@@ -60,10 +60,7 @@
             <button class="btn btn-outline-primary mt-4" id="btnFilter">
                 Filter
             </button>
-
-
-
-
+            <button class="btn btn-outline-danger mt-4" id="btnReset">Reset</button>
         </div>
     </div>
     <div class="table-responsive">
@@ -229,9 +226,13 @@
 
 @push('scripts')
     <script>
-        $('#btnFilter').click(function(e) {
-            e.preventDefault();
-
+        $(document).ready(function() {
+            if (localStorage.getItem("filter_angkatan")) {
+                $('#filterAngkatan').val(localStorage.getItem("filter_angkatan"));
+            }
+            if (localStorage.getItem("filter_kelas")) {
+                $('#filterKelas').val(localStorage.getItem("filter_kelas"));
+            }
             $.ajax({
                 url: "{{ route('siswa.filter') }}",
                 type: "POST",
@@ -294,10 +295,74 @@
                 }
             });
         });
+    </script>
+    <script>
+        $('#btnFilter').click(function(e) {
+            e.preventDefault();
+            localStorage.setItem("filter_angkatan", $('#filterAngkatan').val());
+            localStorage.setItem("filter_kelas", $('#filterKelas').val());
+            $.ajax({
+                url: "{{ route('siswa.filter') }}",
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "filter_angkatan": $('#filterAngkatan').val(),
+                    "filter_kelas": $('#filterKelas').val()
+                },
+                success: function(data) {
+                    $('#dataTables').DataTable().destroy(); // Hancurkan instance DataTable lama
+                    $('#dataTables tbody').empty(); // Kosongkan isi tabel sebelum menambahkan data baru
 
-
-
-
+                    $.each(data, function(index, value) {
+                        $('#dataTables tbody').append('<tr>' +
+                            '<td>' + (index + 1) + '</td>' +
+                            '<td>' + value.nama + '</td>' +
+                            '<td>' + value.angkatan + '</td>' +
+                            '<td>' + value.kelas + '</td>' +
+                            '<td>' + value.jenis_kelamin + '</td>' +
+                            '<td>' + value.alamat + '</td>' +
+                            '<td>' +
+                            '<div class="d-flex gap-1">' +
+                            '<button class="btn btn-info btnDetailSiswa" data-id="' + value
+                            .id +
+                            '" data-bs-toggle="modal" data-bs-target="#detailModal">Detail</button>' +
+                            '<a href="/siswa/' + value.id +
+                            '/edit" class="btn btn-warning">Edit</a>' +
+                            '<form action="/siswa/' + value.id +
+                            '" method="POST" style="display:inline;">' +
+                            '<input type="hidden" name="_token" value="{{ csrf_token() }}">' +
+                            '<input type="hidden" name="_method" value="DELETE">' +
+                            '<button type="submit" class="btn btn-danger" onclick="return confirm(\'Apakah Anda yakin ingin menghapus siswa ini?\')">Hapus</button>' +
+                            '</form>' +
+                            '</div>' +
+                            '</td>' +
+                            '</tr>');
+                    });
+                    $('#dataTables').DataTable({
+                        "paging": true,
+                        "lengthMenu": [10, 25, 50, 100], // Pilihan entries per page
+                        "pageLength": 10, // Default 10 entries per page
+                        "ordering": false, // Nonaktifkan sorting jika tidak diperlukan
+                        "searching": true, // Aktifkan fitur pencarian
+                        "info": true, // Tampilkan informasi jumlah data
+                        "language": {
+                            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                            "zeroRecords": "Tidak ada data ditemukan",
+                            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                            "infoEmpty": "Tidak ada data tersedia",
+                            "infoFiltered": "(disaring dari _MAX_ total data)",
+                            "search": "Cari:",
+                            "paginate": {
+                                "first": "<<",
+                                "last": ">>",
+                                "next": ">",
+                                "previous": "<"
+                            }
+                        }
+                    });
+                }
+            });
+        });
         $(document).on('click', '.btnDetailSiswa', function(e) {
             var dataId = $(this).data('id');
 
@@ -328,5 +393,12 @@
                 }
             });
         });
+        $('#btnReset').click(function() {
+            localStorage.removeItem("filter_angkatan");
+            localStorage.removeItem("filter_kelas");
+            $('#filterAngkatan').val('');
+            $('#filterKelas').val('');
+        });
+
     </script>
 @endpush

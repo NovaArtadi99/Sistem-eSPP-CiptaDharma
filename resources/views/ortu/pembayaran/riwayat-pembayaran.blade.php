@@ -119,6 +119,11 @@
                     <div class="modal-body text-center">
                         <img id="buktiImage" src="{{ asset('bukti-pelunasan/' . $riwayat->bukti_lebih) }}"
                             class="img-fluid" alt="Bukti Transfer">
+                        <form action="{{ route('validasi.lebih') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $riwayat->id }}">
+                            <button type="submit" class="btn btn-primary mt-3">Validasi</button>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -139,12 +139,11 @@
                 <td width="80%" align="center" style="text-align: left;">
                     <p><strong>CHIPTA DHARMA</strong><br>Jln. Jalan ke pasar minggu</p>
                 </td>
-                <td width="10%" align="right" style="font-size: 25px; font-weight: bold;"><strong>INVOICE</strong>
+                <td width="10%" align="right" style="font-size: 25px; font-weight: bold;"><strong>KWITANSI</strong>
                 </td>
             </tr>
         </table>
 
-        <p><strong>Kepada</strong></p>
         <table style="width: 100%">
             <tr>
                 <td><strong>Nama Wali:</strong> {{ $nama_wali }}</td>
@@ -152,7 +151,7 @@
             </tr>
             <tr>
                 <td><strong>Nama Murid:</strong> {{ $nama_murid }}</td>
-                <td><strong>No. Invoice:</strong> {{ $no_invoice }}</td>
+                <td><strong>No. KWITANSI:</strong> {{ str_replace("INV", "KWT", $no_invoice); }}</td>
             </tr>
             <tr>
                 <td><strong>Kelas:</strong> {{ $kelas }}</td>
@@ -178,7 +177,37 @@
         </table>
 
         <p><strong>Terbilang:</strong> {{ terbilang($nominal) }}</p>
-        <p style="text-align: center; margin-top: 20px;"><strong>Terima Kasih</strong><br>_________X_________</p>
+        @php
+            use Carbon\Carbon;
+            $tanggalFormatted = Carbon::parse($tagihan['tanggal_lunas'])->translatedFormat('d F Y');
+            echo $tanggalFormatted;
+        @endphp 
+        <table style="width: 100%; text-align: center;">
+            <tr>
+                <td style="width: 50%;"></td>
+                <td style="width: 50%"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Bali, {{ $tanggalFormatted }}</td>
+            </tr>
+            <tr>
+                <td>Petugas</td>
+                <td>Mengetahui</td>
+            </tr>
+            <tr>
+                <td><br><br><br><br></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>{{ $tagihan->siswa->nama_wali }}</td>
+                <td>Nama Kepala Sekolah</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>NIP.13245789</td>
+            </tr>
+        </table>
     </div>
 </body>
 

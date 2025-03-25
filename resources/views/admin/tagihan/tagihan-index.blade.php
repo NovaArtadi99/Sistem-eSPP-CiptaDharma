@@ -125,22 +125,21 @@
                             <button class="btn btn-block btn-info my-1 btnDetailTagihan" data-bs-toggle="modal"
                                 data-bs-target="#detailModal" data-id="{{ $tagihan->id }}">Detail</button>
 
-                            <a href="{{ route('tagihan.edit', $tagihan->id) }}" class="btn btn-warning">Edit</a>
-
-                            <form action="{{ route('tagihan.destroy', $tagihan->id) }}" method="POST"
-                                style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger"
-                                    onclick="return confirm('Apakah Anda yakin ingin menghapus data tagihan keluar ini?')">Hapus</button>
-                            </form>
+                            <a hidden href="{{ route('tagihan.edit', $tagihan->id) }}" class="btn btn-warning">Edit</a>
 
                             <!-- tambahan a -->
-                            @if ($tagihan->status == 'Lunas' || $tagihan->status == 'Lebih')
+                            @if ($tagihan->status == 'Belum Lunas')
+                                <form action="{{ route('tagihan.destroy', $tagihan->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger"
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data tagihan keluar ini?')">Hapus</button>
+                                </form>
                             @endif
                             <!-- tambahan b -->
 
-                            @if ($tagihan->status == 'Belum Lunas')
+                            @if ($tagihan->status == 'Belum Lunas' || $tagihan->status == "Kurang")
                                 <button
                                     class=" btn btn-dark mx-1 btnSendInvoice {{ $tagihan->isSentKuitanti != '1' ? '' : 'disabled' }} "
                                     data-id="{{ $tagihan->id }}">Kirim

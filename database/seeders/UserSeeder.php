@@ -78,7 +78,7 @@ class UserSeeder extends Seeder
                     'no_telp' => $faker->phoneNumber,
                     'angkatan' => $angkatan[array_rand($angkatan)],
                     'kelas' => $kelas[array_rand($kelas)],
-                    'id_telegram' => null,
+                    'chat_id' => null,
                     'created_at' => now(),
                     'tanggal_lahir' => $faker->dateTimeBetween('2000-01-01', '2020-12-31'),
                 ]

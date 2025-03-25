@@ -138,6 +138,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('lihat-kuitansi/{tagihan}', [TagihanController::class, 'lihatKuitansi'])->name('tagihan.lihatKuitansi');
     Route::get('download-kuitansi/{tagihan}', [TagihanController::class, 'downloadKuitansi'])->name('tagihan.downloadKuitansi');
+    Route::post('validasi-lebih', [OrangTuaController::class, 'validasi'])->name('validasi.lebih');
+
 });
 
 

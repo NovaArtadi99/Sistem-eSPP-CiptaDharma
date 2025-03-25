@@ -281,7 +281,7 @@ class TagihanController extends Controller
         $imageSrc = 'data:image/png;base64,' . $imageData;
 
 
-        $html = view('invoice_template', [
+        $html = view('kwitansi_template', [
             'tagihan' => $dataTagihan,
             'imageSrc' => $imageSrc,
             'bootstrap' => public_path('css/bootstrap.min.css'),

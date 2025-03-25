@@ -79,7 +79,7 @@ class DashboardController extends Controller
             // })
             //     ->find($auth_id);
 
-            return view('admin.ortu-dashboard', $data);
+            return view('admin.ortu-dashboard-new', $data);
         }
     }
 
