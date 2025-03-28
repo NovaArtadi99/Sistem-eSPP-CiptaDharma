@@ -13,9 +13,9 @@
             <button class="btn btn-warning" id="btnImport" data-bs-toggle="modal" data-bs-target="#importModal">
                 <i class="fas fa-file-import"></i> Import Excel
             </button>
-            {{-- <a href="{{ route('siswa.print') }}" class="btn btn-outline-dark" id="btnPrint">
+            <a href="{{ route('siswa.print') }}" class="btn btn-outline-dark" id="btnPrint">
                 <i class="fas fa-print"></i> Print
-            </a> --}}
+            </a>
 
         </div>
     </div>
@@ -139,7 +139,7 @@
                             @endif
                             <!-- tambahan b -->
 
-                            @if ($tagihan->status == 'Belum Lunas' || $tagihan->status == "Kurang")
+                            {{-- @if ($tagihan->status == 'Belum Lunas' || $tagihan->status == "Kurang")
                                 <button
                                     class=" btn btn-dark mx-1 btnSendInvoice {{ $tagihan->isSentKuitanti != '1' ? '' : 'disabled' }} "
                                     data-id="{{ $tagihan->id }}">Kirim
@@ -148,7 +148,7 @@
                                 <a href="{{ route('tagihan.lihatKuitansi', $tagihan->id) }}"
                                     class=" btn btn-outline-dark mx-1 btnLihatKuitansi {{ $tagihan->isSentKuitanti != '1' ? '' : 'disabled' }} "
                                     data-id="{{ $tagihan->id }}">Lihat Kutansi</a>
-                            @endif
+                            @endif --}}
 
 
 

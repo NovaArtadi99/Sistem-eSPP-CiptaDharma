@@ -100,15 +100,25 @@
 
                         {{-- <div class="mb-3">
                             <label for="total_bayar">Total Bayar</label>
-                            <input type="text" id="total_bayar" name="total_bayar" class="form-control" value="" readonly>
-                        </div> --}}
-                        <div class="mb-3">
-                            <label for="total_bayar">Total Bayar</label>
                             @if ($tagihan->status=="Kurang")
                                 <input type="text" id="total_bayar" name="total_bayar" class="form-control" value="{{ $tagihan->nominal ?? '' }}">
                             @else
-                                <input type="text" id="total_bayar" name="total_bayar" class="form-control">                                
+                                <input type="text" id="total_bayar" name="total_bayar" class="form-control">
                             @endif
+                        </div> --}}
+
+                        <div class="mb-3">
+                            <label for="total_bayar">Total Bayar</label>
+                            <input type="text"
+                                   id="total_bayar"
+                                   name="total_bayar"
+                                   class="form-control"
+                                   @if ($tagihan->status == "Kurang")
+                                       value="{{ $tagihan->nominal ?? '' }}"
+                                   @else
+                                       value="{{ $tagihan->biaya->nominal ?? '' }}"
+                                   @endif
+                                   readonly>
                         </div>
 
 
