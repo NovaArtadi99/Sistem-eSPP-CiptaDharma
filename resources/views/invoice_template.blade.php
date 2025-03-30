@@ -152,7 +152,7 @@
             </tr>
             <tr>
                 <td><strong>Nama Murid:</strong> {{ $nama_murid }}</td>
-                <td><strong>No. Invoice:</strong> {{ $no_invoice }}</td>
+                <td><strong>No. Invoice:</strong> {{ $no_inv->no_invoice }}</td>
             </tr>
             <tr>
                 <td><strong>Kelas:</strong> {{ $kelas }}</td>

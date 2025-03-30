@@ -98,6 +98,7 @@ class TagihanController extends Controller
         $tagihan->save();
 
         // Telegram
+        $no_inv = Tagihan::latest()->first();
         $id_siswa = $request->user_id;
         $user = User::where('id', $id_siswa)->first();
         $biaya = Biaya::where('id', $request->biaya_id)->first();
@@ -114,6 +115,7 @@ class TagihanController extends Controller
             'user' => $user,
             'biaya' => $biaya,
             'data_tagihan' => $data_tagihan,
+            'no_inv' => $no_inv,
             'imageSrc' => $imageSrc,
             'tagihan' => null // Set to null to indicate we're using the separate variables format
         ])->render();
