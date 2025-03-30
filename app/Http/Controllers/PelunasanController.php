@@ -57,7 +57,7 @@ class PelunasanController extends Controller
         // $tagihan->bukti_pelunasan = $fileSaved;
         // $tagihan->status = 'Sedang Diverifikasi';
         // $tagihan->save();
-        return redirect()->route('dashboard')->with('success','Bukti pelunasan sudah dikirim');
+        return redirect()->route('ortu.pembayaran')->with('success','Bukti pelunasan sudah dikirim');
     }
 
 
