@@ -93,7 +93,7 @@
                         </td>
                         <td>
                             <div class="d-flex gap-1">
-                                @if ($pembayaran->isSentKuitansi == '1' || $pembayaran->status == 'Lebih')
+                                @if ($pembayaran->isSentKuitansi == '1')
                                     <a href="{{ route('tagihan.lihatKuitansi', $pembayaran->id) }}"
                                         class="btn btn-sm btn-secondary">Lihat Kuitansi</a>
                                 @endif

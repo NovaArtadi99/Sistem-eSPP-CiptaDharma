@@ -71,24 +71,21 @@
                                     <button type="button" class="btn btn-sm btn-warning">Sedang Diverifikasi</button>
 
                                     <!-- tambahan a -->
-                                @elseif ($riwayat->status == 'Lebih')
+                                {{-- @elseif ($riwayat->status == 'Lebih')
                                     <a href="#" class="btn btn-sm btn-success" data-bs-toggle="modal"
-                                        data-bs-target="#buktiModal_{{ $index + 1 }}">Lunas Lebih</a>
-                                @elseif ($riwayat->status == 'Kurang')
-                                    <button type="button" class="btn btn-sm btn-warning">Kurang</button>
+                                        data-bs-target="#buktiModal_{{ $index + 1 }}">Lunas Lebih</a> --}}
+                                {{-- @elseif ($riwayat->status == 'Kurang')
+                                    <button type="button" class="btn btn-sm btn-warning">Kurang</button> --}}
                                     <!-- tambahan b -->
                                 @else
                                     <button type="button" class="btn btn-sm btn-success">Lunas</button>
                                 @endif
 
-                                {{-- tambahan --}}
-                                @if (($riwayat->status == 'Lunas' || $riwayat->status == 'Lebih') && $riwayat->isSentKuitansi == 1)
-                                @endif
-                                {{--  --}}
-
                                 @if ($riwayat->status == 'Lunas' && $riwayat->isSentKuitansi == '1')
-                                    <a href="{{ asset('bukti-pelunasan/' . $riwayat->bukti_pelunasan) }}"
-                                        class="btn btn-sm btn-primary">Bukti</a>
+                                    {{-- <a href="{{ asset('bukti-pelunasan/' . $riwayat->bukti_pelunasan) }}"
+                                        class="btn btn-sm btn-primary">Bukti</a> --}}
+                                    <a href="{{ route('tagihan.lihatKuitansi', $riwayat->id) }}"
+                                        class="btn btn-sm btn-secondary">Lihat Kuitansi</a>
                                 @else
                                     <button disabled class="btn btn-sm btn-secondary">Kuitansi Belum ada</button>
                                 @endif

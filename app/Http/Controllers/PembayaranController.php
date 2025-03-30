@@ -87,7 +87,9 @@ class PembayaranController extends Controller
         $pembayaran->status = 'Lebih';
         $pembayaran->nominal = $request->nominal;
         $pembayaran->bukti_lebih = $fileSaved;
-        $pembayaran->isSentKuitansi = 1;
+        $pembayaran->isSentKuitansi = '1';
+        $pembayaran->tanggal_lunas = Carbon::now();
+        $pembayaran->user_melunasi_id = auth()->user()->id;
         $pembayaran->save();
 
         return to_route('pembayaran.index')->with('success', 'Pesan tagihan nominal lebih sudah terkirim');
