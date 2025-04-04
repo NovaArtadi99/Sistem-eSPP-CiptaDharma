@@ -55,11 +55,12 @@ class LaporanSPPExport implements FromCollection,WithHeadings,WithMapping, Shoul
             $tagihan->siswa->kelas,
             $tagihan->bulan,
             $tagihan->tahun,
-            'Rp. ' . number_format($tagihan->total_bayar, 0, ',', '.'),
-            $tagihan->tanggal_terbit,
+            'Rp. ' . number_format($tagihan->biaya->nominal, 0, ',', '.'),
+$tagihan->tanggal_terbit,
             $tagihan->tanggal_lunas,
             $tagihan->penerbit->nama ?? '-',
             $tagihan->melunasi->nama ?? '-',
+            $tagihan->status
         ];
     }
 
