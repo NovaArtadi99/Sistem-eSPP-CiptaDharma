@@ -114,7 +114,7 @@
             $nama_wali = $tagihan->siswa->nama_wali ?? '';
             $tanggal_terbit = $tagihan->tanggal_terbit ?? '';
             $nama_murid = $tagihan->siswa->nama ?? '';
-            $no_invoice = $tagihan->no_invoice ?? '';
+            $no_invoice = $no_inv->no_invoice;
             $kelas = $tagihan->siswa->kelas ?? '';
             $bulan = $tagihan->bulan ?? '';
             $nama_biaya = $tagihan->biaya->nama_biaya ?? '';
@@ -124,7 +124,7 @@
             $nama_wali = $user->nama_wali ?? '';
             $tanggal_terbit = $data_tagihan['tanggal_terbit'] ?? '';
             $nama_murid = $user->nama ?? '';
-            $no_invoice = $data_tagihan['no_invoice'] ?? '';
+            $no_invoice = $data_tagihan['no_invoice'] ?? $no_inv->no_invoice;
             $kelas = $user->kelas ?? '';
             $bulan = $data_tagihan['bulan'] ?? '';
             $nama_biaya = $biaya->nama_biaya ?? '';
@@ -152,7 +152,7 @@
             </tr>
             <tr>
                 <td><strong>Nama Murid:</strong> {{ $nama_murid }}</td>
-                <td><strong>No. Invoice:</strong> {{ $no_inv->no_invoice }}</td>
+                <td><strong>No. Invoice:</strong> {{ $no_invoice }}</td>
             </tr>
             <tr>
                 <td><strong>Kelas:</strong> {{ $kelas }}</td>
