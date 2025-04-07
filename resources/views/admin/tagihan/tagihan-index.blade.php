@@ -322,20 +322,22 @@
                             '<button class="btn btn-block btn-info my-1 btnDetailTagihan" data-id="' +
                             value.id +
                             '" data-bs-toggle="modal" data-bs-target="#detailModal">Detail</button>' +
-                            '<a href="/tagihan/' + value.id +
-                            '/edit" class="btn btn-warning my-1">Edit</a>' +
-                            '<form action="/tagihan/' + value.id +
+                            '<a hidden href="/tagihan/' + value.id +
+                            '/edit" class="btn btn-warning my-1">Edit</a>'+
+
+                            (value.status == 'Belum Lunas' ? '<form action="/tagihan/' + value.id +
                             '" method="POST" style="display:inline;">' +
                             '@csrf' +
                             '@method('DELETE')' +
                             '<button type="submit" class="btn btn-danger m-1" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data tagihan keluar ini?\')">Hapus</button>' +
-                            '</form>' +
+                            '</form>' : '') +
+
                             (value.status == 'Belum Lunas' ?
-                                '<button class="btn btn-dark my-1 btnSendInvoice ' +
+                                '<button hidden class="btn btn-dark my-1 btnSendInvoice ' +
                                 (value.isSentKuitansi != '1' ? '' :
                                     'disabled') + '" data-id="' + value.id +
                                 '">Kirim Invoice</button>' :
-                                '<a href="' +
+                                '<a hidden href="' +
                                 "{{ route('tagihan.lihatKuitansi', '" + value.id + "') }}" +
                                 '" class="btn btn-outline-dark mx-1 btnLihatKuitansi ' +
                                 (value.isSentKuitansi != '1' ? '' :
@@ -416,20 +418,21 @@
                                 '<button class="btn btn-block btn-info my-1 btnDetailTagihan" data-id="' +
                                 value.id +
                                 '" data-bs-toggle="modal" data-bs-target="#detailModal">Detail</button>' +
-                                '<a href="/tagihan/' + value.id +
-                                '/edit" class="btn btn-warning my-1">Edit</a>' +
-                                '<form action="/tagihan/' + value.id +
+                                '<a hidden href="/tagihan/' + value.id +
+                                '/edit" class="btn btn-warning my-1">Edit</a>'+
+
+                                (value.status == 'Belum Lunas' ? '<form action="/tagihan/' + value.id +
                                 '" method="POST" style="display:inline;">' +
                                 '@csrf' +
                                 '@method('DELETE')' +
                                 '<button type="submit" class="btn btn-danger m-1" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data tagihan keluar ini?\')">Hapus</button>' +
-                                '</form>' +
+                                '</form>' : '') +
                                 (value.status == 'Belum Lunas' ?
-                                    '<button class="btn btn-dark my-1 btnSendInvoice ' +
+                                    '<button hidden class="btn btn-dark my-1 btnSendInvoice ' +
                                     (value.isSentKuitansi != '1' ? '' :
                                         'disabled') + '" data-id="' + value.id +
                                     '">Kirim Invoice</button>' :
-                                    '<a href="' +
+                                    '<a hidden href="' +
                                     "{{ route('tagihan.lihatKuitansi', '" + value.id + "') }}" +
                                     '" class="btn btn-outline-dark mx-1 btnLihatKuitansi ' +
                                     (value.isSentKuitansi != '1' ? '' :
