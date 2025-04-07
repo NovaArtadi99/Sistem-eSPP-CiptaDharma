@@ -25,7 +25,7 @@ class TagihanController extends Controller
     public function index()
     {
         $data['judul'] = 'Tagihan';
-        $data['tagihans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->latest()->get();
+        $data['tagihans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->oldest()->get();
         $data['kelas'] = User::role('SiswaOrangTua')->select('id', 'kelas')->get()->unique();
 
 

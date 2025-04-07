@@ -11,7 +11,7 @@ class BiayaController extends Controller
 
     public function index()
     {
-        $data['biayas'] = Biaya::select('id','nama_biaya', 'nominal','nama_nominal', 'tahun', 'bulan', 'level')->latest()->get();
+        $data['biayas'] = Biaya::select('id','nama_biaya', 'nominal','nama_nominal', 'tahun', 'bulan', 'level')->oldest()->get();
         $data['judul'] = 'Data Biaya';
 
         return view('admin.biaya.biaya-index', $data);

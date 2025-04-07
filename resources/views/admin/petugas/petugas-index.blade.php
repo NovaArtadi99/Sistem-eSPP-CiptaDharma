@@ -17,6 +17,7 @@
             <button class="btn btn-outline-primary mt-4" id="btnFilter">
                 Filter
             </button>
+            <button class="btn btn-outline-danger mt-4" id="btnReset">Reset</button>
 
 
 
@@ -154,8 +155,89 @@
 @endsection
 @push('scripts')
     <script>
+        $(document).ready(function() {
+            if (localStorage.getItem("filter_jenis_kelamin")) {
+                $('#filterJK').val(localStorage.getItem("filter_jenis_kelamin"));
+            }
+            $.ajax({
+                url: "{{ route('petugas.filterAgama') }}",
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "filter_jk": $('#filterJK').val(),
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#dataTables').DataTable().destroy();
+                    $('#dataTables tbody').empty();
+
+                    $.each(data, function(index, value) {
+                        $('#dataTables tbody').append(
+                            '<tr>' +
+                            '<td>' + (index + 1) + '</td>' +
+                            '<td>' + (value.nama ? value.nama : '-') + '</td>' +
+                            '<td>' + (value.nip ? value.nip : '-') + '</td>' +
+                            '<td>' +
+                            '<ul>' +
+                            value.roles.map(role => '<li>' + role.name + '</li>').join('') +
+                            '</ul>' +
+                            '</td>' +
+                            '<td>' + (value.jenis_kelamin ? value.jenis_kelamin : '-') +
+                            '</td>' +
+
+                            '<td>' + (value.status == 1 ?
+                                '<span class="badge rounded-pill bg-success">Aktif</span>' :
+                                '<span class="badge rounded-pill bg-danger">Tidak Aktif</span>'
+                                ) +
+                            '</td>' +
+                            '<td>' +
+                            '<div class="d-flex gap-1">' +
+                            '<a href="/petugas/' + value.id +
+                            '/edit" class="btn btn-block btn-warning my-1">Edit</a>' +
+                            '<form action="/petugas/' + value.id +
+                            '" method="POST" style="display:inline;">' +
+                            '<input type="hidden" name="_token" value="{{ csrf_token() }}">' +
+                            '<input type="hidden" name="_method" value="DELETE">' +
+                            '<button type="submit" class="btn btn-block btn-danger my-1" onclick="return confirm(\'Apakah Anda yakin ingin menghapus petugas ini?\')">Hapus</button>' +
+                            '</form>' +
+                            '<button class="btn btn-block btn-info my-1 btnDetailPetugas" data-bs-toggle="modal" data-bs-target="#detailModal" data-id="' +
+                            value.id +
+                            '">Detail</button>' +
+                            '</div>' +
+                            '</td>' +
+                            '</tr>');
+                    });
+
+
+                    $('#dataTables').DataTable({
+                        "paging": true,
+                        "lengthMenu": [10, 25, 50, 100], // Pilihan entries per page
+                        "pageLength": 10, // Default 10 entries per page
+                        "ordering": false, // Nonaktifkan sorting jika tidak diperlukan
+                        "searching": true, // Aktifkan fitur pencarian
+                        "info": true, // Tampilkan informasi jumlah data
+                        "language": {
+                            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                            "zeroRecords": "Tidak ada data ditemukan",
+                            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                            "infoEmpty": "Tidak ada data tersedia",
+                            "infoFiltered": "(disaring dari _MAX_ total data)",
+                            "search": "Cari:",
+                            "paginate": {
+                                "first": "<<",
+                                "last": ">>",
+                                "next": ">",
+                                "previous": "<"
+                            }
+                        }
+                    });
+
+                }
+            });
+        });
         $('#btnFilter').click(function(e) {
             e.preventDefault();
+            localStorage.setItem("filter_jenis_kelamin", $('#filterJK').val());
             $.ajax({
                 url: "{{ route('petugas.filterAgama') }}",
                 type: "POST",
@@ -168,7 +250,7 @@
                     $('#dataTables tbody').empty();
 
                     $.each(data, function(index, value) {
-                        $('#dataTables tbody').append('<tr>' +
+                        $('#dataTables tbody').append(
                             '<tr>' +
                             '<td>' + (index + 1) + '</td>' +
                             '<td>' + (value.nama ? value.nama : '-') + '</td>' +
@@ -263,6 +345,11 @@
                         '<span class="badge rounded-pill bg-danger">Tidak Aktif</span>');
                 }
             });
+        });
+
+        $('#btnReset').click(function() {
+            localStorage.removeItem("filter_jenis_kelamin");
+            $('#filterJK').val('');
         });
     </script>
 @endpush
