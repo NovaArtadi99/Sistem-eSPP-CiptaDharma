@@ -158,7 +158,7 @@ class SiswaController extends Controller
                 ->when($request->filter_kelas != null, function ($query) use ($request) {
                     return $query->where('kelas', $request->filter_kelas);
                 })
-                ->get()
+                ->latest()->get()
         );
     }
 

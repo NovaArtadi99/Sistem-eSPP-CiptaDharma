@@ -270,7 +270,7 @@
                             "paging": true,
                             "lengthMenu": [10, 25, 50, 100], // Pilihan entries per page
                             "pageLength": 10, // Default 10 entries per page
-                            "ordering": false, // Nonaktifkan sorting jika tidak diperlukan
+                            "ordering": true, // Nonaktifkan sorting jika tidak diperlukan
                             "searching": true, // Aktifkan fitur pencarian
                             "info": true, // Tampilkan informasi jumlah data
                             "language": {

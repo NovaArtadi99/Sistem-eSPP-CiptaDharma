@@ -233,7 +233,7 @@ class TagihanController extends Controller
     {
         // dd($request->all());
         if (empty($request->filter_tahun) && empty($request->filter_bulan) && empty($request->filter_angkatan) && empty($request->filter_kelas)) {
-            return Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->get();
+            return Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->latest()->get();
         } else {
             return response()->json(
                 Tagihan::with(['biaya', 'siswa', 'penerbit', 'melunasi'])
@@ -252,7 +252,7 @@ class TagihanController extends Controller
                             $query->where('kelas', $request->filter_kelas);
                         });
                     })
-                    ->get()
+                    ->latest()->get()
             );
         }
     }
