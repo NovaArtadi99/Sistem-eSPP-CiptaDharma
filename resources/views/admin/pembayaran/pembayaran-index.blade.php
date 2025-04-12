@@ -147,8 +147,8 @@
                         <div class="modal-body">
                             <label for="numb">Jumlah Nominal Lebih Sebesar</label>
                             <input id="numb" type="number" class="form-control" name="nominal">
-                            <label for="bukti_kembali">Bukti dikembalikan</label>
-                            <input id="bukti_kembali" type="file" class="form-control" accept="image/*"
+                            <label hidden for="bukti_kembali">Bukti dikembalikan</label>
+                            <input hidden id="bukti_kembali" type="file" class="form-control" accept="image/*"
                                 name="file_bukti">
                         </div>
                         <div class="modal-footer">

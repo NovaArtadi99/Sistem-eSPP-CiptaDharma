@@ -101,7 +101,7 @@
                                 @if ($pembayaran->status == 'Lebih')
                                     <div class="d-flex">
                                         <a href="#" class="btn btn-success me-3" data-bs-toggle="modal"
-                                            data-bs-target="#buktiModal_{{ $index + 1 }}">Cek Bukti</a>
+                                            data-bs-target="#buktiModal_{{ $index + 1 }}">Validasi</a>
                                     </div>
                                 @endif
                             </div>
@@ -122,12 +122,11 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="buktiModalLabel">Bukti Dikembalikan</h5>
+                        <h5 class="modal-title" id="buktiModalLabel">Validasi</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-center">
-                        <img id="buktiImage" src="{{ asset('bukti-pelunasan/' . $pembayaran->bukti_lebih) }}"
-                            class="img-fluid" alt="Bukti Transfer">
+                        {{-- <img id="buktiImage" src="{{ asset('bukti-pelunasan/' . $pembayaran->bukti_lebih) }}" class="img-fluid" alt="Bukti Transfer"> --}}
                         <form action="{{ route('validasi.lebih') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id" value="{{ $pembayaran->id }}">
