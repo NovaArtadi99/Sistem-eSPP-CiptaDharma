@@ -101,11 +101,25 @@
                                 @if (
                                     $pembayaran->bukti_pelunasan != null &&
                                         ($pembayaran->status == 'Sedang Diverifikasi' ||
-                                            $pembayaran->status == 'Kurang' ||
                                             $pembayaran->status == 'Belum Lunas'))
                                     <a href="javascript:void(0);" id="btnVerifikasi_{{ $pembayaran->id }}"
                                         class="btn btn-sm btn-info btn-verifikasi" data-id="{{ $pembayaran->id }}">
                                         Verifikasi</a>
+                                    <div id="statusButtons_{{ $pembayaran->id }}" class="status-buttons"
+                                        style="display: none;">
+                                        <a href="{{ route('pembayaran.verifikasi', $pembayaran->id) }}"
+                                            class="btn btn-sm btn-success">Lunas</a>
+                                        <button data-bs-toggle="modal" data-bs-target="#lebih_{{ $index + 1 }}"
+                                            class="btn btn-sm btn-primary">Lebih</button>
+                                        <button data-bs-toggle="modal" data-bs-target="#kurang_{{ $index + 1 }}"
+                                            class="btn btn-sm btn-danger">Kurang</button>
+                                    </div>
+                                @endif
+                                @if (
+                                    $pembayaran->bukti_pelunasan != null && ($pembayaran->status == 'Kurang'))
+                                    <a href="javascript:void(0);" id="btnVerifikasi_{{ $pembayaran->id }}"
+                                        class="btn btn-sm btn-info btn-verifikasi" data-id="{{ $pembayaran->id }}">
+                                        Verifikasi Kurang</a>
                                     <div id="statusButtons_{{ $pembayaran->id }}" class="status-buttons"
                                         style="display: none;">
                                         <a href="{{ route('pembayaran.verifikasi', $pembayaran->id) }}"
