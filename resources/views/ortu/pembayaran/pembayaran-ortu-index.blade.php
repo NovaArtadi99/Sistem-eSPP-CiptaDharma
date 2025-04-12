@@ -57,6 +57,8 @@
                                 <span class="badge rounded-pill bg-success">Lunas Lebih</span>
                             @elseif ($pembayaran->status == 'Kurang')
                                 <span class="badge rounded-pill bg-warning">Kurang</span>
+                            @elseif ($pembayaran->status == 'Verifikasi Kurang')
+                                <span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>
                                 <!-- tambahan b -->
                             @else
                                 <span class="badge rounded-pill bg-success">Lunas</span>

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->year('tahun');
             $table->unsignedBigInteger('user_penerbit_id')->nullable();
             $table->unsignedBigInteger('user_melunasi_id')->nullable();
-            $table->enum('status', ['Belum Lunas', 'Sedang Diverifikasi', 'Lunas', 'Lebih', 'Kurang'])
+            $table->enum('status', ['Belum Lunas', 'Sedang Diverifikasi', 'Lunas', 'Lebih', 'Kurang', 'Verifikasi Kurang'])
                 ->default('Belum Lunas');
             $table->integer('nominal')->nullable();
             $table->text('bukti_pelunasan')->nullable();
