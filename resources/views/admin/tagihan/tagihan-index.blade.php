@@ -7,9 +7,12 @@
         </div>
 
         <div>
-            <a href="{{ route('tagihan.export') }}" class="btn btn-outline-success" id="btnExport">
+            <a href="#" class="btn btn-outline-success" id="btnExport">
                 <i class="fas fa-file-excel"></i> Export Excel
             </a>
+            {{-- <a href="{{ route('tagihan.export') }}" class="btn btn-outline-success" id="btnExport">
+                <i class="fas fa-file-excel"></i> Export Excel
+            </a> --}}
             <button class="btn btn-warning" id="btnImport" data-bs-toggle="modal" data-bs-target="#importModal">
                 <i class="fas fa-file-import"></i> Import Excel
             </button>
@@ -542,4 +545,28 @@
             $('#filterBulan').val('');
         });
     </script>
+
+<script>
+    document.getElementById('btnExport').addEventListener('click', function (e) {
+        e.preventDefault(); // Cegah link langsung jalan
+
+        // Ambil nilai dari filter
+        const angkatan = document.getElementById('filterAngkatan').value;
+        const kelas = document.getElementById('filterKelas').value;
+        const tahun = document.getElementById('filterTahun').value;
+        const bulan = document.getElementById('filterBulan').value;
+
+        // Susun parameter query string
+        const query = new URLSearchParams({
+            filter_angkatan: angkatan,
+            filter_kelas: kelas,
+            filter_tahun: tahun,
+            filter_bulan: bulan
+        }).toString();
+
+        // Redirect ke route export dengan parameter GET
+        window.location.href = `{{ route('tagihan.export') }}?${query}`;
+    });
+</script>
+
 @endpush

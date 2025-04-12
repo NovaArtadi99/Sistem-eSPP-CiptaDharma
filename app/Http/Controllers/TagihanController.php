@@ -213,10 +213,14 @@ class TagihanController extends Controller
     }
 
 
-    public function export()
+    public function export(Request $request)
     {
+        $angkatan = $request->get('filter_angkatan');
+        $kelas = $request->get('filter_kelas');
+        $tahun = $request->get('filter_tahun');
+        $bulan = $request->get('filter_bulan');
         $tgl = date('d-m-Y_H-i-s');
-        return Excel::download(new TagihanExport, 'data_tagihan_' . $tgl . '.xlsx');
+        return Excel::download(new TagihanExport($angkatan, $kelas, $tahun, $bulan), 'data_tagihan_' . $tgl . '.xlsx');
     }
 
 

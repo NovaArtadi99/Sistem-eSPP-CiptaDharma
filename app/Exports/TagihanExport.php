@@ -21,11 +21,43 @@ class TagihanExport implements FromCollection,WithHeadings, WithMapping, WithSty
     private $counter = 0;
 
     use Exportable;
+    protected $angkatan;
+    protected $kelas;
+    protected $tahun;
+    protected $bulan;
 
+    public function __construct($angkatan, $kelas, $tahun, $bulan)
+    {
+        $this->angkatan = $angkatan;
+        $this->kelas = $kelas;
+        $this->tahun = $tahun;
+        $this->bulan = $bulan;
+    }
 
     public function collection()
     {
-        $siswa = Tagihan::select([
+        $query = Tagihan::with(['penerbit', 'melunasi', 'biaya', 'siswa'])
+            ->where('status', 'Lunas');
+
+        $query->whereHas('siswa', function ($q) {
+            if ($this->angkatan) {
+                $q->where('angkatan', $this->angkatan);
+            }
+
+            if ($this->kelas) {
+                $q->where('kelas', $this->kelas);
+            }
+        });
+
+        if ($this->tahun) {
+            $query->where('tahun', $this->tahun);
+        }
+
+        if ($this->bulan) {
+            $query->where('bulan', $this->bulan);
+        }
+
+        return $query->select([
             'no_invoice',
             'keterangan',
             'tanggal_terbit',
@@ -37,9 +69,7 @@ class TagihanExport implements FromCollection,WithHeadings, WithMapping, WithSty
             'user_id',
             'bulan',
             'tahun',
-        ])->with(['penerbit','melunasi','biaya','siswa'])->get();
-
-        return $siswa;
+        ])->get();
     }
 
 
