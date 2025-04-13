@@ -36,8 +36,7 @@ class TagihanExport implements FromCollection,WithHeadings, WithMapping, WithSty
 
     public function collection()
     {
-        $query = Tagihan::with(['penerbit', 'melunasi', 'biaya', 'siswa'])
-            ->where('status', 'Lunas');
+        $query = Tagihan::with(['penerbit', 'melunasi', 'biaya', 'siswa']);
 
         $query->whereHas('siswa', function ($q) {
             if ($this->angkatan) {
