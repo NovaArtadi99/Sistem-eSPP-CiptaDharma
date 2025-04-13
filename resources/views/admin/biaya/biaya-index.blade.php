@@ -135,8 +135,8 @@
         <script>
             $(document).ready(function() {
 
-                if (localStorage.getItem("filter_tahun")) {
-                    $('#filterTahun').val(localStorage.getItem("filter_tahun"));
+                if (localStorage.getItem("filter_tahun_biaya")) {
+                    $('#filterTahun').val(localStorage.getItem("filter_tahun_biaya"));
                 }
                 if (localStorage.getItem("filter_bulan")) {
                     $('#filterBulan').val(localStorage.getItem("filter_bulan"));
@@ -211,7 +211,7 @@
                     });
 
                 $('#btnFilter').click(function(e) {
-                    localStorage.setItem("filter_tahun", $('#filterTahun').val());
+                    localStorage.setItem("filter_tahun_biaya", $('#filterTahun').val());
                     localStorage.setItem("filter_bulan", $('#filterBulan').val());
                     $.ajax({
                         url: "{{ route('biaya.filter') }}",
@@ -311,7 +311,7 @@
                 });
 
                 $('#btnReset').click(function() {
-                    localStorage.removeItem("filter_tahun");
+                    localStorage.removeItem("filter_tahun_biaya");
                     localStorage.removeItem("filter_bulan");
                     $('#filterTahun').val('');
                     $('#filterBulan').val('');
