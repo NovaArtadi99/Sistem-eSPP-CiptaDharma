@@ -163,10 +163,12 @@ class SiswaController extends Controller
     }
 
 
-    public function export()
+    public function export(Request $request)
     {
+        $angkatan = $request->get('filter_angkatan');
+        $kelas = $request->get('filter_kelas');
         $tgl = date('d-m-Y_H-i-s');
-        return Excel::download(new SiswaExport, 'siswa_' . $tgl . '.xlsx');
+        return Excel::download(new SiswaExport($angkatan, $kelas), 'siswa_' . $tgl . '.xlsx');
     }
 
 

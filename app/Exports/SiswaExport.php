@@ -18,11 +18,25 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping, WithStyl
     private $counter = 0;
 
     use Exportable;
+    protected $angkatan;
+    protected $kelas;
+    public function __construct($angkatan, $kelas)
+    {
+        $this->angkatan = $angkatan;
+        $this->kelas = $kelas;
+    }
     public function collection()
     {
-        $siswa = User::role('SiswaOrangTua')->get();
+        $siswa = User::role('SiswaOrangTua');
+        if ($this->angkatan) {
+            $siswa->where('angkatan', $this->angkatan);
+        }
 
-        return $siswa;
+        if ($this->kelas) {
+            $siswa->where('kelas', $this->kelas);
+        }
+
+        return $siswa->get();
     }
 
 
