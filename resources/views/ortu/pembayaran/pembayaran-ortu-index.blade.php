@@ -1,4 +1,4 @@
-@extends('admin.admin-layout')
+@extends('admin.admin-layout-ortu')
 @section('content')
     <div class="row mb-3">
         <div class="col-md-4">
@@ -20,15 +20,16 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-light" id="dataTableOrtu">
+        <table class="table table-light dt-responsive nowrap" id="dataTableOrtu" style="width: 100%;">
             <thead class="thead-light">
                 <tr>
+                    <th class="control"></th>
                     <th>No</th>
                     <th>No Invoice</th>
                     <th>Nama Siswa</th>
                     <th>NIS</th>
                     <th>Nominal</th>
-                    <th>Keterangan</th>
+                    {{-- <th>Keterangan</th> --}}
                     <th>Tahun</th>
                     <th>Bulan</th>
                     <th>Status</th>
@@ -38,13 +39,14 @@
             <tbody>
                 @foreach ($pembayarans as $index => $pembayaran)
                     <tr>
+                        <td class="control"></td>
                         <td>{{ $index + 1 }}</td>
                         <td> {{ $pembayaran->no_invoice }}</td>
                         <td>{{ $pembayaran->siswa->nama }} - <b>{{ $pembayaran->siswa->kelas }} </b></td>
                         <td>{{ $pembayaran->siswa->nis }} </td>
 
                         <td>{{ 'Rp. ' . number_format($pembayaran->biaya->nominal, 0, ',', '.') }}</td>
-                        <td>{{ $pembayaran->biaya->nama_nominal }}</td>
+                        {{-- <td>{{ $pembayaran->biaya->nama_nominal }}</td> --}}
                         <td>{{ $pembayaran->tahun }}</td>
                         <td>{{ $pembayaran->bulan }}</td>
                         <td>
@@ -139,116 +141,96 @@
     @endforeach
 @endsection
 @push('scripts')
-    <script>
-        // $('#dataTableOrtu').DataTable();
-        $(document).ready(function() {
-            $('#dataTableOrtu').DataTable();
-            $('#btnFilter').click(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: "{{ route('ortu.filterStatusPembayaran') }}",
-                    type: "POST",
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        "filter_status": $('#filterStatus').val(),
-                    },
-                    success: function(data) {
-                        $('#dataTableOrtu').DataTable().destroy();
-                        $('#dataTableOrtu tbody').empty();
-
-                        $.each(data, function(index, value) {
-                            var actionButtons = '';
-
-                            // Perlu menggunakan kondisi JavaScript, bukan sintaks Blade
-                            if (value.isSentKuitansi == '1') {
-                                actionButtons += '<a href="' +
-                                    "{{ route('tagihan.lihatKuitansi', '') }}/" + value
-                                    .id +
-                                    '" class="btn btn-sm btn-secondary">Lihat Kuitansi</a>';
-                            }
-
-                            if (value.status == 'Belum Lunas') {
-                                actionButtons += '<a href="' +
-                                    "{{ route('pelunasan.tagihan', '') }}/" + value
-                                    .id +
-                                    '" class="btn btn-sm btn-success me-3">Bayar</a>';
-                            }
-
-                            $('#dataTableOrtu tbody').append('<tr>' +
-                                '<td>' + (index + 1) + '</td>' +
-                                '<td>' + value.no_invoice + '</td>' +
-                                '<td>' + value.siswa.nama + '-' + value.siswa
-                                .kelas + '</td>' +
-                                '<td>' + value.siswa.nis + '</td>' +
-
-                                '<td> Rp. ' + value.biaya.nominal.toLocaleString(
-                                    'id-ID') + '</td>' +
-                                '<td>' + value.biaya.nama_nominal + '</td>' +
-                                '<td>' + value.tahun + '</td>' +
-                                '<td>' + value.bulan + '</td>' +
-                                '<td>' +
-                                (value.status == 'Belum Lunas' ?
-                                    '<span class="badge rounded-pill bg-danger">Belum Lunas</span>' :
-                                    (value.status == 'Sedang Diverifikasi' ?
-                                        '<span class="badge rounded-pill bg-warning">Sedang Diverifikasi</span>' :
-                                        (value.status == 'Lebih' ?
-                                        '<span class="badge rounded-pill bg-success">Lunas Lebih</span>' :
-                                            (value.status == 'Kurang' ?
-                                            '<span class="badge rounded-pill bg-warning">Kurang</span>' :
-                                                (value.status == 'Verifikasi Kurang' ?
-                                                '<span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>' :
-                                                    '<span class="badge rounded-pill bg-success">Lunas</span>'
-                                                )
-                                            )
-                                        )
-                                    )
-                                ) + '</td>' +
-                                '<td>' +
-                                '<div class="d-flex gap-1">' +
-                                '<a href="/ortu/pembayaran/' + value.id +
-                                '" class="btn btn-sm btn-warning">Detail</a>' +
-                                actionButtons +
-                                '</div> </td>' +
-                                '</tr>');
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
 
-                        });
+<script>
+    var table;
+    table = $('#dataTableOrtu').DataTable({
+            responsive: {
+                details: {
+                    type: 'column',
+                    target: 0
+                }
+            },
+            columnDefs: [
+                { className: 'control', orderable: false, targets: 0 }
+            ],
+            ordering: true
+    });
+    $(document).ready(function () {
+    $('#btnFilter').click(function(e) {
+        e.preventDefault();
 
+        $.ajax({
+            url: "{{ route('ortu.filterStatusPembayaran') }}",
+            type: "POST",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "filter_status": $('#filterStatus').val(),
+            },
+            success: function(data) {
+                table.clear();
 
-                        $('#dataTableOrtu').DataTable({
+                var rows = [];
+                $.each(data, function(index, value) {
+                    var actionButtons = '';
 
-                            "autoWidth": false, // Matikan auto width
-                            "columnDefs": [{
-                                    "width": "1%",
-                                    "targets": 0
-                                } // Atur width kolom pertama
-                            ],
-                            "paging": true,
-                            "lengthMenu": [10, 25, 50,
-                                100
-                            ], // Pilihan entries per page
-                            "pageLength": 10, // Default 10 entries per page
-                            "ordering": false, // Nonaktifkan sorting jika tidak diperlukan
-                            "searching": true, // Aktifkan fitur pencarian
-                            "info": true, // Tampilkan informasi jumlah data
-                            "language": {
-                                "lengthMenu": "Tampilkan _MENU_ data per halaman",
-                                "zeroRecords": "Tidak ada data ditemukan",
-                                "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                                "infoEmpty": "Tidak ada data tersedia",
-                                "infoFiltered": "(disaring dari _MAX_ total data)",
-                                "search": "Cari:",
-                                "paginate": {
-                                    "first": "<<",
-                                    "last": ">>",
-                                    "next": ">",
-                                    "previous": "<"
-                                }
-                            }
-                        });
+                    if (value.isSentKuitansi == '1') {
+                        actionButtons += '<a href="' +
+                            "{{ route('tagihan.lihatKuitansi', '') }}/" + value.id +
+                            '" class="btn btn-sm btn-secondary">Lihat Kuitansi</a>';
                     }
+
+                    if (value.status == 'Belum Lunas') {
+                        actionButtons += '<a href="' +
+                            "{{ route('pelunasan.tagihan', '') }}/" + value.id +
+                            '" class="btn btn-sm btn-success me-3">Bayar</a>';
+                    }
+
+                    var statusBadge = '';
+                    if (value.status == 'Belum Lunas') {
+                        statusBadge = '<span class="badge rounded-pill bg-danger">Belum Lunas</span>';
+                    } else if (value.status == 'Sedang Diverifikasi') {
+                        statusBadge = '<span class="badge rounded-pill bg-warning">Sedang Diverifikasi</span>';
+                    } else if (value.status == 'Lebih') {
+                        statusBadge = '<span class="badge rounded-pill bg-success">Lunas Lebih</span>';
+                    } else if (value.status == 'Kurang') {
+                        statusBadge = '<span class="badge rounded-pill bg-warning">Kurang</span>';
+                    } else if (value.status == 'Verifikasi Kurang') {
+                        statusBadge = '<span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>';
+                    } else {
+                        statusBadge = '<span class="badge rounded-pill bg-success">Lunas</span>';
+                    }
+
+                    rows.push([
+                        '', // control column
+                        index + 1,
+                        value.no_invoice,
+                        value.siswa.nama + ' - ' + value.siswa.kelas,
+                        value.siswa.nis,
+                        'Rp. ' + value.biaya.nominal.toLocaleString('id-ID'),
+                        value.tahun,
+                        value.bulan,
+                        statusBadge,
+                        '<div class="d-flex gap-1">' +
+                            '<a href="/ortu/pembayaran/' + value.id + '" class="btn btn-sm btn-warning">Detail</a>' +
+                            actionButtons +
+                        '</div>'
+                    ]);
                 });
-            });
+
+                table.rows.add(rows).draw();
+            }
         });
-    </script>
+    });
+});
+
+</script>
+
 @endpush

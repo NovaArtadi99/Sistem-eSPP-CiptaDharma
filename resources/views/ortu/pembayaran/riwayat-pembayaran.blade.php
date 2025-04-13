@@ -1,4 +1,4 @@
-@extends('admin.admin-layout')
+@extends('admin.admin-layout-ortu')
 @section('content')
     <div class="row mb-3">
         <div class="col-md-4">
@@ -39,6 +39,7 @@
         <table class="table table-light" id="dataTableOrtu">
             <thead class="thead-light">
                 <tr>
+                    <th class="control"></th>
                     <th>No</th>
                     <th>No Invoice</th>
                     <th>Tanggal</th>
@@ -54,6 +55,7 @@
             <tbody>
                 @foreach ($riwayats as $index => $riwayat)
                     <tr>
+                        <td class="control"></td>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $riwayat->no_invoice }}</td>
                         <td>{{ $riwayat->tanggal_terbit }}</td>
@@ -129,7 +131,7 @@
     {{--  --}}
 @endsection
 @push('scripts')
-    <script>
+    {{-- <script>
 
         $(document).ready(function() {
 
@@ -214,5 +216,73 @@
                 });
             });
         });
-    </script>
+    </script> --}}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script>
+    var table;
+    table = $('#dataTableOrtu').DataTable({
+            responsive: {
+                details: {
+                    type: 'column',
+                    target: 0
+                }
+            },
+            columnDefs: [
+                { className: 'control', orderable: false, targets: 0 }
+            ],
+            ordering: true
+    });
+    $(document).ready(function () {
+        $('#btnFilter').click(function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: "{{ route('ortu.filterRiwayatPembayaran') }}",
+            type: "POST",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "filter_tahun": $('#filterTahun').val(),
+                "filter_bulan": $('#filterBulan').val(),
+            },
+            success: function(data) {
+                table.clear();
+                // Masukkan data dengan row.add
+                $.each(data, function(index, value) {
+                    let statusBtn = (value.status === 'Belum Lunas')
+                        ? `<a href="{{ route('pembayaran.verifikasi', '') }}/${value.id}" class="btn btn-sm btn-danger">Belum Lunas</a>`
+                        : `<span class="btn btn-sm btn-success">Lunas</span>`;
+
+                    let kuitansiBtn = (value.status === 'Lunas' && value.isSentKuitansi == 1)
+                        ? `<a href="{{ asset('bukti-pelunasan/') }}/${value.bukti_pelunasan}" class="btn btn-sm btn-secondary">Kuitansi</a>`
+                        : `<button disabled class="btn btn-sm btn-secondary">Kuitansi Belum ada</button>`;
+
+                    let detailBtn = `<a href="/ortu/riwayat-pembayaran/${value.id}" class="btn btn-sm btn-info">Detail</a>`;
+
+                    table.row.add([
+                        '', // Kolom collapse (control)
+                        index + 1,
+                        value.no_invoice,
+                        value.tanggal_terbit,
+                        value.siswa.nama,
+                        value.siswa.nis,
+                        value.siswa.angkatan,
+                        value.siswa.kelas,
+                        'Rp. ' + value.biaya.nominal.toLocaleString('id-ID'),
+                        `<div class="d-flex gap-1">${statusBtn}${kuitansiBtn}</div>`,
+                        detailBtn
+                    ]);
+                });
+
+                table.draw();
+            }
+        });
+    });
+
+    })
+</script>
 @endpush

@@ -22,25 +22,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
-    <style>
-        #layoutSidenav_content {
-            margin-left: 0 !important;
-            width: 100% !important;
-        }
-    </style>
+    
     
 </head>
 
 <body class="col-md-12">
-    @include('admin.partials.navbar')
+    @include('admin.partials.navbar-ortu')
     <div id="layoutSidenav">
-        {{-- @include('admin.partials.sidebar') --}}
+        @include('admin.partials.sidebar-ortu')
         <div id="layoutSidenav_content">
             <main style="min-height: 100vh;">
                 <div class="container-fluid px-4">
                     <h1 class="mt-4">{{ $judul ?? 'Dashboard' }}</h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Hai {{ Auth::user()->nama}}, Selamat datang di web E-SPP CHIPTA DHARMA</li>
+                        {{-- <li class="breadcrumb-item active">Hai {{ Auth::user()->nama}}, Selamat datang di web E-SPP CHIPTA DHARMA</li> --}}
                     </ol>
 
                     @include('admin.flash')

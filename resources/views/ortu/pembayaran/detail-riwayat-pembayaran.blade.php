@@ -1,4 +1,4 @@
-@extends('admin.admin-layout')
+@extends('admin.admin-layout-ortu')
 @section('content')
     <div class="card">
         <div class="card-body py-4">
