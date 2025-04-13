@@ -191,7 +191,16 @@
                                     '<span class="badge rounded-pill bg-danger">Belum Lunas</span>' :
                                     (value.status == 'Sedang Diverifikasi' ?
                                         '<span class="badge rounded-pill bg-warning">Sedang Diverifikasi</span>' :
-                                        '<span class="badge rounded-pill bg-success">Lunas</span>'
+                                        (value.status == 'Lebih' ?
+                                        '<span class="badge rounded-pill bg-success">Lunas Lebih</span>' :
+                                            (value.status == 'Kurang' ?
+                                            '<span class="badge rounded-pill bg-warning">Kurang</span>' :
+                                                (value.status == 'Verifikasi Kurang' ?
+                                                '<span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>' :
+                                                    '<span class="badge rounded-pill bg-success">Lunas</span>'
+                                                )
+                                            )
+                                        )
                                     )
                                 ) + '</td>' +
                                 '<td>' +
