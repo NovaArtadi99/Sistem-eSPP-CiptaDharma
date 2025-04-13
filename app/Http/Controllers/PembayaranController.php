@@ -14,7 +14,7 @@ class PembayaranController extends Controller
     public function index()
     {
         $data['judul'] = 'Pembayaran';
-        $data['pembayarans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->whereNotNull('bukti_pelunasan')->latest()->get();
+        $data['pembayarans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->whereNotNull('bukti_pelunasan')->orderByRaw("FIELD(status, 'Sedang Diverifikasi', 'Verifikasi Kurang', 'Belum Lunas', 'Kurang', 'Lebih', 'Lunas')")->get();
 
         // $data['kelas'] = User::role('SiswaOrangTua')->select('id', 'kelas')->get()->unique();
 
@@ -157,7 +157,7 @@ class PembayaranController extends Controller
         // dd($request->all());
         if (empty($request->filter_tahun) && empty($request->filter_bulan) && empty($request->filter_angkatan) && empty($request->filter_kelas)) {
             return Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])
-                ->whereNotNull('bukti_pelunasan')->get();
+                ->whereNotNull('bukti_pelunasan')->orderByRaw("FIELD(status, 'Sedang Diverifikasi', 'Verifikasi Kurang', 'Belum Lunas', 'Kurang', 'Lebih', 'Lunas')")->get();
         } else {
             return response()->json(
                 Tagihan::with(['biaya', 'siswa', 'penerbit', 'melunasi'])
@@ -177,7 +177,7 @@ class PembayaranController extends Controller
                             $query->where('kelas', $request->filter_kelas);
                         });
                     })
-                    ->latest()
+                    ->orderByRaw("FIELD(status, 'Sedang Diverifikasi', 'Verifikasi Kurang', 'Belum Lunas', 'Kurang', 'Lebih', 'Lunas')")
                     ->get()
             );
         }
