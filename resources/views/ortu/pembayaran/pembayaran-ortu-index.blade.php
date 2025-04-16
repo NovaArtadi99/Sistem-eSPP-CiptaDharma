@@ -128,7 +128,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-center">
-                        {{-- <img id="buktiImage" src="{{ asset('bukti-pelunasan/' . $pembayaran->bukti_lebih) }}" class="img-fluid" alt="Bukti Transfer"> --}}
+                        @if ($pembayaran->bukti_lebih == "kosong")
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvX7ghSY75PvK5S-RvhkFxNz88MWEALSBDvA&s"id="preview" width="100%" alt="">
+                        @endif
+                        @if ($pembayaran->bukti_lebih != "kosong")
+                        <img id="buktiImage" src="{{ asset('bukti-pelunasan/' . $pembayaran->bukti_lebih) }}" class="img-fluid" alt="Bukti Transfer">
+                        @endif
                         <form action="{{ route('validasi.lebih') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id" value="{{ $pembayaran->id }}">

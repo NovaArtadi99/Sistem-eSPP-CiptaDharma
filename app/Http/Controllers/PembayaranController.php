@@ -53,48 +53,69 @@ class PembayaranController extends Controller
     {
         $data_tagihan = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->where('id', $id)->first();
 
-        // $file = $request->file('file_bukti');
-        // $fileName = $file->getClientOriginalName();
-        // $fileSaved = $data_tagihan->siswa->nama.'-'.now()->format('Y-m-d H-i-s').'-'.$fileName;
-        // $file->move('bukti-pelunasan', $fileSaved);
+        if ($request->hasFile('file_bukti')) {
+            $file = $request->file('file_bukti');
+            $fileName = $file->getClientOriginalName();
+            $fileSaved = $data_tagihan->siswa->nama.'-'.now()->format('Y-m-d H-i-s').'-'.$fileName;
+            $file->move('bukti-pelunasan', $fileSaved);
 
-        $chatId = $data_tagihan ? $data_tagihan->siswa->chat_id : null;
-        if (!$chatId) {
-            $chatId = env('TELEGRAM_CHAT_ID');
+            $chatId = $data_tagihan ? $data_tagihan->siswa->chat_id : null;
+            if (!$chatId) {
+                $chatId = env('TELEGRAM_CHAT_ID');
+            }
+
+            $botToken = env('TELEGRAM_BOT_TOKEN');
+            $client = new Client();
+                    $response = $client->post("https://api.telegram.org/bot{$botToken}/sendPhoto", [
+                'multipart' => [
+                    [
+                        'name'     => 'chat_id',
+                        'contents' => $chatId
+                    ],
+                    [
+                        'name'     => 'photo',
+                        'contents' => fopen(public_path("bukti-pelunasan/{$fileSaved}"), 'r'),
+                        'filename' => $file->getClientOriginalName()
+                    ],
+                    [
+                        'name'     => 'caption',
+                        'contents' => "Halo {$data_tagihan->siswa->nama_wali}, Setelah dilakukan pengecekan data tagihan, nominal yang anda kirim lebih dari tagihan yang seharusnya Rp.". number_format($data_tagihan->biaya->nominal, 0, ',', '.').". Oleh karena itu dana kami kembalikan lagi sebesar Rp.". number_format($request->nominal, 0, ',', '.').", Terimakasih."
+                    ]
+                ]
+            ]);
+
+            $pembayaran = Tagihan::find($id);
+            $pembayaran->status = 'Lebih';
+            $pembayaran->nominal = $request->nominal;
+            $pembayaran->bukti_lebih = $fileSaved;
+            $pembayaran->isSentKuitansi = '1';
+            $pembayaran->tanggal_lunas = Carbon::now();
+            $pembayaran->user_melunasi_id = auth()->user()->id;
+            $pembayaran->save();
+        }else{
+
+            $chatId = $data_tagihan ? $data_tagihan->siswa->chat_id : null;
+            if (!$chatId) {
+                $chatId = env('TELEGRAM_CHAT_ID');
+            }
+
+            $botToken = env('TELEGRAM_BOT_TOKEN');
+            $client = new Client();
+            $response = $client->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
+            'form_params' => [
+                'chat_id' => $chatId,
+                'text' => "Halo {$data_tagihan->siswa->nama_wali}, Setelah dilakukan pengecekan data tagihan, nominal yang anda kirim lebih dari tagihan yang seharusnya Rp.". number_format($data_tagihan->biaya->nominal, 0, ',', '.').". Oleh karena itu dana kami kembalikan lagi sebesar Rp.". number_format($request->nominal, 0, ',', '.').", Terimakasih.",
+                ]
+            ]);
+            $pembayaran = Tagihan::find($id);
+            $pembayaran->status = 'Lebih';
+            $pembayaran->nominal = $request->nominal;
+            $pembayaran->bukti_lebih = "kosong";
+            $pembayaran->isSentKuitansi = '1';
+            $pembayaran->tanggal_lunas = Carbon::now();
+            $pembayaran->user_melunasi_id = auth()->user()->id;
+            $pembayaran->save();
         }
-
-        $botToken = env('TELEGRAM_BOT_TOKEN');
-        $client = new Client();
-        $response = $client->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
-                    'form_params' => [
-                        'chat_id' => $chatId,
-                        'text' => "Halo {$data_tagihan->siswa->nama_wali}, Setelah dilakukan pengecekan data tagihan, nominal yang anda kirim lebih dari tagihan yang seharusnya Rp.". number_format($data_tagihan->biaya->nominal, 0, ',', '.').". Oleh karena itu dana kami kembalikan lagi sebesar Rp.". number_format($request->nominal, 0, ',', '.').", Terimakasih.",
-        // $response = $client->post("https://api.telegram.org/bot{$botToken}/sendPhoto", [
-            // 'multipart' => [
-                // [
-                //     'name'     => 'chat_id',
-                //     'contents' => $chatId
-                // ],
-                // [
-                //     'name'     => 'photo',
-                //     'contents' => fopen(public_path("bukti-pelunasan/{$fileSaved}"), 'r'),
-                //     'filename' => $file->getClientOriginalName()
-                // ],
-                // [
-                //     'name'     => 'caption',
-                //     'contents' => "Halo {$data_tagihan->siswa->nama_wali}, Setelah dilakukan pengecekan data tagihan, nominal yang anda kirim lebih dari tagihan yang seharusnya Rp.". number_format($data_tagihan->biaya->nominal, 0, ',', '.').". Oleh karena itu dana kami kembalikan lagi sebesar Rp.". number_format($request->nominal, 0, ',', '.').", Terimakasih."
-                // ]
-            ]
-        ]);
-
-        $pembayaran = Tagihan::find($id);
-        $pembayaran->status = 'Lebih';
-        $pembayaran->nominal = $request->nominal;
-        $pembayaran->bukti_lebih = "kosong";
-        $pembayaran->isSentKuitansi = '1';
-        $pembayaran->tanggal_lunas = Carbon::now();
-        $pembayaran->user_melunasi_id = auth()->user()->id;
-        $pembayaran->save();
 
         return to_route('pembayaran.index')->with('success', 'Pesan tagihan nominal lebih sudah terkirim');
     }
