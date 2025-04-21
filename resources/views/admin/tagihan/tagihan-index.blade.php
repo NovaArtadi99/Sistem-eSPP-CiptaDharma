@@ -7,9 +7,12 @@
         </div>
 
         <div>
-            <a href="{{ route('tagihan.export') }}" class="btn btn-outline-success" id="btnExport">
+            <a href="#" class="btn btn-outline-success" id="btnExport">
                 <i class="fas fa-file-excel"></i> Export Excel
             </a>
+            {{-- <a href="{{ route('tagihan.export') }}" class="btn btn-outline-success" id="btnExport">
+                <i class="fas fa-file-excel"></i> Export Excel
+            </a> --}}
             <button class="btn btn-warning" id="btnImport" data-bs-toggle="modal" data-bs-target="#importModal">
                 <i class="fas fa-file-import"></i> Import Excel
             </button>
@@ -72,6 +75,7 @@
             <button type="submit" class="btn btn-outline-primary mt-4" id="btnFilter">
                 Filter
             </button>
+            <button class="btn btn-outline-danger mt-4" id="btnReset">Reset</button>
 
         </div>
     </div>
@@ -272,8 +276,123 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            if (localStorage.getItem("filter_angkatan")) {
+                $('#filterAngkatan').val(localStorage.getItem("filter_angkatan"));
+            }
+            if (localStorage.getItem("filter_kelas")) {
+                $('#filterKelas').val(localStorage.getItem("filter_kelas"));
+            }
+            if (localStorage.getItem("filter_tahun")) {
+                $('#filterTahun').val(localStorage.getItem("filter_tahun"));
+            }
+            if (localStorage.getItem("filter_bulan")) {
+                $('#filterBulan').val(localStorage.getItem("filter_bulan"));
+            }
+            $.ajax({
+                url: "{{ route('tagihan.filter') }}",
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "filter_tahun": $('#filterTahun').val(),
+                    "filter_bulan": $('#filterBulan').val(),
+                    "filter_angkatan": $('#filterAngkatan').val(),
+                    "filter_kelas": $('#filterKelas').val()
+                },
+                success: function(data) {
+                    $('#dataTables').DataTable().destroy();
+                    $('#dataTables tbody').empty();
+
+                    $.each(data, function(index, value) {
+                        $('#dataTables tbody').append('<tr>' +
+                            '<td>' + (index + 1) + '</td>' +
+                            '<td>' + value.no_invoice + '</td>' +
+                            '<td>' + value.keterangan + '</td>' +
+                            '<td>' + value.siswa.nis + '</td>' +
+                            '<td>' + 'Rp. ' + value.biaya.nominal + '</td>' +
+                            '<td>' + value.bulan + '</td>' +
+                            '<td>' + value.tahun + '</td>' +
+                            '<td>' +
+                            (value.status == 'Belum Lunas' ?
+                                '<span class="badge rounded-pill bg-danger">Belum Lunas</span>' :
+                                (value.status == 'Sedang Diverifikasi' ?
+                                    '<span class="badge rounded-pill bg-warning">Sedang Diverifikasi</span>' :
+                                    (value.status == 'Lebih' ?
+                                    '<span class="badge rounded-pill bg-success">Lunas Lebih</span>' :
+                                        (value.status == 'Kurang' ?
+                                        '<span class="badge rounded-pill bg-warning">Kurang</span>' :
+                                            (value.status == 'Verifikasi Kurang' ?
+                                            '<span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>' :
+                                                '<span class="badge rounded-pill bg-success">Lunas</span>'
+                                            )
+                                        )
+                                    )
+                                )
+                            ) +
+                            '</td>' +
+                            '<td>' +
+                            '<div class="d-flex gap-1">' +
+                            '<button class="btn btn-block btn-info my-1 btnDetailTagihan" data-id="' +
+                            value.id +
+                            '" data-bs-toggle="modal" data-bs-target="#detailModal">Detail</button>' +
+                            '<a hidden href="/tagihan/' + value.id +
+                            '/edit" class="btn btn-warning my-1">Edit</a>'+
+
+                            (value.status == 'Belum Lunas' ? '<form action="/tagihan/' + value.id +
+                            '" method="POST" style="display:inline;">' +
+                            '@csrf' +
+                            '@method('DELETE')' +
+                            '<button type="submit" class="btn btn-danger m-1" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data tagihan keluar ini?\')">Hapus</button>' +
+                            '</form>' : '') +
+
+                            (value.status == 'Belum Lunas' ?
+                                '<button hidden class="btn btn-dark my-1 btnSendInvoice ' +
+                                (value.isSentKuitansi != '1' ? '' :
+                                    'disabled') + '" data-id="' + value.id +
+                                '">Kirim Invoice</button>' :
+                                '<a hidden href="' +
+                                "{{ route('tagihan.lihatKuitansi', '" + value.id + "') }}" +
+                                '" class="btn btn-outline-dark mx-1 btnLihatKuitansi ' +
+                                (value.isSentKuitansi != '1' ? '' :
+                                    'disabled') + '" data-id="' + value.id +
+                                '">Lihat Kutansi</a>'
+                            ) +
+                            '</div>' +
+                            '</td>' +
+                            '</tr>');
+                    });
+
+
+                    $('#dataTables').DataTable({
+                            "paging": true,
+                            "lengthMenu": [10, 25, 50, 100], // Pilihan entries per page
+                            "pageLength": 10, // Default 10 entries per page
+                            "ordering": true, // Nonaktifkan sorting jika tidak diperlukan
+                            "searching": true, // Aktifkan fitur pencarian
+                            "info": true, // Tampilkan informasi jumlah data
+                            "language": {
+                                "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                                "zeroRecords": "Tidak ada data ditemukan",
+                                "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                                "infoEmpty": "Tidak ada data tersedia",
+                                "infoFiltered": "(disaring dari _MAX_ total data)",
+                                "search": "Cari:",
+                                "paginate": {
+                                    "first": "<<",
+                                    "last": ">>",
+                                    "next": ">",
+                                    "previous": "<"
+                                }
+                            }
+                        });
+                }
+            });
+
             $('#btnFilter').click(function(e) {
                 e.preventDefault();
+                localStorage.setItem("filter_angkatan", $('#filterAngkatan').val());
+                localStorage.setItem("filter_kelas", $('#filterKelas').val());
+                localStorage.setItem("filter_tahun", $('#filterTahun').val());
+                localStorage.setItem("filter_bulan", $('#filterBulan').val());
                 $.ajax({
                     url: "{{ route('tagihan.filter') }}",
                     type: "POST",
@@ -302,7 +421,16 @@
                                     '<span class="badge rounded-pill bg-danger">Belum Lunas</span>' :
                                     (value.status == 'Sedang Diverifikasi' ?
                                         '<span class="badge rounded-pill bg-warning">Sedang Diverifikasi</span>' :
-                                        '<span class="badge rounded-pill bg-success">Lunas</span>'
+                                        (value.status == 'Lebih' ?
+                                        '<span class="badge rounded-pill bg-success">Lunas Lebih</span>' :
+                                            (value.status == 'Kurang' ?
+                                            '<span class="badge rounded-pill bg-warning">Kurang</span>' :
+                                                (value.status == 'Verifikasi Kurang' ?
+                                                '<span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>' :
+                                                    '<span class="badge rounded-pill bg-success">Lunas</span>'
+                                                )
+                                            )
+                                        )
                                     )
                                 ) +
                                 '</td>' +
@@ -311,20 +439,21 @@
                                 '<button class="btn btn-block btn-info my-1 btnDetailTagihan" data-id="' +
                                 value.id +
                                 '" data-bs-toggle="modal" data-bs-target="#detailModal">Detail</button>' +
-                                '<a href="/tagihan/' + value.id +
-                                '/edit" class="btn btn-warning my-1">Edit</a>' +
-                                '<form action="/tagihan/' + value.id +
+                                '<a hidden href="/tagihan/' + value.id +
+                                '/edit" class="btn btn-warning my-1">Edit</a>'+
+
+                                (value.status == 'Belum Lunas' ? '<form action="/tagihan/' + value.id +
                                 '" method="POST" style="display:inline;">' +
                                 '@csrf' +
                                 '@method('DELETE')' +
                                 '<button type="submit" class="btn btn-danger m-1" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data tagihan keluar ini?\')">Hapus</button>' +
-                                '</form>' +
+                                '</form>' : '') +
                                 (value.status == 'Belum Lunas' ?
-                                    '<button class="btn btn-dark my-1 btnSendInvoice ' +
+                                    '<button hidden class="btn btn-dark my-1 btnSendInvoice ' +
                                     (value.isSentKuitansi != '1' ? '' :
                                         'disabled') + '" data-id="' + value.id +
                                     '">Kirim Invoice</button>' :
-                                    '<a href="' +
+                                    '<a hidden href="' +
                                     "{{ route('tagihan.lihatKuitansi', '" + value.id + "') }}" +
                                     '" class="btn btn-outline-dark mx-1 btnLihatKuitansi ' +
                                     (value.isSentKuitansi != '1' ? '' :
@@ -341,7 +470,7 @@
                                 "paging": true,
                                 "lengthMenu": [10, 25, 50, 100], // Pilihan entries per page
                                 "pageLength": 10, // Default 10 entries per page
-                                "ordering": false, // Nonaktifkan sorting jika tidak diperlukan
+                                "ordering": true, // Nonaktifkan sorting jika tidak diperlukan
                                 "searching": true, // Aktifkan fitur pencarian
                                 "info": true, // Tampilkan informasi jumlah data
                                 "language": {
@@ -422,5 +551,40 @@
 
             });
         });
+
+        $('#btnReset').click(function() {
+            localStorage.removeItem("filter_angkatan");
+            localStorage.removeItem("filter_kelas");
+            localStorage.removeItem("filter_tahun");
+            localStorage.removeItem("filter_bulan");
+            $('#filterAngkatan').val('');
+            $('#filterKelas').val('');
+            $('#filterTahun').val('');
+            $('#filterBulan').val('');
+        });
     </script>
+
+<script>
+    document.getElementById('btnExport').addEventListener('click', function (e) {
+        e.preventDefault(); // Cegah link langsung jalan
+
+        // Ambil nilai dari filter
+        const angkatan = document.getElementById('filterAngkatan').value;
+        const kelas = document.getElementById('filterKelas').value;
+        const tahun = document.getElementById('filterTahun').value;
+        const bulan = document.getElementById('filterBulan').value;
+
+        // Susun parameter query string
+        const query = new URLSearchParams({
+            filter_angkatan: angkatan,
+            filter_kelas: kelas,
+            filter_tahun: tahun,
+            filter_bulan: bulan
+        }).toString();
+
+        // Redirect ke route export dengan parameter GET
+        window.location.href = `{{ route('tagihan.export') }}?${query}`;
+    });
+</script>
+
 @endpush

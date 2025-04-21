@@ -87,10 +87,14 @@ class LaporanSPPController extends Controller
     }
 
 
-    public function export()
+    public function export(Request $request)
     {
+        $filterTahun = $request->query('filter_tahun');
+        $filterBulan = $request->query('filter_bulan');
+        $filterTanggalAwal = $request->query('filter_tanggal_awal');
+        $filterTanggalAkhir = $request->query('filter_tanggal_akhir');
         $tgl = date('d-m-Y_H-i-s');
-        return Excel::download(new LaporanSPPExport, 'laporan_spp_' . $tgl . '.xlsx');
+        return Excel::download(new LaporanSPPExport($filterTahun, $filterBulan, $filterTanggalAwal, $filterTanggalAkhir), 'laporan_spp_' . $tgl . '.xlsx');
     }
 
 

@@ -102,7 +102,7 @@ class BiayaController extends Controller
 
 
         if(empty($request->filter_tahun) && empty($request->filter_bulan)){
-           return Biaya::get();
+           return Biaya::latest()->get();
         } else {
             return response()->json(
                 Biaya::when(!empty($request->filter_tahun), function ($query) use ($request) {
@@ -111,7 +111,7 @@ class BiayaController extends Controller
                     ->when(!empty($request->filter_bulan), function ($query) use ($request) {
                         $query->where('bulan', $request->filter_bulan);
                     })
-                    ->get()
+                    ->latest()->get()
             );
         }
 

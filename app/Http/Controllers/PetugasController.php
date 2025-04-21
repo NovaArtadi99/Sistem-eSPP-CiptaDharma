@@ -11,7 +11,7 @@ class PetugasController extends Controller
     public function index()
     {
         $data['judul'] = 'Data Petugas';
-        $data['petugas'] = User::role(['Petugas', 'KepalaSekolah'])->latest()->get();
+        $data['petugas'] = User::role(['Petugas', 'KepalaSekolah'])->oldest()->get();
 
         return view('admin.petugas.petugas-index', $data);
     }

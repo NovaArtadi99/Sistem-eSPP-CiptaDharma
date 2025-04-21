@@ -36,6 +36,7 @@
             <button type="button" class="btn btn-outline-primary mt-4" id="btnFilter">
                 Filter
             </button>
+            <button class="btn btn-outline-danger mt-4" id="btnReset">Reset</button>
 
         </div>
 
@@ -134,7 +135,84 @@
         <script>
             $(document).ready(function() {
 
+                if (localStorage.getItem("filter_tahun_biaya")) {
+                    $('#filterTahun').val(localStorage.getItem("filter_tahun_biaya"));
+                }
+                if (localStorage.getItem("filter_bulan")) {
+                    $('#filterBulan').val(localStorage.getItem("filter_bulan"));
+                }
+                $.ajax({
+                        url: "{{ route('biaya.filter') }}",
+                        type: "POST",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "filter_tahun": $('#filterTahun').val(),
+                            "filter_bulan": $('#filterBulan').val()
+                        },
+                        success: function(data) {
+                            $('#dataTables').DataTable().destroy();
+                            $('#dataTables tbody').empty();
+
+                            $.each(data, function(index, value) {
+                                $('#dataTables tbody').append('<tr>' +
+                                    '<td>' + (index + 1) + '</td>' +
+                                    '<td>' + value.nama_biaya + '</td>' +
+                                    '<td>' + 'Rp. ' + value.nominal.toLocaleString(
+                                        'id-ID') + '</td>' +
+                                    '<td>' + value.nama_nominal + '</td>' +
+                                    '<td>' + value.tahun + '</td>' +
+                                    '<td>' + value.bulan + '</td>' +
+                                    '<td>' + value.level + '</td>' +
+                                    '<td>' +
+                                    '<button class="btn btn-block btn-info my-1 btnDetailBiaya" data-bs-toggle="modal" data-bs-target="#detailModal" data-id="' +
+                                    value.id +
+                                    '">Detail</button>' +
+                                    '<a href="biaya/' + value.id +
+                                    '/edit" class="btn btn-warning mx-1">Edit</a>' +
+
+                                    '<form action="biaya/' + value.id +
+                                    '" method="POST" style="display:inline;">' +
+                                    '@csrf' +
+                                    '@method('DELETE')' +
+                                    '<button type="submit" class="btn btn-danger my-1" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data biaya ini?\')">Hapus</button>' +
+                                    '</form>' +
+                                    '</td>' +
+                                    '</tr>');
+                            });
+
+
+
+                            $('#dataTables').DataTable({
+                                "paging": true,
+                                "lengthMenu": [10, 25, 50, 100], // Pilihan entries per page
+                                "pageLength": 10, // Default 10 entries per page
+                                "ordering": true, // Nonaktifkan sorting jika tidak diperlukan
+                                "searching": true, // Aktifkan fitur pencarian
+                                "info": true, // Tampilkan informasi jumlah data
+                                "language": {
+                                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                                    "zeroRecords": "Tidak ada data ditemukan",
+                                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                                    "infoEmpty": "Tidak ada data tersedia",
+                                    "infoFiltered": "(disaring dari _MAX_ total data)",
+                                    "search": "Cari:",
+                                    "paginate": {
+                                        "first": "<<",
+                                        "last": ">>",
+                                        "next": ">",
+                                        "previous": "<"
+                                    }
+                                }
+                            });
+                        }
+
+
+
+                    });
+
                 $('#btnFilter').click(function(e) {
+                    localStorage.setItem("filter_tahun_biaya", $('#filterTahun').val());
+                    localStorage.setItem("filter_bulan", $('#filterBulan').val());
                     $.ajax({
                         url: "{{ route('biaya.filter') }}",
                         type: "POST",
@@ -180,7 +258,7 @@
                                 "paging": true,
                                 "lengthMenu": [10, 25, 50, 100], // Pilihan entries per page
                                 "pageLength": 10, // Default 10 entries per page
-                                "ordering": false, // Nonaktifkan sorting jika tidak diperlukan
+                                "ordering": true, // Nonaktifkan sorting jika tidak diperlukan
                                 "searching": true, // Aktifkan fitur pencarian
                                 "info": true, // Tampilkan informasi jumlah data
                                 "language": {
@@ -230,6 +308,13 @@
                             $('#detail-kelas').val(response.level);
                         }
                     });
+                });
+
+                $('#btnReset').click(function() {
+                    localStorage.removeItem("filter_tahun_biaya");
+                    localStorage.removeItem("filter_bulan");
+                    $('#filterTahun').val('');
+                    $('#filterBulan').val('');
                 });
             });
         </script>

@@ -16,7 +16,7 @@ class SiswaController extends Controller
     public function index()
     {
         $data['judul'] = 'Data Siswa';
-        $data['siswas'] = User::role('SiswaOrangTua')->latest()->get();
+        $data['siswas'] = User::role('SiswaOrangTua')->oldest()->get();
 
         return view('admin.siswa.siswa-index', $data);
     }
@@ -158,15 +158,17 @@ class SiswaController extends Controller
                 ->when($request->filter_kelas != null, function ($query) use ($request) {
                     return $query->where('kelas', $request->filter_kelas);
                 })
-                ->get()
+                ->latest()->get()
         );
     }
 
 
-    public function export()
+    public function export(Request $request)
     {
+        $angkatan = $request->get('filter_angkatan');
+        $kelas = $request->get('filter_kelas');
         $tgl = date('d-m-Y_H-i-s');
-        return Excel::download(new SiswaExport, 'siswa_' . $tgl . '.xlsx');
+        return Excel::download(new SiswaExport($angkatan, $kelas), 'siswa_' . $tgl . '.xlsx');
     }
 
 

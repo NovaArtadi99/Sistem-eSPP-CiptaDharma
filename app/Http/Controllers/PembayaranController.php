@@ -14,7 +14,7 @@ class PembayaranController extends Controller
     public function index()
     {
         $data['judul'] = 'Pembayaran';
-        $data['pembayarans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->whereNotNull('bukti_pelunasan')->latest()->get();
+        $data['pembayarans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->whereNotNull('bukti_pelunasan')->orderByRaw("FIELD(status, 'Sedang Diverifikasi', 'Verifikasi Kurang', 'Belum Lunas', 'Kurang', 'Lebih', 'Lunas')")->get();
 
         // $data['kelas'] = User::role('SiswaOrangTua')->select('id', 'kelas')->get()->unique();
 
@@ -53,44 +53,69 @@ class PembayaranController extends Controller
     {
         $data_tagihan = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->where('id', $id)->first();
 
-        $file = $request->file('file_bukti');
-        $fileName = $file->getClientOriginalName();
-        $fileSaved = $data_tagihan->siswa->nama.'-'.now()->format('Y-m-d H-i-s').'-'.$fileName;
-        $file->move('bukti-pelunasan', $fileSaved);
+        if ($request->hasFile('file_bukti')) {
+            $file = $request->file('file_bukti');
+            $fileName = $file->getClientOriginalName();
+            $fileSaved = $data_tagihan->siswa->nama.'-'.now()->format('Y-m-d H-i-s').'-'.$fileName;
+            $file->move('bukti-pelunasan', $fileSaved);
 
-        $chatId = $data_tagihan ? $data_tagihan->siswa->chat_id : null;
-        if (!$chatId) {
-            $chatId = env('TELEGRAM_CHAT_ID');
-        }
+            $chatId = $data_tagihan ? $data_tagihan->siswa->chat_id : null;
+            if (!$chatId) {
+                $chatId = env('TELEGRAM_CHAT_ID');
+            }
 
-        $botToken = env('TELEGRAM_BOT_TOKEN');
-        $client = new Client();
-        $response = $client->post("https://api.telegram.org/bot{$botToken}/sendPhoto", [
-            'multipart' => [
-                [
-                    'name'     => 'chat_id',
-                    'contents' => $chatId
-                ],
-                [
-                    'name'     => 'photo',
-                    'contents' => fopen(public_path("bukti-pelunasan/{$fileSaved}"), 'r'),
-                    'filename' => $file->getClientOriginalName()
-                ],
-                [
-                    'name'     => 'caption',
-                    'contents' => "Halo {$data_tagihan->siswa->nama_wali}, Setelah dilakukan pengecekan data tagihan, nominal yang anda kirim lebih dari tagihan yang seharusnya Rp.". number_format($data_tagihan->biaya->nominal, 0, ',', '.').". Oleh karena itu dana kami kembalikan lagi sebesar Rp.". number_format($request->nominal, 0, ',', '.').", Terimakasih."
+            $botToken = env('TELEGRAM_BOT_TOKEN');
+            $client = new Client();
+                    $response = $client->post("https://api.telegram.org/bot{$botToken}/sendPhoto", [
+                'multipart' => [
+                    [
+                        'name'     => 'chat_id',
+                        'contents' => $chatId
+                    ],
+                    [
+                        'name'     => 'photo',
+                        'contents' => fopen(public_path("bukti-pelunasan/{$fileSaved}"), 'r'),
+                        'filename' => $file->getClientOriginalName()
+                    ],
+                    [
+                        'name'     => 'caption',
+                        'contents' => "Halo {$data_tagihan->siswa->nama_wali}, Setelah dilakukan pengecekan data tagihan, nominal yang anda kirim lebih dari tagihan yang seharusnya Rp.". number_format($data_tagihan->biaya->nominal, 0, ',', '.').". Oleh karena itu dana kami kembalikan lagi sebesar Rp.". number_format($request->nominal, 0, ',', '.').", Terimakasih."
+                    ]
                 ]
-            ]
-        ]);
+            ]);
 
-        $pembayaran = Tagihan::find($id);
-        $pembayaran->status = 'Lebih';
-        $pembayaran->nominal = $request->nominal;
-        $pembayaran->bukti_lebih = $fileSaved;
-        $pembayaran->isSentKuitansi = '1';
-        $pembayaran->tanggal_lunas = Carbon::now();
-        $pembayaran->user_melunasi_id = auth()->user()->id;
-        $pembayaran->save();
+            $pembayaran = Tagihan::find($id);
+            $pembayaran->status = 'Lebih';
+            $pembayaran->nominal = $request->nominal;
+            $pembayaran->bukti_lebih = $fileSaved;
+            $pembayaran->isSentKuitansi = '1';
+            $pembayaran->tanggal_lunas = Carbon::now();
+            $pembayaran->user_melunasi_id = auth()->user()->id;
+            $pembayaran->save();
+        }else{
+
+            $chatId = $data_tagihan ? $data_tagihan->siswa->chat_id : null;
+            if (!$chatId) {
+                $chatId = env('TELEGRAM_CHAT_ID');
+            }
+
+            $botToken = env('TELEGRAM_BOT_TOKEN');
+            $client = new Client();
+            $response = $client->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
+            'form_params' => [
+                'chat_id' => $chatId,
+                'text' => "Halo {$data_tagihan->siswa->nama_wali}, Setelah dilakukan pengecekan data tagihan, nominal yang anda kirim lebih dari tagihan yang seharusnya Rp.". number_format($data_tagihan->biaya->nominal, 0, ',', '.').". Oleh karena itu dana kami kembalikan lagi sebesar Rp.". number_format($request->nominal, 0, ',', '.').", Terimakasih.",
+                ]
+            ]);
+            $pembayaran = Tagihan::find($id);
+            $pembayaran->status = 'Lebih';
+            $pembayaran->nominal = $request->nominal;
+            $pembayaran->bukti_lebih = "kosong";
+            $pembayaran->isSentKuitansi = '1';
+            $pembayaran->tanggal_lunas = Carbon::now();
+            $pembayaran->user_melunasi_id = auth()->user()->id;
+            $pembayaran->save();
+        }
 
         return to_route('pembayaran.index')->with('success', 'Pesan tagihan nominal lebih sudah terkirim');
     }
@@ -153,7 +178,7 @@ class PembayaranController extends Controller
         // dd($request->all());
         if (empty($request->filter_tahun) && empty($request->filter_bulan) && empty($request->filter_angkatan) && empty($request->filter_kelas)) {
             return Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])
-                ->whereNotNull('bukti_pelunasan')->get();
+                ->whereNotNull('bukti_pelunasan')->orderByRaw("FIELD(status, 'Sedang Diverifikasi', 'Verifikasi Kurang', 'Belum Lunas', 'Kurang', 'Lebih', 'Lunas')")->get();
         } else {
             return response()->json(
                 Tagihan::with(['biaya', 'siswa', 'penerbit', 'melunasi'])
@@ -173,7 +198,7 @@ class PembayaranController extends Controller
                             $query->where('kelas', $request->filter_kelas);
                         });
                     })
-                    ->latest()
+                    ->orderByRaw("FIELD(status, 'Sedang Diverifikasi', 'Verifikasi Kurang', 'Belum Lunas', 'Kurang', 'Lebih', 'Lunas')")
                     ->get()
             );
         }

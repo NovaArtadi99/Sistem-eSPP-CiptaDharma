@@ -26,7 +26,7 @@
         </div>
 
         <div class="col">
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label for="">Bukti Pelunasan</label>
                 @if (empty($pembayaran->bukti_pelunasan))
                     <h3>Orang tua belum melakukan pembayaran</h3>
@@ -34,7 +34,7 @@
                     <img src="{{ asset('bukti-pelunasan/' . $pembayaran->bukti_pelunasan) }}" id="preview" width="100%"
                         alt="" class="img-thumbnail shadow">
                 @endif
-            </div>
+            </div> --}}
 
             <div class="mb-3">
                 <label for="">No Invoice</label>

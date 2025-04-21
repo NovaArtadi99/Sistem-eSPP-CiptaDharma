@@ -1,4 +1,4 @@
-@extends('admin.admin-layout')
+@extends('admin.admin-layout-ortu')
 @section('content')
     <div class="card">
         <div class="card-body py-4">
@@ -17,6 +17,12 @@
                         <span class="badge bg-success rounded-pill text-bg-success px-3">Sukses</span>
                     @elseif($pembayaran->status == 'Sedang Diverifikasi')
                         <span class="badge bg-warning  rounded-pill text-bg-warning px-3">Diproses</span>
+                    @elseif($pembayaran->status == 'Verifikasi Kurang')
+                        <span class="badge bg-warning  rounded-pill text-bg-warning px-3">Verifikasi Kurang</span>
+                    @elseif($pembayaran->status == 'Kurang')
+                        <span class="badge bg-warning  rounded-pill text-bg-warning px-3">Kurang</span>
+                    @elseif($pembayaran->status == 'Lebih')
+                        <span class="badge bg-warning  rounded-pill text-bg-warning px-3">Lebih</span>
                     @else
                         <span class="badge bg-danger  rounded-pill text-bg-danger px-3">Belum Lunas</span>
                     @endif

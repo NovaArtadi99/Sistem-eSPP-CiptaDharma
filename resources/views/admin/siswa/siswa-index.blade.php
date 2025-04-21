@@ -16,8 +16,11 @@
                     </div>
 
                 </form>
-                <a href="{{ route('siswa.export') }}" class="btn btn-outline-success m-1 d-xl-inline d-lg-inline d-block "
+                {{-- <a href="{{ route('siswa.export') }}" class="btn btn-outline-success m-1 d-xl-inline d-lg-inline d-block "
                     id="btnExport">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a> --}}
+                <a href="#" class="btn btn-outline-success" id="btnExport">
                     <i class="fas fa-file-excel"></i> Export Excel
                 </a>
                 <a href="#" class="btn btn-warning m-1 d-xl-inline d-lg-inline d-block" id="btnImport"
@@ -274,7 +277,7 @@
                         "paging": true,
                         "lengthMenu": [10, 25, 50, 100], // Pilihan entries per page
                         "pageLength": 10, // Default 10 entries per page
-                        "ordering": false, // Nonaktifkan sorting jika tidak diperlukan
+                        "ordering": true, // Nonaktifkan sorting jika tidak diperlukan
                         "searching": true, // Aktifkan fitur pencarian
                         "info": true, // Tampilkan informasi jumlah data
                         "language": {
@@ -342,7 +345,7 @@
                         "paging": true,
                         "lengthMenu": [10, 25, 50, 100], // Pilihan entries per page
                         "pageLength": 10, // Default 10 entries per page
-                        "ordering": false, // Nonaktifkan sorting jika tidak diperlukan
+                        "ordering": true, // Nonaktifkan sorting jika tidak diperlukan
                         "searching": true, // Aktifkan fitur pencarian
                         "info": true, // Tampilkan informasi jumlah data
                         "language": {
@@ -400,5 +403,23 @@
             $('#filterKelas').val('');
         });
 
+    </script>
+    <script>
+        document.getElementById('btnExport').addEventListener('click', function (e) {
+            e.preventDefault(); // Cegah link langsung jalan
+    
+            // Ambil nilai dari filter
+            const angkatan = document.getElementById('filterAngkatan').value;
+            const kelas = document.getElementById('filterKelas').value;
+    
+            // Susun parameter query string
+            const query = new URLSearchParams({
+                filter_angkatan: angkatan,
+                filter_kelas: kelas
+            }).toString();
+    
+            // Redirect ke route export dengan parameter GET
+            window.location.href = `{{ route('siswa.export') }}?${query}`;
+        });
     </script>
 @endpush

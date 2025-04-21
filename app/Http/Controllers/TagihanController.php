@@ -25,7 +25,7 @@ class TagihanController extends Controller
     public function index()
     {
         $data['judul'] = 'Tagihan';
-        $data['tagihans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->latest()->get();
+        $data['tagihans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->oldest()->get();
         $data['kelas'] = User::role('SiswaOrangTua')->select('id', 'kelas')->get()->unique();
 
 
@@ -213,10 +213,14 @@ class TagihanController extends Controller
     }
 
 
-    public function export()
+    public function export(Request $request)
     {
+        $angkatan = $request->get('filter_angkatan');
+        $kelas = $request->get('filter_kelas');
+        $tahun = $request->get('filter_tahun');
+        $bulan = $request->get('filter_bulan');
         $tgl = date('d-m-Y_H-i-s');
-        return Excel::download(new TagihanExport, 'data_tagihan_' . $tgl . '.xlsx');
+        return Excel::download(new TagihanExport($angkatan, $kelas, $tahun, $bulan), 'data_tagihan_' . $tgl . '.xlsx');
     }
 
 
@@ -233,7 +237,7 @@ class TagihanController extends Controller
     {
         // dd($request->all());
         if (empty($request->filter_tahun) && empty($request->filter_bulan) && empty($request->filter_angkatan) && empty($request->filter_kelas)) {
-            return Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->get();
+            return Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->latest()->get();
         } else {
             return response()->json(
                 Tagihan::with(['biaya', 'siswa', 'penerbit', 'melunasi'])
@@ -252,7 +256,7 @@ class TagihanController extends Controller
                             $query->where('kelas', $request->filter_kelas);
                         });
                     })
-                    ->get()
+                    ->latest()->get()
             );
         }
     }

@@ -17,12 +17,35 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
     private $counter = 0;
 
     use Exportable;
+    protected $tahun;
+    protected $bulan;
+    protected $tanggalAwal;
+    protected $tanggalAkhir;
+
+    public function __construct($tahun = null, $bulan = null, $tanggalAwal = null, $tanggalAkhir = null)
+    {
+        $this->tahun = $tahun;
+        $this->bulan = $bulan;
+        $this->tanggalAwal = $tanggalAwal;
+        $this->tanggalAkhir = $tanggalAkhir;
+    }
 
     public function collection()
     {
-        $tagihan = Tagihan::with('siswa')->latest()->get();
+        $tagihan = Tagihan::with('siswa')->where('status', 'Lunas');
+        if ($this->tahun) {
+            $tagihan->where('tahun', $this->tahun);
+        }
 
-        return $tagihan;
+        if ($this->bulan) {
+            $tagihan->where('bulan', $this->bulan);
+        }
+
+        if ($this->tanggalAwal && $this->tanggalAkhir) {
+            $tagihan->whereBetween('tanggal_lunas', [$this->tanggalAwal, $this->tanggalAkhir]);
+        }
+
+        return $tagihan->get();
     }
 
 

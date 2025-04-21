@@ -1,4 +1,4 @@
-@extends('admin.admin-layout')
+@extends('admin.admin-layout-ortu')
 @section('content')
     <ul class="nav nav-tabs my-3" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">

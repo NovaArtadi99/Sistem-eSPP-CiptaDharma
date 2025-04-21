@@ -98,6 +98,12 @@
                                 <button class="btn btn-danger">Belum Lunas</button>
                             @elseif ($siswa->status == 'Sedang Diverifikasi')
                                 <button class="btn btn-warning">Sedang Diverifikasi</button>
+                            @elseif ($siswa->status == 'Lebih')
+                                <span class="badge rounded-pill bg-success">Lunas Lebih</span>
+                            @elseif ($siswa->status == 'Kurang')
+                                <span class="badge rounded-pill bg-warning">Kurang</span>
+                            @elseif ($siswa->status == 'Verifikasi Kurang')
+                                <span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>
                             @else
                                 <button class="btn btn-success">Lunas</button>
                             @endif
@@ -230,11 +236,21 @@
                                 '<td>' + value.siswa.nis + '</td>' +
                                 '<td>' + value.siswa.angkatan + '</td>' +
                                 '<td>' + value.siswa.kelas + '</td>' +
-                                '<td>' + (value.status == 'Belum Lunas' ?
-                                    '<button class="btn btn-danger">Belum Lunas</button>' :
+                                '<td>' + 
+                                (value.status == 'Belum Lunas' ?
+                                    '<span class="badge rounded-pill bg-danger">Belum Lunas</span>' :
                                     (value.status == 'Sedang Diverifikasi' ?
-                                        '<button class="btn btn-warning">Sedang Diverifikasi</button>' :
-                                        '<button class="btn btn-success">Lunas</button>'
+                                        '<span class="badge rounded-pill bg-warning">Sedang Diverifikasi</span>' :
+                                        (value.status == 'Lebih' ?
+                                        '<span class="badge rounded-pill bg-success">Lunas Lebih</span>' :
+                                            (value.status == 'Kurang' ?
+                                            '<span class="badge rounded-pill bg-warning">Kurang</span>' :
+                                                (value.status == 'Verifikasi Kurang' ?
+                                                '<span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>' :
+                                                    '<span class="badge rounded-pill bg-success">Lunas</span>'
+                                                )
+                                            )
+                                        )
                                     )
                                 ) + '</td>' +
                                 '<td> <div class="d-grid">' +

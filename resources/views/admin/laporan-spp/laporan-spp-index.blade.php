@@ -48,7 +48,10 @@
         <div class="col-md-12">
             <div class="d-flex justify-content-end my-4">
                 <div>
-                    <a href="{{ route('laporanSpp.export') }}" class="btn btn-outline-success" id="btnExport">
+                    {{-- <a href="{{ route('laporanSpp.export') }}" class="btn btn-outline-success" id="btnExport">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </a> --}}
+                    <a href="#" class="btn btn-outline-success" id="btnExport">
                         <i class="fas fa-file-excel"></i> Export Excel
                     </a>
                     {{-- <a href="{{ route('laporanSpp.import') }}" class="btn btn-warning" id="btnImport" data-bs-toggle="modal"
@@ -195,6 +198,26 @@
 @endsection
 
 @push('scripts')
+<script>
+    document.getElementById('btnExport').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const tahun = document.getElementById('filterTahun').value;
+        const bulan = document.getElementById('filterBulan').value;
+        const tglAwal = document.getElementById('filterTanggalAwal').value;
+        const tglAkhir = document.getElementById('filterTanggalAkhir').value;
+
+        const params = new URLSearchParams();
+
+        if (tahun) params.append('filter_tahun', tahun);
+        if (bulan) params.append('filter_bulan', bulan);
+        if (tglAwal) params.append('filter_tanggal_awal', tglAwal);
+        if (tglAkhir) params.append('filter_tanggal_akhir', tglAkhir);
+
+        const url = "{{ route('laporanSpp.export') }}" + "?" + params.toString();
+        window.location.href = url;
+    });
+</script>
     <script>
         $(document).ready(function() {
             $('#btnFilter').click(function(e) {

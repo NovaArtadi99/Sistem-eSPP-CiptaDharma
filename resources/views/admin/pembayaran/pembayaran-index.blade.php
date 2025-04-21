@@ -87,6 +87,8 @@
                                 <span class="badge rounded-pill bg-success">Lunas Lebih</span>
                             @elseif ($pembayaran->status == 'Kurang')
                                 <span class="badge rounded-pill bg-warning">Kurang</span>
+                            @elseif ($pembayaran->status == 'Verifikasi Kurang')
+                                <span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>
                             @else
                                 <span class="badge rounded-pill bg-success">Lunas</span>
                             @endif
@@ -100,9 +102,8 @@
 
                                 @if (
                                     $pembayaran->bukti_pelunasan != null &&
-                                        ($pembayaran->status == 'Sedang Diverifikasi' ||
-                                            $pembayaran->status == 'Kurang' ||
-                                            $pembayaran->status == 'Belum Lunas'))
+                                        ($pembayaran->status == 'Sedang Diverifikasi' || $pembayaran->status == 'Kurang' ||
+                                            $pembayaran->status == 'Belum Lunas' || $pembayaran->status == 'Verifikasi Kurang'))
                                     <a href="javascript:void(0);" id="btnVerifikasi_{{ $pembayaran->id }}"
                                         class="btn btn-sm btn-info btn-verifikasi" data-id="{{ $pembayaran->id }}">
                                         Verifikasi</a>
@@ -230,7 +231,16 @@
                                     '<span class="badge rounded-pill bg-danger">Belum Lunas</span>' :
                                     (value.status == 'Sedang Diverifikasi' ?
                                         '<span class="badge rounded-pill bg-warning">Sedang Diverifikasi</span>' :
-                                        '<span class="badge rounded-pill bg-success">Lunas</span>'
+                                        (value.status == 'Lebih' ?
+                                        '<span class="badge rounded-pill bg-success">Lunas Lebih</span>' :
+                                            (value.status == 'Kurang' ?
+                                            '<span class="badge rounded-pill bg-warning">Kurang</span>' :
+                                                (value.status == 'Verifikasi Kurang' ?
+                                                '<span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>' :
+                                                    '<span class="badge rounded-pill bg-success">Lunas</span>'
+                                                )
+                                            )
+                                        )
                                     )
                                 ) +
                                 '</td>' +
@@ -244,7 +254,8 @@
                                     '') +
                                 (value.bukti_pelunasan != null && (value.status ==
                                         'Sedang Diverifikasi' || value.status ==
-                                        'Kurang' || value.status == 'Belum Lunas') ?
+                                        'Kurang' || value.status ==
+                                        'Verifikasi Kurang' || value.status == 'Belum Lunas') ?
                                     '<a href="javascript:void(0);" class="btn btn-sm btn-info btn-verifikasi" data-id="' +
                                     value.id + '">Verifikasi</a>' +
                                     '<div id="statusButtons_' + value.id +
@@ -270,7 +281,7 @@
                             "paging": true,
                             "lengthMenu": [10, 25, 50, 100], // Pilihan entries per page
                             "pageLength": 10, // Default 10 entries per page
-                            "ordering": false, // Nonaktifkan sorting jika tidak diperlukan
+                            "ordering": true, // Nonaktifkan sorting jika tidak diperlukan
                             "searching": true, // Aktifkan fitur pencarian
                             "info": true, // Tampilkan informasi jumlah data
                             "language": {
