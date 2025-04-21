@@ -76,7 +76,7 @@
                         <td>{{ $spp->siswa->kelas  ?? '-'}}</td>
                         <td>{{ $spp->bulan  ?? '-'}}</td>
                         <td>{{ $spp->tahun  ?? '-' }}</td>
-                        <td>{{ 'Rp. ' . number_format($spp->total_bayar, 0, ',', '.') }}</td>
+                        <td>{{ 'Rp. ' . number_format($spp->biaya->nominal, 0, ',', '.') }}</td>
                     </tr>
                 </tr>
             @endforeach

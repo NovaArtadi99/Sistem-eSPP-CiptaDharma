@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Models\User;
 use App\Models\Biaya;
 use App\Models\Siswa;
+use GuzzleHttp\Client;
 use App\Models\Tagihan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+
+// require_once base_path('dompdf/autoload.inc.php');
 use App\Exports\TagihanExport;
 use App\Imports\TagihanImport;
 use Maatwebsite\Excel\Facades\Excel;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\DB;
-
-// require_once base_path('dompdf/autoload.inc.php');
-use Dompdf\Dompdf;
-use Dompdf\Options;
 
 
 class TagihanController extends Controller
@@ -336,5 +336,16 @@ class TagihanController extends Controller
             'kuitansi_' . $tagihan->no_invoice . '.pdf',
             ['Content-Type' => 'application/pdf']
         );
+    }
+
+
+
+    public function print()
+    {
+        $tagihans =Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->latest()->get();
+        $pdf = PDF::loadview('admin.pdf.tagihan-print', compact('tagihans'))
+            ->setPaper('a4', 'landscape');
+        $tgl = date('d-m-Y_H-i`-s');
+        return $pdf->stream('tagihans' . $tgl . '.pdf');
     }
 }

@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class LaporanSPPExport implements FromCollection,WithHeadings,WithMapping, ShouldAutoSize,WithStyles
+class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
 {
 
     private $counter = 0;
@@ -45,7 +45,7 @@ class LaporanSPPExport implements FromCollection,WithHeadings,WithMapping, Shoul
         ];
     }
 
-    public function map($tagihan) : array
+    public function map($tagihan): array
     {
         return [
             ++$this->counter,
@@ -56,7 +56,7 @@ class LaporanSPPExport implements FromCollection,WithHeadings,WithMapping, Shoul
             $tagihan->bulan,
             $tagihan->tahun,
             'Rp. ' . number_format($tagihan->biaya->nominal, 0, ',', '.'),
-$tagihan->tanggal_terbit,
+            $tagihan->tanggal_terbit,
             $tagihan->tanggal_lunas,
             $tagihan->penerbit->nama ?? '-',
             $tagihan->melunasi->nama ?? '-',

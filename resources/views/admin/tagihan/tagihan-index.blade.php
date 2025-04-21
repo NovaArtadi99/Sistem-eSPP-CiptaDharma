@@ -13,7 +13,7 @@
             <button class="btn btn-warning" id="btnImport" data-bs-toggle="modal" data-bs-target="#importModal">
                 <i class="fas fa-file-import"></i> Import Excel
             </button>
-            <a href="{{ route('siswa.print') }}" class="btn btn-outline-dark" id="btnPrint">
+            <a href="{{ route('tagihan.print') }}" class="btn btn-outline-dark" id="btnPrint">
                 <i class="fas fa-print"></i> Print
             </a>
 

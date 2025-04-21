@@ -67,6 +67,8 @@ Route::middleware('auth')->group(function () {
         Route::get('export-tagihan', [TagihanController::class, 'export'])->name('tagihan.export');
         Route::post('import-tagihan', [TagihanController::class, 'import'])->name('tagihan.import');
         Route::get('/{tagihan}/kirim-invoice', [TagihanController::class, 'sendInvoice'])->name('tagihan.sendInvoice');
+        Route::get('print-tagihan', [TagihanController::class, 'print'])->name('tagihan.print');
+
         // Biaya
         Route::resource('biaya', BiayaController::class);
         Route::post('filter-biaya', [BiayaController::class, 'filter'])->name('biaya.filter');
@@ -80,7 +82,7 @@ Route::middleware('auth')->group(function () {
         // New
         Route::post('pembayaran/lebih/{id}', [PembayaranController::class, 'lebih'])->name('lebih');
         Route::post('pembayaran/kurang/{id}', [PembayaranController::class, 'kurang'])->name('kurang');
-        // tambahan 
+        // tambahan
 
 
         // Laporan Petugas
