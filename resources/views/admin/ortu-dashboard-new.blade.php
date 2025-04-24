@@ -1,4 +1,4 @@
-@extends('admin.admin-layout-ortu')
+{{-- @extends('admin.admin-layout-ortu')
 @section('content')
 
 <div class="container">
@@ -84,4 +84,4 @@
     }
 </style>
 
-@endsection
+@endsection --}}

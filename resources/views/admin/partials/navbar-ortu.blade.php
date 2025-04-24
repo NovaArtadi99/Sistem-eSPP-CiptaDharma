@@ -1,12 +1,12 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #4c51bf">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="index.html">E SPP Chipta Dharama</a>
+    <a class="navbar-brand ps-3" href="index.html">E SPP Chipta Dharma</a>
 
     <!-- Sidebar Toggle (hanya untuk Admin/Kepsek) -->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 d-none d-lg-block" id="sidebarToggle" type="button">
         <i class="fas fa-bars"></i>
     </button>
-    
+
     <!-- Navbar Profil -->
     <ul class="navbar-nav ms-auto me-3 me-lg-4"> <!-- ms-auto untuk menggeser ke kanan -->
         <li>
@@ -34,7 +34,7 @@
             </ul>
         </li>
     </ul>
-    
+
 </nav>
 <style>
     .drawer-link {
@@ -54,9 +54,18 @@
         text-align: center;
     }
 
-    .drawer-link:hover {
+    .drawer-link:hover, .drawer-link.active {
         background-color: rgba(255, 255, 255, 0.2);
         transform: scale(1.05);
+    }
+
+    .drawer-link.active {
+        background-color: #fff;
+        color: #4c51bf;
+        font-weight: 600;
+        border-left: 4px solid #4c51bf;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
 
     @media (min-width: 992px) {
@@ -72,17 +81,17 @@
     style="top: 56px; z-index: 2000; display: none; background-color: #5a63d3; max-height: 300px; overflow-y: auto;">
     <ul class="list-unstyled mb-0 text-center">
         <li>
-            <a href="{{ route('dashboard') }}" class="drawer-link">
+            <a href="{{ route('dashboard') }}" class="drawer-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <i class="fas fa-tachometer-alt me-2"></i> Dashboard
             </a>
         </li>
         <li>
-            <a href="{{ route('ortu.pembayaran') }}" class="drawer-link">
+            <a href="{{ route('ortu.pembayaran') }}" class="drawer-link {{ request()->routeIs('ortu.pembayaran') ? 'active' : '' }}">
                 <i class="fas fa-wallet me-2"></i> Pembayaran
             </a>
         </li>
         <li>
-            <a href="{{ route('ortu.riwayatPembayaran') }}" class="drawer-link">
+            <a href="{{ route('ortu.riwayatPembayaran') }}" class="drawer-link {{ request()->routeIs('ortu.riwayatPembayaran') ? 'active' : '' }}">
                 <i class="fas fa-history me-2"></i> Riwayat Pembayaran
             </a>
         </li>
@@ -97,9 +106,6 @@
     </ul>
 </div>
 
-
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const drawer = document.getElementById('mobileDrawer');
@@ -109,8 +115,23 @@
             const isVisible = drawer.style.display === 'block';
             drawer.style.display = isVisible ? 'none' : 'block';
         });
+
+        // Add active class when clicked (for non-Laravel environments or additional interactivity)
+        const drawerLinks = document.querySelectorAll('.drawer-link');
+        drawerLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                // Remove active class from all links
+                drawerLinks.forEach(l => {
+                    if (l.tagName === 'A') { // Only for anchor tags, not buttons
+                        l.classList.remove('active');
+                    }
+                });
+
+                // Add active class to clicked link if it's not the logout button
+                if (this.tagName === 'A') {
+                    this.classList.add('active');
+                }
+            });
+        });
     });
 </script>
-
-
-

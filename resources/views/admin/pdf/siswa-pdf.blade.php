@@ -63,9 +63,9 @@
                 <th>Nama Wali</th>
                 <th>Alamat</th>
                 <th>No Telfon</th>
-                <th>Angkatan</th>
+                {{-- <th>Angkatan</th>
                 <th>Kelas</th>
-                <th>Jenis Kelamin</th>
+                <th>Jenis Kelamin</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -79,9 +79,9 @@
                     <td>{{ $siswa->nama_wali }}</td>
                     <td>{{ $siswa->alamat }}</td>
                     <td>{{ $siswa->no_telp }}</td>
-                    <td>{{ $siswa->angkatan }}</td>
+                    {{-- <td>{{ $siswa->angkatan }}</td>
                     <td>{{ $siswa->kelas }}</td>
-                    <td>{{ $siswa->jenis_kelamin }}</td>
+                    <td>{{ $siswa->jenis_kelamin }}</td> --}}
                 </tr>
             @endforeach
         </tbody>

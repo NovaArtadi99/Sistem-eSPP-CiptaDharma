@@ -10,11 +10,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-    <title>{{ $judul ?? 'Dashboard - SB Admin' }} </title>
+    <title>{{ $judul ?? 'Dashboard - Admin' }} </title>
 
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
     <link href="{{ asset('dist/css/styles.css') }}" rel="stylesheet" />
-    <link rel="shortcut icon" href="{{ asset('dist/assets/image/logosdciptadharma.jpg') }}" />
+    <link rel="shortcut icon" href="{{ asset('dist/assets/image/logo_sd_cipta_dharma-removebg-preview.png') }}" />
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
@@ -34,7 +34,7 @@
                 <div class="container-fluid px-4">
                     <h1 class="mt-4">{{ $judul ?? 'Dashboard' }}</h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Dashboard</li>
+                        {{-- <li class="breadcrumb-item active">Dashboard</li> --}}
                     </ol>
 
                     @include('admin.flash')

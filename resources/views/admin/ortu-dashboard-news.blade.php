@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Responsive Navbar Lengkap</title>
+    <title>Dashboard Siswa</title>
     <style>
         * {
             box-sizing: border-box;
@@ -96,7 +96,7 @@
 
         .actions a {
             text-decoration: none;
-            color: #333; 
+            color: #333;
             background-color: white;
             border: none;
             padding: 1rem;
