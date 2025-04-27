@@ -14,8 +14,17 @@ class PembayaranController extends Controller
     public function index()
     {
         $data['judul'] = 'Pembayaran';
-        $data['pembayarans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->whereNotNull('bukti_pelunasan')->orderByRaw("FIELD(status, 'Sedang Diverifikasi', 'Verifikasi Kurang', 'Belum Lunas', 'Kurang', 'Lebih', 'Lunas')")->get();
-
+        // $data['pembayarans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->whereNotNull('bukti_pelunasan')->orderByRaw("FIELD(status, 'Sedang Diverifikasi', 'Verifikasi Kurang', 'Belum Lunas', 'Kurang', 'Lebih', 'Lunas')")->get();
+        $data['pembayarans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])
+        ->whereNotNull('bukti_pelunasan')
+        ->orderByRaw("
+            FIELD(status, 'Sedang Diverifikasi', 'Verifikasi Kurang', 'Belum Lunas', 'Kurang', 'Lebih', 'Lunas'),
+            CASE 
+                WHEN status = 'Lunas' THEN CAST(REGEXP_REPLACE(no_invoice, '[^0-9]', '') AS UNSIGNED) 
+            END DESC
+        ")
+        ->get();
+    
         // $data['kelas'] = User::role('SiswaOrangTua')->select('id', 'kelas')->get()->unique();
 
 
