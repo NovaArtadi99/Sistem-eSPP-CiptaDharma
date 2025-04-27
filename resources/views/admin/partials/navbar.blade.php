@@ -1,6 +1,28 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="index.html">E SPP Chipta Dharma</a>
+    <style>
+        /* Default: tampilkan full title */
+        .short-title {
+            display: none;
+        }
+        
+        /* Kalau layar kecil (max-width 576px misalnya) */
+        @media (max-width: 576px) {
+            .full-title {
+                display: none;
+            }
+            .short-title {
+                display: inline;
+            }
+        }
+        </style>
+            
+            <a class="navbar-brand ps-3" href="">
+                <span class="d-none d-md-inline">E SPP Chipta Dharma</span>
+                <span class="d-inline d-md-none">E SPP</span>
+            </a>
+            
+    {{-- <a class="navbar-brand ps-3" href="index.html">E SPP Chipta Dharma</a> --}}
     <!-- Sidebar Toggle-->
     @if (Auth::user()->nama == "Admin" || Auth::user()->nama == "Kepsek")
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
