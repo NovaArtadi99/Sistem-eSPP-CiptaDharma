@@ -209,7 +209,7 @@
     <div class="actions">
         <a href="{{ route('ortu.pembayaran') }}">📘 Pembayaran</a>
         <a href="{{ route('ortu.riwayatPembayaran') }}">📥 Riwayat Pembayaran</a>
-        <a href="#">📖 Panduan Pengguna</a>
+        <a href="{{ route('ortu.panduan') }}">📖 Panduan Pengguna</a>
     </div>
 
     <script>

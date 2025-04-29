@@ -137,6 +137,8 @@ Route::middleware('auth')->group(function () {
     Route::get('ortu/pembayaran/{pembayaran}', [OrangTuaController::class, 'show'])->name('ortu.pembayaran.show');
     Route::get('ortu/riwayat-pembayaran', [OrangTuaController::class, 'riwayatPembayaran'])->name('ortu.riwayatPembayaran');
     Route::get('ortu/riwayat-pembayaran/{pembayaran}', [OrangTuaController::class, 'showRiwayatPembayaran'])->name('ortu.show.riwayatPembayaran');
+    Route::get('ortu/panduan', [OrangTuaController::class, 'panduan'])->name('ortu.panduan');
+    Route::get('ortu/panduan/export', [OrangTuaController::class, 'exportView'])->name('panduan.export');
 
     Route::view('print', 'admin.tagihan.tagihan-invoice-print');
     Route::post('filter-riwayat-pembayaran', [OrangTuaController::class, 'filterRiwayatPembayaran'])->name('ortu.filterRiwayatPembayaran');

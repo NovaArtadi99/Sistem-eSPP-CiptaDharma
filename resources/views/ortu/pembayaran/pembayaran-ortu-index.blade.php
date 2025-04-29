@@ -5,7 +5,7 @@
             <label for="filterStatus">Filter Status</label>
             <select id="filterStatus" name="filter_status" class="form-control">
                 <option value="">Pilih Status</option>
-                <option value="Lunas">Lunas</option>
+                {{-- <option value="Lunas">Lunas</option> --}}
                 <option value="Sedang Diverifikasi">Sedang Diverifikasi</option>
                 <option value="Belum Lunas">Belum Lunas</option>
             </select>

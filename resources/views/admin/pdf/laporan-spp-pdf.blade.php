@@ -52,6 +52,8 @@
         }
     </style>
 
+    <div style="text-align: center;"><h3>Laporan Data SPP</h3></div>
+
     <table class="table table-light">
         <thead class="thead-light">
             <tr>

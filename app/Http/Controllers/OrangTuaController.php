@@ -12,7 +12,7 @@ class OrangTuaController extends Controller
     public function pembayaran()
     {
         $data['judul'] = 'Pembayaran';
-        $data['pembayarans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->where('user_id', auth()->user()->id)->latest()->get();
+        $data['pembayarans'] = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->where('user_id', auth()->user()->id)->where('status', '!=','Lunas')->latest()->get();
 
 
         // dd($data['pembayarans']);
@@ -38,6 +38,18 @@ class OrangTuaController extends Controller
 
         // dd($data['pembayarans']);
         return view('ortu.pembayaran.riwayat-pembayaran', $data);
+    }
+
+    public function panduan()
+    {
+        $data['judul'] = 'Panduan Pembayaran';
+
+        return view('ortu.pembayaran.panduan-pembayaran', $data);
+    }
+
+    public function exportView()
+    {
+        return view('ortu.pembayaran.export-pdf');
     }
 
 

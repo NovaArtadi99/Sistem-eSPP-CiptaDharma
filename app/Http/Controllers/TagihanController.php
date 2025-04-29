@@ -44,6 +44,16 @@ class TagihanController extends Controller
     public function store(Request $request)
     {
 
+        //cek apakah sudah ada di db
+        $exists = Tagihan::where('tahun', $request->tahun)
+                ->where('bulan', $request->bulan)
+                ->where('user_id', $request->user_id)
+                ->exists();
+
+        if ($exists) {
+            return back()->with('error', 'Tagihan untuk bulan dan tahun tersebut sudah ada.');
+        }
+
         // dd($request->all());
         $request->validate([
             'user_id' => 'required',

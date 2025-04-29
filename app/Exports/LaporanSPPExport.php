@@ -10,8 +10,10 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\BeforeSheet;
 
-class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles, WithEvents
 {
 
     private $counter = 0;
@@ -91,7 +93,7 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
     {
         return [
             // Style the first row as bold text.
-            'A1:M1'    => [
+            'A2:M2'    => [
                 'font' => ['bold' => true],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
@@ -100,6 +102,16 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
                     ],
                 ],
             ],
+            'A1' => ['font' => ['bold' => true, 'size' => 14]],
+        ];
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            BeforeSheet::class => function (BeforeSheet $event) {
+                $event->sheet->setCellValue('A1', 'Laporan Data Spp');
+            },
         ];
     }
 }
