@@ -37,6 +37,17 @@
                         <div class="fv-row mb-10">
                             <label for="email" class="form-label fs-4 fw-bolder text-dark">Email</label>
                             <input id="email" class="form-control fs-5 form-control-lg form-control-solid @error('email') is-invalid @enderror"
+                                   type="text"
+                                   name="login"
+                                   {{-- value="{{ old('email') }}" --}}
+                                   required
+                                   autocomplete="off" />
+                            @error('email')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                            {{-- <input id="email" class="form-control fs-5 form-control-lg form-control-solid @error('email') is-invalid @enderror"
                                    type="email"
                                    name="email"
                                    value="{{ old('email') }}"
@@ -46,7 +57,7 @@
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
-                            @enderror
+                            @enderror --}}
                         </div>
 
                         <!-- Password -->
