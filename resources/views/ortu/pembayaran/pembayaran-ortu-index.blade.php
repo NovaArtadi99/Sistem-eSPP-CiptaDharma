@@ -156,18 +156,28 @@
 
 <script>
     var table;
+    // table = $('#dataTableOrtu').DataTable({
+    //         responsive: {
+    //             details: {
+    //                 type: 'column',
+    //                 target: 0
+    //             }
+    //         },
+    //         columnDefs: [
+    //             { className: 'control', orderable: false, targets: 0 }
+    //         ],
+    //         ordering: true
+    // });
     table = $('#dataTableOrtu').DataTable({
-            responsive: {
-                details: {
-                    type: 'column',
-                    target: 0
-                }
-            },
-            columnDefs: [
-                { className: 'control', orderable: false, targets: 0 }
-            ],
-            ordering: true
+    responsive: {
+        details: {
+                display: $.fn.dataTable.Responsive.display.childRowImmediate,
+                type: '' // kosong = tidak pakai tombol
+            }
+        },
+        ordering: true
     });
+
     $(document).ready(function () {
     $('#btnFilter').click(function(e) {
         e.preventDefault();
