@@ -5,6 +5,7 @@ use App\Http\Controllers\BiayaController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\TagihanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PelunasanController;
@@ -35,6 +36,10 @@ Route::middleware('auth')->group(function () {
     // Route::resource('profile', ProfileController::class);
     Route::resource('profile', ProfileController::class)->parameters([
         'profile' => 'user',
+    ]);
+
+    Route::resource('profil', ProfilController::class)->parameters([
+        'profil' => 'user',
     ]);
 
     // Dashboard
@@ -84,6 +89,7 @@ Route::middleware('auth')->group(function () {
         Route::post('filter-pembayaran', [PembayaranController::class, 'filter'])->name('pembayaran.filter');
 
         // New
+        Route::post('pembayaran/verifikasi_nilai/{id}', [PembayaranController::class, 'verifikasi_nilai'])->name('verifikasi_nilai');
         Route::post('pembayaran/lebih/{id}', [PembayaranController::class, 'lebih'])->name('lebih');
         Route::post('pembayaran/kurang/{id}', [PembayaranController::class, 'kurang'])->name('kurang');
         // tambahan

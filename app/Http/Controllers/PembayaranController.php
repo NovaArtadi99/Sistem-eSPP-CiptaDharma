@@ -57,11 +57,22 @@ class PembayaranController extends Controller
 
 
     // tambahan a
+    //verifikasi nilai
+    function verifikasi_nilai($id, Request $request){
+        $data_tagihan = Tagihan::with(['biaya'])->where('id', $id)->first();
+        if ($request->nominal > $data_tagihan->biaya->nominal) {
+            return $this->lebih($id, $request);
+        }elseif ($request->nominal < $data_tagihan->biaya->nominal) {
+            return $this->kurang($id, $request);
+        }else
+            return $this->verifikasi($id);
+        // dd($request);
+    }
     // lebih
     public function lebih($id, Request $request)
     {
         $data_tagihan = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->where('id', $id)->first();
-
+        $nilai = $request->nominal - $data_tagihan->biaya->nominal;
         if ($request->hasFile('file_bukti')) {
             $file = $request->file('file_bukti');
             $fileName = $file->getClientOriginalName();
@@ -95,7 +106,7 @@ class PembayaranController extends Controller
 
             $pembayaran = Tagihan::find($id);
             $pembayaran->status = 'Lebih';
-            $pembayaran->nominal = $request->nominal;
+            $pembayaran->nominal = $nilai;
             $pembayaran->bukti_lebih = $fileSaved;
             $pembayaran->isSentKuitansi = '1';
             $pembayaran->tanggal_lunas = Carbon::now();
@@ -113,12 +124,12 @@ class PembayaranController extends Controller
             $response = $client->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
             'form_params' => [
                 'chat_id' => $chatId,
-                'text' => "Halo {$data_tagihan->siswa->nama_wali}, Setelah dilakukan pengecekan data tagihan, nominal yang anda kirim lebih dari tagihan yang seharusnya Rp.". number_format($data_tagihan->biaya->nominal, 0, ',', '.').". Oleh karena itu dana kami kembalikan lagi sebesar Rp.". number_format($request->nominal, 0, ',', '.').", Terimakasih.",
+                'text' => "Halo {$data_tagihan->siswa->nama_wali}, Setelah dilakukan pengecekan data tagihan, nominal yang anda kirim lebih dari tagihan yang seharusnya Rp.". number_format($data_tagihan->biaya->nominal, 0, ',', '.').". Oleh karena itu dana kami kembalikan lagi sebesar Rp.". number_format($nilai, 0, ',', '.').", Terimakasih.",
                 ]
             ]);
             $pembayaran = Tagihan::find($id);
             $pembayaran->status = 'Lebih';
-            $pembayaran->nominal = $request->nominal;
+            $pembayaran->nominal = $nilai;
             $pembayaran->bukti_lebih = "kosong";
             $pembayaran->isSentKuitansi = '1';
             $pembayaran->tanggal_lunas = Carbon::now();
@@ -132,7 +143,7 @@ class PembayaranController extends Controller
     public function kurang($id, Request $request)
     {
         $data_tagihan = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi'])->where('id', $id)->first();
-
+        $nilai = $data_tagihan->biaya->nominal - $request->nominal;
         $chatId = $data_tagihan ? $data_tagihan->siswa->chat_id : null;
         if (!$chatId) {
             $chatId = env('TELEGRAM_CHAT_ID');
@@ -143,7 +154,7 @@ class PembayaranController extends Controller
         $client->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
             'form_params' => [
                 'chat_id' => $chatId,
-                'text' => "Halo {$data_tagihan->siswa->nama_wali}, Setelah dilakukan pengecekan data tagihan, nominal yang anda kirim kurang dari tagihan yang seharusnya Rp.". number_format($data_tagihan->biaya->nominal, 0, ',', '.').". Oleh karena itu dimohon untuk melakukan pembayaran kembali sebesar Rp.". number_format($request->nominal, 0, ',', '.').", Terimakasih.",
+                'text' => "Halo {$data_tagihan->siswa->nama_wali}, Setelah dilakukan pengecekan data tagihan, nominal yang anda kirim kurang dari tagihan yang seharusnya Rp.". number_format($data_tagihan->biaya->nominal, 0, ',', '.').". Oleh karena itu dimohon untuk melakukan pembayaran kembali sebesar Rp.". number_format($nilai, 0, ',', '.').", Terimakasih.",
             ],
         ]);
 

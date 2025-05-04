@@ -114,7 +114,7 @@
                 <label for="total_bayar">Total Bayar</label>
                 <input type="text" id="total_bayar" name="total_bayar" class="form-control" @if ($tagihan->status ==
                 "Kurang")
-                value="{{ $tagihan->nominal ?? '' }}"
+                value="{{ $tagihan->biaya->nominal-$tagihan->nominal ?? '' }}"
                 @else
                 value="{{ $tagihan->biaya->nominal ?? '' }}"
                 @endif
