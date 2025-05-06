@@ -50,9 +50,46 @@
         tr:hover {
             background-color: #f1f1f1;
         }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .header:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(to right, #4a90e2, #64b5f6, #4a90e2);
+        }
+
+        .main-title {
+            font-size: 24px;
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0;
+        }
     </style>
 
-    <div style="text-align: center;"><h3>Laporan Data SPP</h3></div>
+    {{-- <div style="text-align: center;"><h3>Laporan Data SPP</h3></div> --}}
+    <div class="header">
+        <h1 class="main-title">Laporan Data SPP SD Cipta Dharma</h1>
+        {{-- <p class="sub-title">
+            Periode: {{ $dateRange ?? date('01/m/Y') . ' - ' . date('t/m/Y') }}
+        </p> --}}
+    </div>
 
     <table class="table table-light">
         <thead class="thead-light">
