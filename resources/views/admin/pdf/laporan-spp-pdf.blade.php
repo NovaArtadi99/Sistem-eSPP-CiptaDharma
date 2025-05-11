@@ -53,7 +53,7 @@
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             position: relative;
             padding-bottom: 15px;
         }
@@ -71,24 +71,37 @@
         .main-title {
             font-size: 24px;
             color: #2c3e50;
-            margin: 0 0 10px 0;
-            text-transform: uppercase;
+            margin: 0 0 3px 0;
+            /* text-transform: uppercase; */
             letter-spacing: 1px;
         }
 
         .sub-title {
-            font-size: 14px;
+            font-size: 16px;
             color: #666;
             margin: 5px 0;
+            text-align: left;
         }
     </style>
 
     {{-- <div style="text-align: center;"><h3>Laporan Data SPP</h3></div> --}}
     <div class="header">
-        <h1 class="main-title">Laporan Data SPP SD Cipta Dharma</h1>
-        {{-- <p class="sub-title">
-            Periode: {{ $dateRange ?? date('01/m/Y') . ' - ' . date('t/m/Y') }}
-        </p> --}}
+        <h1 class="main-title">Pemerintah Provinsi Bali</h1>
+        <h1 class="main-title">SD Cipta Dharma</h1>
+        <h1 class="main-title">Laporan Data SPP</h1>        
+        <p class="sub-title">
+            @php
+                $periode = '';
+                if ($filtertahun && $filterbulan) {
+                    $periode .= $filterbulan . ' ' . $filtertahun;
+                } elseif ($filtertahun) {
+                    $periode .= $filtertahun;
+                } else {
+                    $periode .= '-';
+                }   
+            @endphp
+            Periode: {{ $periode }}
+        </p>
     </div>
 
     <table class="table table-light">

@@ -58,7 +58,7 @@
                         data-bs-target="#importModal">
                         <i class="fas fa-file-import"></i> Import Excel
                     </a> --}}
-                    <a href="{{ route('laporanSpp.print') }}" class="btn btn-outline-dark" id="btnPrint">
+                    <a href="#" class="btn btn-outline-dark" id="btnPrint">
                         <i class="fas fa-print"></i> Print
                     </a>
 
@@ -215,6 +215,25 @@
         if (tglAkhir) params.append('filter_tanggal_akhir', tglAkhir);
 
         const url = "{{ route('laporanSpp.export') }}" + "?" + params.toString();
+        window.location.href = url;
+    });
+
+    document.getElementById('btnPrint').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const tahun = document.getElementById('filterTahun').value;
+        const bulan = document.getElementById('filterBulan').value;
+        const tglAwal = document.getElementById('filterTanggalAwal').value;
+        const tglAkhir = document.getElementById('filterTanggalAkhir').value;
+
+        const params = new URLSearchParams();
+
+        if (tahun) params.append('filter_tahun', tahun);
+        if (bulan) params.append('filter_bulan', bulan);
+        if (tglAwal) params.append('filter_tanggal_awal', tglAwal);
+        if (tglAkhir) params.append('filter_tanggal_akhir', tglAkhir);
+
+        const url = "{{ route('laporanSpp.print') }}" + "?" + params.toString();
         window.location.href = url;
     });
 </script>

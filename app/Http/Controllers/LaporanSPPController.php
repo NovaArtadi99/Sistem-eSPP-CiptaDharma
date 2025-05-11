@@ -106,10 +106,33 @@ class LaporanSPPController extends Controller
     }
 
 
-    public function print()
+    public function print(Request $request)
     {
-        $laporan_spp = Tagihan::with('siswa','biaya')->latest()->get();
-        $pdf = PDF::loadview('admin.pdf.laporan-spp-pdf', compact('laporan_spp'))
+        $filtertahun = $request->query('filter_tahun');
+        $filterbulan = $request->query('filter_bulan');
+        $filtertanggalAwal = $request->query('filter_tanggal_awal');
+        $filtertanggalAkhir = $request->query('filter_tanggal_akhir');
+        // dd($filtertahun);
+
+        $laporan_spp = Tagihan::with('siswa')->where('status', 'Lunas');
+        if (!is_null($filtertahun)) {
+            $laporan_spp->where('tahun', $filtertahun);
+        }
+
+        if (!is_null($filterbulan)) {
+            $laporan_spp->where('bulan', $filterbulan);
+        }
+
+        if (!is_null($filtertanggalAwal) && !is_null($filtertanggalAkhir)) {
+            $laporan_spp->whereBetween('tanggal_lunas', [$filtertanggalAwal, $filtertanggalAkhir]);
+        }
+
+        $laporan_spp = $laporan_spp->get();
+        // dd($laporan_spp);
+
+        // $laporan_spp = Tagihan::with('siswa','biaya')->latest()->get();
+        $pdf = PDF::loadview('admin.pdf.laporan-spp-pdf', 
+                compact(['laporan_spp', 'filtertahun', 'filterbulan']))
             ->setPaper('a4', 'landscape');
         $tgl = date('d-m-Y_H-i`-s');
         return $pdf->stream('siswa' . $tgl . '.pdf');

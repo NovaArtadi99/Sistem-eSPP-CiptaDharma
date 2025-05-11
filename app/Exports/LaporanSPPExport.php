@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeSheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles, WithEvents
 {
@@ -92,17 +93,17 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
     public function styles(Worksheet $sheet)
     {
         return [
-            // Style the first row as bold text.
-            'A2:M2'    => [
+            'A5:M5' => [
                 'font' => ['bold' => true],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'startColor' => [
-                        'argb' => 'FFD700',
-                    ],
+                    'startColor' => ['argb' => 'FFD700'],
                 ],
             ],
             'A1' => ['font' => ['bold' => true, 'size' => 14]],
+            'A2' => ['font' => ['bold' => true, 'size' => 14]],
+            'A3' => ['font' => ['bold' => true, 'size' => 14]],
+            'A4' => ['font' => ['bold' => true]],
         ];
     }
 
@@ -110,8 +111,39 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
     {
         return [
             BeforeSheet::class => function (BeforeSheet $event) {
-                $event->sheet->setCellValue('A1', 'Laporan Data Spp');
+                $sheet = $event->sheet->getDelegate();
+
+                // Set judul utama
+                $sheet->mergeCells('A1:M1');
+                $sheet->setCellValue('A1', 'Pemerintah Provinsi Bali');
+
+                $sheet->mergeCells('A2:M2');
+                $sheet->setCellValue('A2', 'SD CHIPTA DHARMA');
+
+                $sheet->mergeCells('A3:M3');
+                $sheet->setCellValue('A3', 'Laporan Data SPP');
+
+                $periode = 'Periode : ';
+                if ($this->bulan && $this->tahun) {
+                    $periode .= $this->bulan . ' ' . $this->tahun;
+                } elseif ($this->tahun) {
+                    $periode .= $this->tahun;
+                } else {
+                    $periode .= '-';
+                }
+
+                $sheet->mergeCells('A4:B4');
+                $sheet->setCellValue('A4', $periode);
+
+                // Atur rata tengah dan bold
+                foreach (['A1', 'A2', 'A3'] as $cell) {
+                    $sheet->getStyle($cell)->getFont()->setBold(true)->setSize(14);
+                    $sheet->getStyle($cell)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                }
+
+                $sheet->getStyle('A4')->getFont()->setBold(true);
             },
         ];
     }
+
 }
