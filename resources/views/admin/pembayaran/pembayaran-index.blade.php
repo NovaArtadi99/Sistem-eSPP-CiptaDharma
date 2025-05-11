@@ -102,14 +102,13 @@
 
                                 @if (
                                     $pembayaran->bukti_pelunasan != null &&
-                                        ($pembayaran->status == 'Sedang Diverifikasi' || $pembayaran->status == 'Kurang' ||
-                                            $pembayaran->status == 'Belum Lunas' || $pembayaran->status == 'Verifikasi Kurang'))
+                                        ($pembayaran->status == 'Sedang Diverifikasi' || $pembayaran->status == 'Belum Lunas' ))
                                     {{-- <a href="javascript:void(0);" 
                                         class="btn btn-sm btn-info btn-verifikasi" data-id="{{ $pembayaran->id }}">
                                         Verifikasi</a> --}}
                                     <button data-bs-toggle="modal" data-bs-target="#verifikasi_{{ $index + 1 }}"
                                             class="btn btn-sm btn-info">Verifikasi</button>
-                                    <div id="statusButtons_{{ $pembayaran->id }}" class="status-buttons"
+                                    {{-- <div id="statusButtons_{{ $pembayaran->id }}" class="status-buttons"
                                         style="display: none;">
                                         <a href="{{ route('pembayaran.verifikasi', $pembayaran->id) }}"
                                             class="btn btn-sm btn-success">Lunas</a>
@@ -117,9 +116,11 @@
                                             class="btn btn-sm btn-primary">Lebih</button>
                                         <button data-bs-toggle="modal" data-bs-target="#kurang_{{ $index + 1 }}"
                                             class="btn btn-sm btn-danger">Kurang</button>
-                                    </div>
+                                    </div> --}}
                                 @endif
-
+                                @if ($pembayaran->bukti_pelunasan != null && ($pembayaran->status == 'Kurang' || $pembayaran->status == 'Verifikasi Kurang'))
+                                    <button onclick="verifikasi_kurang({{ json_encode($pembayaran) }})"class="btn btn-sm btn-info">Verifikasi</button>
+                                @endif
                                 <a href="{{ route('pembayaran.show', $pembayaran->id) }}"
                                     class="btn btn-sm btn-warning">Detail</a>
                             </div>
@@ -156,7 +157,7 @@
                             <input id="status_{{ $index }}" type="text" class="form-control" readonly>
                             <div id="bukti_kembali_{{ $index }}" style="display: none;" >
                             <label for="bukti_kembali">Bukti tambahan</label>
-                            <input id="bukti_kembali]_{{ $index }}" type="file" class="form-control" accept="image/*"
+                            <input id="bukti_kembali_{{ $index }}" type="file" class="form-control" accept="image/*"
                                 name="file_bukti">
                             </div>
                         </div>
@@ -228,6 +229,41 @@
         </div> --}}
     @endforeach
     <!-- tambahan b -->
+
+
+    <div class="modal fade" id="VerifikasiKurang" tabindex="-1" aria-labelledby="VerifikasiKurangLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formkurang" method="POST">
+                    @csrf
+                    <input type="hidden" name="_method" id="formMethod" value="POST">
+                    <input type="hidden" name="id" id="id">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="verifikasiKurangModalLabel">Verifikasi Pembayaran Kurang</h5>
+                    </div>
+                    <div class="modal-body">
+                        <label for="ntagihank">Tagihan Kurang</label>
+                        <input id="ntagihank" type="text" class="form-control" readonly>
+                        <label for="numbk">Nominal dikirim</label>
+                        <input type="text" class="form-control" id="numbk" oninput="hitungStatusk()">
+                        <input type="hidden" name="nominal" id="real_numbk">
+                        <label for="statusk">Status</label>
+                        <input id="statusk" type="text" class="form-control" readonly>
+                        <div id="bukti_kembalik" style="display: none;" >
+                            <label for="bukti_kembalik">Bukti tambahan</label>
+                            <input id="bukti_kembalikk" type="file" class="form-control" accept="image/*"
+                                name="file_bukti">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Kirim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
 @endsection
 @push('scripts')
 
@@ -465,4 +501,57 @@ function reattachEventHandlers() {
         });
     </script>
     <!-- tambahan b -->
+
+    <script>
+        
+        function verifikasi_kurang(data) {
+            hitungStatusk();
+
+            $('#ntagihank').val(`Rp. ${formatRupiah(data.biaya.nominal-data.nominal).replace('Rp. ', '')}`);
+            $('#numbk').val(`Rp. ${formatRupiah(data.biaya.nominal-data.nominal).replace('Rp. ', '')}`);
+            $('#real_numbk').val(data.biaya.nominal-data.nominal);
+            $('#formMethod').val('POST');
+            $('#formkurang').attr('action', `/verifikasi_kurang`);
+            $('#id').val(data.id);
+            $('#VerifikasiKurangLabel').text('Verifikasi Kurang');
+
+            var modal = new bootstrap.Modal(document.getElementById('VerifikasiKurang'));
+            modal.show();
+        }
+
+        function hitungStatusk() {
+            const tagihanEl = document.getElementById(`ntagihank`);
+            const nominalEl = document.getElementById(`numbk`);
+            const statusEl = document.getElementById(`statusk`);
+            const buktiEl = document.getElementById(`bukti_kembalik`);
+            const realNominalEl = document.getElementById(`real_numbk`);
+
+            const tagihan = parseInt(tagihanEl.value.replace(/\D/g, ''));
+            let nominalRaw = nominalEl.value.replace(/\D/g, '');
+            let nominal = parseInt(nominalRaw || 0);
+
+            // Update tampilan dengan format Rupiah
+            nominalEl.value = formatRupiah(nominal);
+            realNominalEl.value = nominal; // Simpan angka asli untuk dikirim
+
+            // Logika status
+            if (isNaN(nominal)) {
+                statusEl.value = '';
+                buktiEl.style.display = 'none';
+                return;
+            }
+
+            let selisih = nominal - tagihan;
+            if (selisih > 0) {
+                statusEl.value = `Lebih Rp. ${formatRupiah(selisih).replace('Rp. ', '')}`;
+                buktiEl.style.display = 'block';
+            } else if (selisih < 0) {
+                statusEl.value = `Kurang Rp. ${formatRupiah(Math.abs(selisih)).replace('Rp. ', '')}`;
+                buktiEl.style.display = 'none';
+            } else {
+                statusEl.value = 'Pas';
+                buktiEl.style.display = 'none';
+            }
+        }
+    </script>
 @endpush

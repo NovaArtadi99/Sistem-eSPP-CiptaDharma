@@ -47,7 +47,7 @@ class PelunasanController extends Controller
             }
             $buktiLama[] = $fileSaved;
             $tagihan->bukti_pelunasan = json_encode($buktiLama);
-            $tagihan->nominal += $request->total_bayar;
+            // $tagihan->nominal += $request->total_bayar;
             $tagihan->status = 'Verifikasi Kurang';
             $tagihan->save();
         }

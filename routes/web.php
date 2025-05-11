@@ -92,6 +92,8 @@ Route::middleware('auth')->group(function () {
         Route::post('pembayaran/verifikasi_nilai/{id}', [PembayaranController::class, 'verifikasi_nilai'])->name('verifikasi_nilai');
         Route::post('pembayaran/lebih/{id}', [PembayaranController::class, 'lebih'])->name('lebih');
         Route::post('pembayaran/kurang/{id}', [PembayaranController::class, 'kurang'])->name('kurang');
+        Route::post('verifikasi_kurang', [PembayaranController::class, 'verifikasi_kurang']);
+
         // tambahan
 
 
