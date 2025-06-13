@@ -11,7 +11,7 @@ class BiayaController extends Controller
 
     public function index()
     {
-        $data['biayas'] = Biaya::select('id','nama_biaya', 'nominal','nama_nominal', 'tahun', 'bulan', 'level')->latest()->get();
+        $data['biayas'] = Biaya::select('id','nama_biaya', 'nominal','nama_nominal', 'tahun', 'bulan')->latest()->get();
         $data['judul'] = 'Data Biaya';
 
         return view('admin.biaya.biaya-index', $data);
@@ -35,7 +35,7 @@ class BiayaController extends Controller
             'nominal' => 'required|numeric',
             'tahun' => 'required',
             'bulan' => 'required',
-            'level' => 'required',
+            // 'level' => 'required',
         ]);
 
         $biaya = new Biaya();
@@ -44,7 +44,7 @@ class BiayaController extends Controller
         $biaya->nama_nominal = $request->nama_nominal;
         $biaya->tahun = $tahun;
         $biaya->bulan = $request->bulan;
-        $biaya->level = $request->level;
+        // $biaya->level = $request->level;
         $biaya->save();
 
         return to_route('biaya.index')->with('success', 'Data biaya baru telah ditambahkan');
@@ -76,14 +76,14 @@ class BiayaController extends Controller
             'nominal' => 'required|numeric',
             'tahun' => 'required',
             'bulan' => 'required',
-            'level' => 'required',
+            // 'level' => 'required',
         ]);
         $biaya->nama_biaya = $request->nama_biaya;
         $biaya->nominal = $request->nominal;
         $biaya->nama_nominal = $request->nama_nominal;
         $biaya->tahun = $tahun;
         $biaya->bulan = $request->bulan;
-        $biaya->level = $request->level;
+        // $biaya->level = $request->level;
         $biaya->save();
 
         return to_route('biaya.index')->with('success', 'Data biaya baru telah diperbarui');

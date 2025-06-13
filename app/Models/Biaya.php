@@ -15,6 +15,6 @@ class Biaya extends Model
         'nama_nominal',
         'tahun',
         'bulan',
-        'level',
+        // 'level',
     ];
 }

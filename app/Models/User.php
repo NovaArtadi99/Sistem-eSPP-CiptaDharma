@@ -23,7 +23,7 @@ class User extends Authenticatable
         'nis',
         'nisn',
         'nip',
-        'username',
+        // 'username',
         'email',
         'password',
         'nama_wali',
@@ -32,7 +32,7 @@ class User extends Authenticatable
         'angkatan',
         'kelas',
         'jenis_kelamin',
-        'id_telegram',
+        // 'id_telegram',
         'agama',
         'chat_id',
         'tanggal_lahir'

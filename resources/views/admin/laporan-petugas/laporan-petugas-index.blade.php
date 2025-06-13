@@ -1,6 +1,6 @@
 @extends('admin.admin-layout')
 @section('content')
-    <div class="row mb-3">
+    {{-- <div class="row mb-3">
         <div class="col-md-2">
             <label for="filterTahun">Filter Tahun</label>
             <select id="filterTahun" name="filter_tahun" class="form-control">
@@ -32,6 +32,22 @@
             <button type="submit" class="btn btn-outline-primary mt-4" id="btnFilter">
                 Filter
             </button>
+
+        </div>
+    </div> --}}
+    <div class="col-md-12">
+        <div class="d-flex justify-content-end my-4">
+            <div>
+                {{-- <a href="#" onclick="window.print()" class="btn btn-outline-dark m-1 d-xl-inline d-lg-inline d-block"
+                    id="btnPrint">
+                    <i class="fas fa-print"></i> Print
+                </a> --}}
+                {{-- <a href="{{ route('laporanPetugas.print') }}" class="btn btn-outline-dark m-1 d-xl-inline d-lg-inline d-block"
+                    id="btnPrint">
+                    <i class="fas fa-print"></i> Print
+                </a> --}}
+            </div>
+
 
         </div>
     </div>
@@ -81,8 +97,49 @@
     </div>
 @endsection
 
-@push('scripts')
-    <script>
+{{-- @push('scripts')
+<script>
+    document.getElementById('btnExport').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const tahun = document.getElementById('filterTahun').value;
+        const bulan = document.getElementById('filterBulan').value;
+        const tglAwal = document.getElementById('filterTanggalAwal').value;
+        const tglAkhir = document.getElementById('filterTanggalAkhir').value;
+
+        const params = new URLSearchParams();
+
+        if (tahun) params.append('filter_tahun', tahun);
+        if (bulan) params.append('filter_bulan', bulan);
+        if (tglAwal) params.append('filter_tanggal_awal', tglAwal);
+        if (tglAkhir) params.append('filter_tanggal_akhir', tglAkhir);
+
+        const url = "{{ route('laporanPetugas.export') }}" + "?" + params.toString();
+        window.location.href = url;
+    });
+
+    document.getElementById('btnPrint').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const tahun = document.getElementById('filterTahun').value;
+        const bulan = document.getElementById('filterBulan').value;
+        const tglAwal = document.getElementById('filterTanggalAwal').value;
+        const tglAkhir = document.getElementById('filterTanggalAkhir').value;
+
+        const params = new URLSearchParams();
+
+        if (tahun) params.append('filter_tahun', tahun);
+        if (bulan) params.append('filter_bulan', bulan);
+        if (tglAwal) params.append('filter_tanggal_awal', tglAwal);
+        if (tglAkhir) params.append('filter_tanggal_akhir', tglAkhir);
+
+        const url = "{{ route('laporanPetugas.print') }}" + "?" + params.toString();
+        window.location.href = url;
+    });
+</script>
+
+@endpush --}}
+{{-- <script>
         $(document).ready(function() {
             $('#btnFilter').click(function(e) {
                 e.preventDefault();
@@ -146,5 +203,4 @@
                 });
             });
         });
-    </script>
-@endpush
+    </script> --}}

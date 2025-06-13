@@ -1,7 +1,7 @@
 @extends('admin.admin-layout')
 @section('content')
     <div class="row">
-        <div class="col">
+        {{-- <div class="col">
             <div class="mb-3">
                 <label for="">Bukti Pelunasan</label>
 
@@ -23,18 +23,43 @@
                     @endif
                 @endif
             </div>
-        </div>
-
+        </div> --}}
         <div class="col">
-            {{-- <div class="mb-3">
-                <label for="">Bukti Pelunasan</label>
+            <div class="mb-3">
                 @if (empty($pembayaran->bukti_pelunasan))
                     <h3>Orang tua belum melakukan pembayaran</h3>
                 @else
-                    <img src="{{ asset('bukti-pelunasan/' . $pembayaran->bukti_pelunasan) }}" id="preview" width="100%"
-                        alt="" class="img-thumbnail shadow">
+                    @php
+                        $buktiPelunasan = json_decode($pembayaran->bukti_pelunasan, true);
+                    @endphp
+
+                    @if (is_array($buktiPelunasan))
+                        @foreach ($buktiPelunasan as $index => $file)
+                            <div class="mb-3">
+                                <label for="" class="form-label">
+                                    @if ($index == 0)
+                                        Bukti Pelunasan
+                                    @else
+                                        Bukti Pelunasan {{ $index + 1 }}
+                                    @endif
+                                </label>
+                                <img src="{{ asset('bukti-pelunasan/' . $file) }}" id="preview" width="100%" alt=""
+                                    class="img-thumbnail shadow">
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="mb-3">
+                            <label for="" class="form-label">Bukti Pelunasan</label>
+                            <img src="{{ asset('bukti-pelunasan/' . $pembayaran->bukti_pelunasan) }}" id="preview"
+                                width="100%" alt="" class="img-thumbnail shadow">
+                        </div>
+                    @endif
                 @endif
-            </div> --}}
+            </div>
+        </div>
+
+
+        <div class="col">
 
             <div class="mb-3">
                 <label for="">No Invoice</label>
@@ -43,7 +68,8 @@
 
             <div class="mb-3">
                 <label for="">Nama Invoice</label>
-                <input type="text" name="nama_tagihan" class="form-control" value="{{ $pembayaran->keterangan }}" readonly>
+                <input type="text" name="nama_tagihan" class="form-control" value="{{ $pembayaran->keterangan }}"
+                    readonly>
             </div>
 
             <div class="mb-3">
@@ -103,5 +129,10 @@
             </div>
         </div>
     </div>
+    {{-- Button Keluar --}}
+    <div class="mt-4 text-end">
+        <a href="{{ url()->previous() }}" class="btn btn-danger btn-lg">
+            <i class="fas fa-sign-out-alt me-2"></i> Keluar
+        </a>
+    </div>
 @endsection
-

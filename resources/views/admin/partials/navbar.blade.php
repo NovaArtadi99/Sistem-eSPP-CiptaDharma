@@ -5,7 +5,7 @@
         .short-title {
             display: none;
         }
-        
+
         /* Kalau layar kecil (max-width 576px misalnya) */
         @media (max-width: 576px) {
             .full-title {
@@ -16,12 +16,12 @@
             }
         }
         </style>
-            
+
             <a class="navbar-brand ps-3" href="">
                 <span class="d-none d-md-inline">E SPP Chipta Dharma</span>
                 <span class="d-inline d-md-none">E SPP</span>
             </a>
-            
+
     {{-- <a class="navbar-brand ps-3" href="index.html">E SPP Chipta Dharma</a> --}}
     <!-- Sidebar Toggle-->
     @if (Auth::user()->nama == "Admin" || Auth::user()->nama == "Kepsek")
@@ -46,7 +46,7 @@
             <a class="nav-link dropdown-toggle m,x-" id="navbarDropdown" href="#" role="button"
                 data-bs-toggle="dropdown" aria-expanded="false"> <span class="btn btn-outline-light  fw-bold mx-3"> {{ Auth::user()->nama}}</span> <i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{{ route('profile.index') }}">Profile</a></li>
+                <li><a class="dropdown-item" href="{{ route('profile.index') }}">Profil</a></li>
                 {{-- <li><a class="dropdown-item" href="#!">Activity Log</a></li> --}}
                 <li>
                     <hr class="dropdown-divider" />
@@ -57,7 +57,7 @@
                         @csrf
                         <a class="dropdown-item" href="{{ route('logout') }}"
                             onclick="event.preventDefault();
-                                            this.closest('form').submit();">Logout</a>
+                                            this.closest('form').submit();">Keluar</a>
 
                     </form>
             </ul>

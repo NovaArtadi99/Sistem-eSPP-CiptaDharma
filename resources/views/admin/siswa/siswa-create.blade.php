@@ -7,10 +7,10 @@
             <label for="">Nama Siswa</label>
             <input type="text" name="nama" class="form-control" required autocomplete="on" value="{{ old('nama', '') }}">
         </div>
-        <div class="mb-3">
+        {{-- <div class="mb-3">
             <label for="">Username</label>
             <input type="text" name="username" class="form-control" required autocomplete="on" value="{{ old('username', '') }}">
-        </div>
+        </div> --}}
         <div class="mb-3">
             <label for="">Kelas</label>
             <select name="kelas" id="" class="form-control" autocomplete="on" value="{{ old('kelas', '') }}">
@@ -77,12 +77,12 @@
         </div>
 
         <div class="mb-3">
-            <label for="">No Telfon</label>
+            <label for="">No Telepon</label>
             <input type="number" name="no_telp" class="form-control" required autocomplete="on" value="{{ old('no_telp', '') }}">
         </div>
 
         <div class="mb-3">
-            <label for="">Nama Wali</label>
+            <label for="">Nama Orang Tua</label>
             <input type="text" name="nama_wali" class="form-control" required autocomplete="on" value="{{ old('nama_wali', '') }}">
         </div>
 
@@ -92,6 +92,9 @@
         </div>
 
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="mb-3 d-flex justify-content-start gap-2">
+            <button type="submit" class="btn btn-success">Kirim</button>
+            <a href="{{ route('siswa.index') }}" class="btn btn-primary">Batal</a>
+        </div>
     </form>
 @endsection

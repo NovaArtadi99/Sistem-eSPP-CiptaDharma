@@ -34,9 +34,6 @@
                 </div>
 
 
-
-
-
                 <div class="mb-3">
                     <label for="">Tanggal Terbit</label>
                     <input type="date" name="tanggal_terbit" class="form-control"

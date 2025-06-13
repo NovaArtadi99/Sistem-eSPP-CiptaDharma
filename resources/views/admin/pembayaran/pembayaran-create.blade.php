@@ -1,4 +1,4 @@
-@extends('admin.admin-layout')
+{{-- @extends('admin.admin-layout')
 @section('content')
     <form action="{{ route('tagihan.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -56,7 +56,7 @@
 @endsection
 
 @push('scrirpts')
-    {{-- <script>
+    <script>
     document.getElementById('barang_id').addEventListener('change', function() {
         var barangId = this.value;
 
@@ -78,5 +78,5 @@
             console.error('Error:', error);
         });
     });
-</script> --}}
-@endpush
+</script>
+@endpush --}}

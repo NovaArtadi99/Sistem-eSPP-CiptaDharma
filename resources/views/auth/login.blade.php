@@ -30,12 +30,12 @@
                     <form class="form w-100" method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="text-center mb-10">
-                            <h1 class="text-dark mb-3 fs-1">Sign In To E-SPP Cipta Dharma</h1>
+                            <h1 class="text-dark mb-3 fs-1">Masuk ke E-SPP Cipta Dharma</h1>
                         </div>
 
                         <!-- Email -->
                         <div class="fv-row mb-10">
-                            <label for="email" class="form-label fs-4 fw-bolder text-dark">Email</label>
+                            <label for="email" class="form-label fs-4 fw-bolder text-dark">Email atau ponsel</label>
                             <input id="email" class="form-control fs-5 form-control-lg form-control-solid @error('email') is-invalid @enderror"
                                    type="text"
                                    name="login"
@@ -66,7 +66,7 @@
                                 <label for="password" class="form-label fw-bolder text-dark fs-4 mb-0">Password</label>
                                 @if (Route::has('password.request'))
                                     <a href="{{ route('password.request') }}" class="link-primary fs-5 fw-bolder">
-                                        Forgot Password?
+                                        Lupa Password?
                                     </a>
                                 @endif
                             </div>
@@ -93,14 +93,14 @@
                             <label class="form-check form-check-custom form-check-solid">
                                 <input class="form-check-input" type="checkbox" name="remember" id="remember_me" />
                                 <span class="form-check-label fw-bold text-gray-700 fs-6">
-                                    Remember me
+                                    Ingat saya
                                 </span>
                             </label>
                         </div>
 
                         <div class="text-center">
                             <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">
-                                <span class="indicator-label">Log in</span>
+                                <span class="indicator-label">Masuk</span>
                             </button>
                         </div>
                     </form>

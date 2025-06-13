@@ -48,8 +48,15 @@
                 <option value="Desember">Desember</option>
             </select>
         </div>
-        <div class="col-4">
+        {{-- <div class="col-4">
             <button type="submit" class="btn btn-outline-primary mt-4" id="btnFilter">Filter</button>
+        </div> --}}
+        <div class="col-4">
+            <button type="submit" class="btn btn-outline-primary mt-4" id="btnFilter">
+                Filter
+            </button>
+            <button class="btn btn-outline-danger mt-4" id="btnReset">Reset</button>
+
         </div>
     </div>
 
@@ -103,7 +110,7 @@
                                 @if (
                                     $pembayaran->bukti_pelunasan != null &&
                                         ($pembayaran->status == 'Sedang Diverifikasi' || $pembayaran->status == 'Belum Lunas' ))
-                                    {{-- <a href="javascript:void(0);" 
+                                    {{-- <a href="javascript:void(0);"
                                         class="btn btn-sm btn-info btn-verifikasi" data-id="{{ $pembayaran->id }}">
                                         Verifikasi</a> --}}
                                     <button data-bs-toggle="modal" data-bs-target="#verifikasi_{{ $index + 1 }}"
@@ -492,6 +499,17 @@ function reattachEventHandlers() {
         // Your existing invoice sending code...
     });
 }
+
+$('#btnReset').click(function() {
+            localStorage.removeItem("filter_angkatan");
+            localStorage.removeItem("filter_kelas");
+            localStorage.removeItem("filter_tahun");
+            localStorage.removeItem("filter_bulan");
+            $('#filterAngkatan').val('');
+            $('#filterKelas').val('');
+            $('#filterTahun').val('');
+            $('#filterBulan').val('');
+        });
 </script>
     <!-- tambahan a -->
     <script>
@@ -503,7 +521,7 @@ function reattachEventHandlers() {
     <!-- tambahan b -->
 
     <script>
-        
+
         function verifikasi_kurang(data) {
             hitungStatusk();
 

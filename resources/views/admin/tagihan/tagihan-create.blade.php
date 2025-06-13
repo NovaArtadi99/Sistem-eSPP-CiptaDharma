@@ -64,7 +64,10 @@
 
 
 
-        <button type="submit" class="btn btn-primary my-3">Submit</button>
+        <div class="mb-3 d-flex justify-content-start gap-2">
+            <button type="submit" class="btn btn-success">Kirim</button>
+            <a href="{{ route('tagihan.index') }}" class="btn btn-primary">Batal</a>
+        </div>
     </form>
 @endsection
 

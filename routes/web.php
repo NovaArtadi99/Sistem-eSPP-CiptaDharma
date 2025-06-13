@@ -112,6 +112,9 @@ Route::middleware('auth')->group(function () {
         Route::get('laporan-petugas/create', [LaporanPetugasController::class, 'create'])->name('laporanPetugas.create');
         Route::get('laporan-petugas/{petugas}', [LaporanPetugasController::class, 'show'])->name('laporanPetugas.show');
         Route::post('filter-laporan-petugas', [LaporanPetugasController::class, 'filter'])->name('laporanPetugas.filter');
+        // Route::get('laporan-petugas/export', [LaporanPetugasController::class, 'export'])->name('laporanPetugas.export');
+        // Route::get('laporan-petugas/print', [LaporanPetugasController::class, 'print'])->name('laporanPetugas.print');
+        // Laporan Siswa
         Route::get('laporan-siswa', [LaporanSiswaController::class, 'index'])->name('laporanSiswa.index');
         Route::get('laporan-siswa/create', [laporanSiswaController::class, 'create'])->name('laporanSiswa.create');
         Route::get('laporan-siswa/{laporan_siswa}', [laporanSiswaController::class, 'show'])->name('laporanSiswa.show');

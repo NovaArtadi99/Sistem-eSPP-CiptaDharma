@@ -42,7 +42,7 @@ class PetugasController extends Controller
             [
                 'nama' => $request->nama,
                 'email' => $request->email,
-                'username' => $request->username,
+                // 'username' => $request->username,
                 'password' => bcrypt($request->password),
                 'nama_wali' => $request->nama_wali,
                 'alamat' => $request->alamat,
@@ -83,7 +83,7 @@ class PetugasController extends Controller
     {
         $this->validate($request, [
             'nama' => 'required',
-            'username' => 'required|unique:users,username,' . $petugas->id . ',id',
+            // 'username' => 'required|unique:users,username,' . $petugas->id . ',id',
             'email' => 'required|unique:users,email,' . $petugas->id . ',id',
             // 'password' => 'required',
             'alamat' => 'required',
@@ -99,7 +99,7 @@ class PetugasController extends Controller
                 'nis' => $request->nis,
                 'nisn' => $request->nisn,
                 'email' => $request->email,
-                'username' => $request->username,
+                // 'username' => $request->username,
                 'password' => $password,
                 'nama_wali' => $request->nama_wali,
                 'alamat' => $request->alamat,

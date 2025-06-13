@@ -50,7 +50,7 @@
                 </select>
             </div>
 
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label for="">Kelas</label>
                 <select name="level" id="" class="form-control" autocomplete="on" value="{{ old('kelas', '') }}">
                     @for ($kelas = 1; $kelas <= 6; $kelas++)
@@ -59,8 +59,11 @@
                         @endforeach
                     @endfor
                 </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            </div> --}}
+           <div class="mb-3 d-flex justify-content-start gap-2">
+            <button type="submit" class="btn btn-success">Kirim</button>
+            <a href="{{ route('biaya.index') }}" class="btn btn-primary">Batal</a>
+        </div>
         </div>
 
 

@@ -8,26 +8,28 @@
         <div class="py-2 pb-4">
             <div class="mb-3">
                 <label for="">Nama Biaya</label>
-                <input type="text" name="nama_biaya" id="stok_sekarang" class="form-control" value="{{$biaya->nama_biaya}}">
+                <input type="text" name="nama_biaya" id="stok_sekarang" class="form-control"
+                    value="{{ $biaya->nama_biaya }}">
             </div>
 
 
             <div class="mb-3">
                 <label for="">Nominal</label>
-                <input type="number" name="nominal" class="form-control" value="{{$biaya->nominal}}">
+                <input type="number" name="nominal" class="form-control" value="{{ $biaya->nominal }}">
             </div>
 
 
 
             <div class="mb-3">
                 <label for="">Nama Nominal</label>
-                <input type="text" name="nama_nominal" id="stok_sekarang" class="form-control" value="{{$biaya->nama_nominal}}">
+                <input type="text" name="nama_nominal" id="stok_sekarang" class="form-control"
+                    value="{{ $biaya->nama_nominal }}">
             </div>
 
 
             <div class="mb-3">
                 <label for="">Tahun</label>
-                <input type="number" name="tahun" class="form-control" value="{{$biaya->tahun}}">
+                <input type="number" name="tahun" class="form-control" value="{{ $biaya->tahun }}">
             </div>
 
 
@@ -50,17 +52,23 @@
                 </select>
             </div>
 
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label for="">Level</label>
-                <select name="level" id="" class="form-control" autocomplete="on" value="{{ old('level', '') }}">
+                <select name="level" id="" class="form-control" autocomplete="on"
+                    value="{{ old('level', '') }}">
                     @for ($level = 1; $level <= 6; $level++)
                         @foreach (range('A', 'E') as $huruf)
-                            <option value="{{ $level . $huruf }}" {{ old('level', '') == $level . $huruf ? 'selected' : '' }}>{{ $level . ' - ' . $huruf }}</option>
+                            <option value="{{ $level . $huruf }}"
+                                {{ old('level', '') == $level . $huruf ? 'selected' : '' }}>{{ $level . ' - ' . $huruf }}
+                            </option>
                         @endforeach
                     @endfor
                 </select>
+            </div> --}}
+            <div class="mb-3 d-flex justify-content-start gap-2">
+                <button type="submit" class="btn btn-success">Kirim</button>
+                <a href="{{ route('biaya.index') }}" class="btn btn-primary">Batal</a>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
         </div>
 
 

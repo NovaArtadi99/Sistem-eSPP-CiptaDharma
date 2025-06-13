@@ -1,4 +1,4 @@
-@extends('admin.admin-layout')
+{{-- @extends('admin.admin-layout')
 @section('content')
     <form>
         <div class="mb-3">
@@ -45,4 +45,4 @@
 
 @push('scrirpts')
 
-@endpush
+@endpush --}}

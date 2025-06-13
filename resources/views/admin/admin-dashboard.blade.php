@@ -68,51 +68,7 @@
             </div>
         </div>
 
-
-
         <div class="col-xl-8">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between">
-                        <div class="py-2">
-                            <i class="fas fa-chart-area me-1"></i>
-                            Statistik Per Tahun
-                        </div>
-
-                    </div>
-
-                </div>
-                <div class="card-body mb-5" style="min-height: 400px">
-                    <div class="row mb-3">
-                        <div class="col-4">
-                            <select name="tahun" id="filter_tahun_awal" class="form-control">
-                                <option value="">Pilih Tahun </option>
-                                @foreach ($select_tahun as $tahun)
-                                    <option value="{{ $tahun }}">{{ $tahun }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-4">
-                            <select name="tahun" id="filter_tahun_akhir" class="form-control">
-                                <option value="">Pilih Tahun </option>
-
-                                @foreach ($select_tahun as $tahun)
-                                    <option value="{{ $tahun }}">{{ $tahun }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-4">
-                            <button class="btn btn-primary" id="btnFilterTahun">Filter</button>
-                        </div>
-                    </div>
-
-                    <canvas id="dataPerTahun"></canvas>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-xl-12">
             <div class="card mb-4">
                 <div class="card-header">
                     <div class="d-flex justify-content-between">
@@ -161,7 +117,53 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-xl-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="py-2">
+                            <i class="fas fa-chart-area me-1"></i>
+                            Statistik Per Tahun
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="card-body mb-5" style="min-height: 400px">
+                    <div class="row mb-3">
+                        <div class="col-4">
+                            <select name="tahun" id="filter_tahun_awal" class="form-control">
+                                <option value="">Pilih Tahun </option>
+                                @foreach ($select_tahun as $tahun)
+                                    <option value="{{ $tahun }}">{{ $tahun }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <select name="tahun" id="filter_tahun_akhir" class="form-control">
+                                <option value="">Pilih Tahun </option>
+
+                                @foreach ($select_tahun as $tahun)
+                                    <option value="{{ $tahun }}">{{ $tahun }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary" id="btnFilterTahun">Filter</button>
+                        </div>
+                    </div>
+
+                    <canvas id="dataPerTahun"></canvas>
+                </div>
+            </div>
+        </div>
+
     </div>
+    @if (session()->has('loginSuccess'))
+    @include('admin.partials.loginberhasil')
+@endif
+
 @endsection
 
 
@@ -503,5 +505,6 @@
                 });
             }
         }
+
     </script>
 @endpush

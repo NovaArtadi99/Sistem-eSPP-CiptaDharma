@@ -1,11 +1,6 @@
 @extends('admin.admin-layout')
 @section('content')
     <div class="row mb-3">
-
-        <div class="">
-            <button class="btn btn-dark mb-5">Data yang disajikan adalah data siswa pada bulan ini</button>
-
-        </div>
         <div class="col-md-2">
             <label for="filterAngkatan">Filter Angkatan</label>
             <select id="filterAngkatan" name="filter_angkatan" class="form-control">
@@ -105,7 +100,7 @@
                             @elseif ($siswa->status == 'Verifikasi Kurang')
                                 <span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>
                             @else
-                                <button class="btn btn-success">Lunas</button>
+                                <button class="badge rounded-pill bg-success">Lunas</button>
                             @endif
                         </td>
                         <td>
@@ -236,7 +231,7 @@
                                 '<td>' + value.siswa.nis + '</td>' +
                                 '<td>' + value.siswa.angkatan + '</td>' +
                                 '<td>' + value.siswa.kelas + '</td>' +
-                                '<td>' + 
+                                '<td>' +
                                 (value.status == 'Belum Lunas' ?
                                     '<span class="badge rounded-pill bg-danger">Belum Lunas</span>' :
                                     (value.status == 'Sedang Diverifikasi' ?

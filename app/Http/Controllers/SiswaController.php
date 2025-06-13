@@ -24,7 +24,9 @@ class SiswaController extends Controller
 
     public function create()
     {
-        return view('admin.siswa.siswa-create');
+        return view('admin.siswa.siswa-create', [
+            'judul' => 'Tambah Data Siswa',
+        ]);
     }
 
 
@@ -46,13 +48,13 @@ class SiswaController extends Controller
             'kelas' => 'required',
             'jenis_kelamin' => 'required',
             'tanggal_lahir' => 'required',
-            'username' => 'required'
+            // 'username' => 'required'
         ]);
 
 
         $user =  User::create(
             [
-                'username' => $request->username,
+                // 'username' => $request->username,
                 'nama' => $request->nama,
                 'nis' => $request->nis,
                 'nisn' => $request->nisn,
@@ -87,14 +89,16 @@ class SiswaController extends Controller
 
     public function edit(User $siswa)
     {
-        return view('admin.siswa.siswa-edit', compact('siswa'));
+        return view('admin.siswa.siswa-edit', compact('siswa'), [
+            'judul' => 'Edit Data Siswa',
+        ]);
     }
     public function update(Request $request, User $siswa)
     {
 
         // dd($siswa);
         $this->validate($request, [
-            'username' => 'required|unique:users,username,' . $siswa->id . ',id',
+            // 'username' => 'required|unique:users,username,' . $siswa->id . ',id',
             'nama' => 'required',
             'nis' => 'required|unique:users,nis,' . $siswa->id,
             'nisn' => 'required|unique:users,nisn,' . $siswa->id,
@@ -116,7 +120,7 @@ class SiswaController extends Controller
 
         $siswa->update(
             [
-                'username' => $request->username,
+                // 'username' => $request->username,
                 'nama' => $request->nama,
                 'nis' => $request->nis,
                 'nisn' => $request->nisn,
@@ -140,7 +144,7 @@ class SiswaController extends Controller
     }
 
 
-    public function destroy(User $siswa)
+    public function destroy($id)
     {
         $siswa->delete();
         return redirect()->route('siswa.index')->with('success', 'Data siswa telah dihapus');

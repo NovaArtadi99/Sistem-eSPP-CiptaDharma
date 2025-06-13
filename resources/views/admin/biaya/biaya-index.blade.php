@@ -1,7 +1,7 @@
 @extends('admin.admin-layout')
 @section('content')
     <div class="my-3">
-        <a href="{{ route('biaya.create') }}" class="btn btn-primary">Tambah Data Biaya Baru</a>
+        <a href="{{ route('biaya.create') }}" class="btn btn-primary">Tambah Biaya</a>
 
     </div>
     <div class="row mb-3">
@@ -50,7 +50,7 @@
                         <th>Nama Nominal</th>
                         <th>Tahun </th>
                         <th>Bulan</th>
-                        <th>Kelas</th>
+                        {{-- <th>Kelas</th> --}}
                         <th>Aksi</th> <!-- Kolom untuk aksi -->
                     </tr>
                 </thead>
@@ -63,21 +63,30 @@
                             <td>{{ $biaya->nama_nominal }}</td>
                             <td>{{ $biaya->tahun }}</td>
                             <td>{{ $biaya->bulan }}</td>
-                            <td>{{ $biaya->level }}</td>
+                            {{-- <td>{{ $biaya->level }}</td> --}}
                             {{-- <td>{{ \Carbon\Carbon::parse($biaya->created_at)->isoFormat('HH:mm:ss, dddd, D MMMM Y') }}</td> --}}
-                            <td>
+                        <td>
                                 <button class="btn btn-block btn-info my-1 btnDetailBiaya" data-bs-toggle="modal"
-                                    data-bs-target="#detailModal" data-id="{{ $biaya->id }}">Detail</button>
+                                    data-bs-target="detailModal" data-id="{{ $biaya->id }}">Detail</button>
                                 <a href="{{ route('biaya.edit', $biaya->id) }}" class="btn btn-warning">Edit</a>
 
-                                <form action="{{ route('biaya.destroy', $biaya->id) }}" method="POST"
+                            <form action="{{ route('biaya.destroy', $biaya->id) }}" method="POST"
+                                style="display: inline;"
+                                id="delete-form-{{ $biaya->id }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-danger btn-delete" data-id="{{ $biaya->id }}">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </form>
+                                {{-- <form action="{{ route('biaya.destroy', $biaya->id) }}" method="POST"
                                     style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger"
                                         onclick="return confirm('Apakah Anda yakin ingin menghapus data barang keluar ini?')">Hapus</button>
-                                </form>
-                            </td>
+                                </form> --}}
+                        </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -92,7 +101,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="my-modal-title">Detail Biaya</h5>
-                        <button class="close" data-dismiss="modal" aria-label="Close">
+                        <button class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -117,14 +126,10 @@
                             <label for="detail-bulan">Bulan</label>
                             <input type="text" id="detail-bulan" class="form-control" readonly>
                         </div>
-                        <div class="form-group mb-3">
-                            <label for="detail-kelas">Kelas</label>
-                            <input type="text" id="detail-kelas" class="form-control" readonly>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Close
+                            Tutup
                         </button>
                     </div>
                 </div>
@@ -162,7 +167,7 @@
                                     '<td>' + value.nama_nominal + '</td>' +
                                     '<td>' + value.tahun + '</td>' +
                                     '<td>' + value.bulan + '</td>' +
-                                    '<td>' + value.level + '</td>' +
+                                    // '<td>' + value.level + '</td>' +
                                     '<td>' +
                                     '<button class="btn btn-block btn-info my-1 btnDetailBiaya" data-bs-toggle="modal" data-bs-target="#detailModal" data-id="' +
                                     value.id +
@@ -170,6 +175,7 @@
                                     '<a href="biaya/' + value.id +
                                     '/edit" class="btn btn-warning mx-1">Edit</a>' +
 
+                                    // hapus
                                     '<form action="biaya/' + value.id +
                                     '" method="POST" style="display:inline;">' +
                                     '@csrf' +
@@ -234,7 +240,7 @@
                                     '<td>' + value.nama_nominal + '</td>' +
                                     '<td>' + value.tahun + '</td>' +
                                     '<td>' + value.bulan + '</td>' +
-                                    '<td>' + value.level + '</td>' +
+                                    // '<td>' + value.level + '</td>' +
                                     '<td>' +
                                     '<button class="btn btn-block btn-info my-1 btnDetailBiaya" data-bs-toggle="modal" data-bs-target="#detailModal" data-id="' +
                                     value.id +
@@ -242,6 +248,7 @@
                                     '<a href="biaya/' + value.id +
                                     '/edit" class="btn btn-warning mx-1">Edit</a>' +
 
+                                    // hapus
                                     '<form action="biaya/' + value.id +
                                     '" method="POST" style="display:inline;">' +
                                     '@csrf' +
@@ -305,7 +312,7 @@
                             $('#detail-nama-nominal').val(response.nama_nominal);
                             $('#detail-tahun').val(response.tahun);
                             $('#detail-bulan').val(response.bulan);
-                            $('#detail-kelas').val(response.level);
+                            // $('#detail-kelas').val(response.level);
                         }
                     });
                 });

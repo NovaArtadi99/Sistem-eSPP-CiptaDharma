@@ -25,11 +25,11 @@
             </select>
         </div>
 
-        <div class="mb-3">
+        {{-- <div class="mb-3">
             <label for="">Username</label>
             <input type="text" name="username" class="form-control" required autocomplete="on"
                 value="{{ old('username', '') }}">
-        </div>
+        </div> --}}
 
 
         <div class="mb-3">

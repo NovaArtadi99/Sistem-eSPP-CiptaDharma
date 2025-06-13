@@ -98,12 +98,21 @@
                                     class="btn btn-block btn-warning my-1">Edit</a>
 
                                 <form action="{{ route('siswa.destroy', $siswa->id) }}" method="POST"
+                                style="display: inline;"
+                                id="delete-form-{{ $siswa->id }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-danger btn-delete" data-id="{{ $siswa->id }}">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </form>
+                                {{-- <form action="{{ route('siswa.destroy', $siswa->id) }}" method="POST"
                                     style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-block my-1"
                                         onclick="return confirm('Apakah Anda yakin ingin menghapus siswa ini?')">Hapus</button>
-                                </form>
+                                </form> --}}
                             </div>
 
                         </td>
@@ -141,7 +150,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
+                        Tutup
                     </button>
 
                 </div>
@@ -180,7 +189,7 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="detail-nama-wali">Nama Wali</label>
+                        <label for="detail-nama-wali">Nama Orang Tua</label>
                         <input type="text" id="detail-nama-wali" class="form-control" readonly>
                     </div>
                     <div class="form-group mb-3">
@@ -188,7 +197,7 @@
                         <input type="text" id="detail-alamat" class="form-control" readonly>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="detail-no-telp">No Telp</label>
+                        <label for="detail-no-telp">No Telepon</label>
                         <input type="text" id="detail-no-telp" class="form-control" readonly>
                     </div>
                     <div class="form-group mb-3">
@@ -218,7 +227,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
+                        Tutup
                     </button>
 
                 </div>
@@ -407,17 +416,17 @@
     <script>
         document.getElementById('btnExport').addEventListener('click', function (e) {
             e.preventDefault(); // Cegah link langsung jalan
-    
+
             // Ambil nilai dari filter
             const angkatan = document.getElementById('filterAngkatan').value;
             const kelas = document.getElementById('filterKelas').value;
-    
+
             // Susun parameter query string
             const query = new URLSearchParams({
                 filter_angkatan: angkatan,
                 filter_kelas: kelas
             }).toString();
-    
+
             // Redirect ke route export dengan parameter GET
             window.location.href = `{{ route('siswa.export') }}?${query}`;
         });

@@ -26,11 +26,11 @@
                         <div class="sb-sidenav-menu-heading">Data Master</div>
                         <a class="{{ Request::routeIs('siswa.index') ? 'nav-link active' : 'nav-link' }}" href="{{ route('siswa.index') }}">
                             <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
-                            Siswa
+                            Data Siswa
                         </a>
                         <a class="{{ Request::routeIs('biaya.index') ? 'nav-link active' : 'nav-link' }}" href="{{ route('biaya.index') }}">
                             <div class="sb-nav-link-icon"><i class="fas fa-money-bill"></i></div>
-                            Biaya
+                            Data Biaya
                         </a>
 
                         <a class="nav-link collapsed {{ Request::routeIs('tagihan.index', 'pembayaran.index') ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTagihan"

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('nama_nominal');
             $table->year('tahun');
             $table->string('bulan');
-            $table->string('level');
+            // $table->string('level');
 
             $table->timestamps();
         });

@@ -112,10 +112,10 @@
                         <label for="detail-jabatan">Jabatan</label>
                         <input type="text" id="detail-jabatan" class="form-control" readonly>
                     </div>
-                    <div class="form-group mb-3">
+                    {{-- <div class="form-group mb-3">
                         <label for="detail-username">Username</label>
                         <input type="text" id="detail-username" class="form-control" readonly>
-                    </div>
+                    </div> --}}
                     <div class="form-group mb-3">
                         <label for="detail-email">Email</label>
                         <input type="text" id="detail-email" class="form-control" readonly>
@@ -334,7 +334,7 @@
                     $('#detail-nama-lengkap').val(response.nama ?? '-');
                     $('#detail-nip').val(response.nip ?? '-');
                     $('#detail-jabatan').val(response.roles.map(role => role.name).join(', '));
-                    $('#detail-username').val(response.username ?? '-');
+                    // $('#detail-username').val(response.username ?? '-');
                     $('#detail-email').val(response.email ?? '-');
                     $('#detail-jenis-kelamin').val(response.jenis_kelamin ?? '-');
                     $('#detail-alamat').val(response.alamat ?? '-');

@@ -36,7 +36,10 @@
                     <ol class="breadcrumb mb-4">
                         {{-- <li class="breadcrumb-item active">Dashboard</li> --}}
                     </ol>
-
+                    {{-- popup Berhasil login --}}
+        {{-- @if (session()->has('loginSuccess'))
+            @include('admin.partials.loginberhasil')
+        @endif --}}
                     @include('admin.flash')
                     @yield('content')
 
@@ -55,6 +58,7 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
     <script src="{{ asset('dist/js/datatables-simple-demo.js') }} "></script>
 
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="{{asset('src/js/scripts.js')}}"></script>
@@ -67,6 +71,30 @@
             $('#dataTables').DataTable();
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.btn-delete').click(function(e) {
+                    e.preventDefault();
+                    var formId = $(this).data('id');
+                    var form = $('#delete-form-' + formId);
+
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        </script>
 
 </body>
 

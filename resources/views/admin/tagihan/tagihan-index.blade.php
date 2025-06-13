@@ -2,7 +2,7 @@
 @section('content')
     <div class="d-flex justify-content-between my-3">
         <div class="">
-            <a href="{{ route('tagihan.create') }}" class="btn btn-primary">Tambah Data Tagihan</a>
+            <a href="{{ route('tagihan.create') }}" class="btn btn-primary">Tambah Tagihan</a>
 
         </div>
 
@@ -207,7 +207,7 @@
                     <div class="form-group mb-3">
                         <label for="detail-bukti-pelunasan">Bukti Pelunasan</label>
                         <br>
-                        <a href="" id="detail-bukti-pelunasan-link" target="_blank"> Click to view
+                        <a href="" id="detail-bukti-pelunasan-link" target="_blank"> Klik untuk melihat
                         </a>
                     </div>
                     <div class="form-group mb-3">
@@ -236,7 +236,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Close
+                            Tutup
                         </button>
                     </div>
                 </div>
@@ -264,7 +264,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
+                        Tutup
                     </button>
 
                 </div>

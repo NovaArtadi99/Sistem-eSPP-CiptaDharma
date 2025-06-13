@@ -14,10 +14,10 @@
             <input type="email" name="email" class="form-control" value="{{ $petugas->email }}" required autocomplete="on">
         </div>
 
-        <div class="mb-3">
+        {{-- <div class="mb-3">
             <label for="">Username</label>
             <input type="text" name="username" class="form-control" value="{{ $petugas->username }}" required autocomplete="on">
-        </div>
+        </div> --}}
 
         <div class="mb-3">
             <label for="">Jabatan petugas</label>

@@ -48,7 +48,7 @@ class LoginRequest extends FormRequest
             $credentials = ['email' => $login, 'password' => $password];
         } elseif (is_numeric($login)) {
             $credentials = ['no_telp' => $login, 'password' => $password];
-        } 
+        }
         // else {
         //     $credentials = ['username' => $login, 'password' => $password];
         // }
