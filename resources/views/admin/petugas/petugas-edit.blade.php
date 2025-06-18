@@ -30,7 +30,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="">NIP</label>
+            <label for="">NIK</label>
             <input type="number" name="nip" class="form-control" value="{{ $petugas->nip }}" required autocomplete="on">
         </div>
 

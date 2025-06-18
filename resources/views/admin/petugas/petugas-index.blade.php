@@ -30,7 +30,7 @@
                 <tr>
                     <th>No</th>
                     <th>Nama Lengkap</th>
-                    <th>NIP</th>
+                    <th>NIK</th>
                     <th>Jabatan</th>
                     <th>Jenis Kelamin</th>
 
@@ -105,7 +105,7 @@
                         <input type="text" id="detail-nama-lengkap" class="form-control" readonly>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="detail-nip">NIP</label>
+                        <label for="detail-nip">NIK</label>
                         <input type="text" id="detail-nip" class="form-control" readonly>
                     </div>
                     <div class="form-group mb-3">
