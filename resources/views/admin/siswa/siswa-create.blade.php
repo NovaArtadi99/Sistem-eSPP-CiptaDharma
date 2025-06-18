@@ -25,7 +25,7 @@
         <div class="mb-3">
             <label for="">Angkatan</label>
             <select name="angkatan" id="" class="form-control" autocomplete="on" value="{{ old('angkatan', '') }}">
-                @for ($kelas = 2015; $kelas <= 2024; $kelas++)
+                @for ($kelas = 2019; $kelas <= 2024; $kelas++)
                     <option value="{{ $kelas }}" {{ old('angkatan', '') == $kelas ? 'selected' : '' }}>{{ $kelas  }}</option>
                 @endfor
             </select>

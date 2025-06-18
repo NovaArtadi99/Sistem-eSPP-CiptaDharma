@@ -29,7 +29,7 @@
         <div class="mb-3">
             <label for="">Angkatan</label>
             <select name="angkatan" id="" class="form-control" required>
-                @for ($kelas = 2015; $kelas <= 2024; $kelas++)
+                @for ($kelas = 2019; $kelas <= 2024; $kelas++)
                     <option value="{{ $kelas }}" {{ $siswa->angkatan == $kelas ? 'selected' : '' }}>
                         {{ $kelas }}</option>
                 @endfor
@@ -72,11 +72,11 @@
             <input type="text" name="no_telp" class="form-control" value="{{ $siswa->no_telp }}" required>
         </div>
 
-        <div class="mb-3">
+        {{-- <div class="mb-3">
             <label for="">Angkatan</label>
             <input type="number" name="angkatan" class="form-control" value="{{ $siswa->angkatan }}" required>
-        </div>
-        <div class="mb-3">
+        </div> --}}
+        {{-- <div class="mb-3">
             <label for="">Kelas</label>
             <select name="kelas" id="" class="form-control" autocomplete="on" value="{{ old('kelas', '') }}">
                 @for ($kelas = 1; $kelas <= 6; $kelas++)
@@ -86,7 +86,7 @@
                     @endforeach
                 @endfor
             </select>
-        </div>
+        </div> --}}
         <div class="mb-3">
             <label for="">Jenis Kelamin</label>
             <select type="text" name="jenis_kelamin" id="jenis_kelamin" class="form-control">
