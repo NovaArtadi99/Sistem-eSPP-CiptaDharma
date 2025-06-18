@@ -28,7 +28,8 @@ class BiayaController extends Controller
     {
 
         // dd($request->tahun);
-        $tahun = Carbon::parse($request->tahun)->format('Y');
+        // $tahun = Carbon::parse($request->tahun)->format('Y');
+        $tahun = $request->tahun;
         // dd($tahun);
         $this->validate($request, [
             'nama_biaya' => 'required',
@@ -69,7 +70,8 @@ class BiayaController extends Controller
 
     public function update(Request $request, Biaya $biaya)
     {
-        $tahun = Carbon::parse($request->tahun)->format('Y');
+        // $tahun = Carbon::parse($request->tahun)->format('Y');
+        $tahun = $request->tahun;
         // dd($tahun);
         $this->validate($request, [
             'nama_biaya' => 'required',

@@ -11,16 +11,22 @@
             <label for="">Username</label>
             <input type="text" name="username" class="form-control" required autocomplete="on" value="{{ old('username', '') }}">
         </div> --}}
-        <div class="mb-3">
-            <label for="">Kelas</label>
-            <select name="kelas" id="" class="form-control" autocomplete="on" value="{{ old('kelas', '') }}">
-                @for ($kelas = 1; $kelas <= 6; $kelas++)
-                    @foreach (range('A', 'E') as $huruf)
-                        <option value="{{ $kelas . $huruf }}" {{ old('kelas', '') == $kelas . $huruf ? 'selected' : '' }}>{{ $kelas . ' - ' . $huruf }}</option>
-                    @endforeach
-                @endfor
-            </select>
-        </div>
+       <div class="mb-3">
+    <label for="">Kelas</label>
+    <select name="kelas" id="" class="form-control" autocomplete="on">
+        @for ($kelas = 1; $kelas <= 6; $kelas++)
+            @php
+                $rangeHuruf = $kelas <= 2 ? range('A', 'D') : range('A', 'E');
+            @endphp
+            @foreach ($rangeHuruf as $huruf)
+                <option value="{{ $kelas . $huruf }}" {{ old('kelas', '') == $kelas . $huruf ? 'selected' : '' }}>
+                    {{ $kelas . ' - ' . $huruf }}
+                </option>
+            @endforeach
+        @endfor
+    </select>
+</div>
+
 
         <div class="mb-3">
             <label for="">Angkatan</label>

@@ -18,13 +18,18 @@
             <label for="">Kelas</label>
             <select name="kelas" id="" class="form-control" required>
                 @for ($kelas = 1; $kelas <= 6; $kelas++)
-                    @foreach (range('A', 'E') as $huruf)
+                    @php
+                        $rangeHuruf = $kelas <= 2 ? range('A', 'D') : range('A', 'E');
+                    @endphp
+                    @foreach ($rangeHuruf as $huruf)
                         <option value="{{ $kelas . $huruf }}" {{ $siswa->kelas == $kelas . $huruf ? 'selected' : '' }}>
-                            {{ $kelas . ' - ' . $huruf }}</option>
+                            {{ $kelas . ' - ' . $huruf }}
+                        </option>
                     @endforeach
                 @endfor
             </select>
         </div>
+
 
         <div class="mb-3">
             <label for="">Angkatan</label>
@@ -95,10 +100,10 @@
             </select>
         </div>
 
-        <div class="mb-3">
+        {{-- <div class="mb-3">
             <label for="">Alamat</label>
             <input type="text" name="alamat" class="form-control" value="{{ $siswa->alamat }}" required>
-        </div>
+        </div> --}}
 
         <div class="mb-3">
             <label for="">Agama</label>
