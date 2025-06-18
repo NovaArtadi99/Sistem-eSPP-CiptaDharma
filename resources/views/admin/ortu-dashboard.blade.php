@@ -1,4 +1,4 @@
-@extends('admin.admin-layout')
+{{-- @extends('admin.admin-layout')
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -138,4 +138,4 @@
         $('#dataTables2').DataTable();
     });
 </script>
-@endpush
+@endpush --}}

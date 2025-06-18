@@ -42,10 +42,17 @@
             <button type="submit" class="btn btn-outline-primary mt-4" id="btnFilter">
                 Filter
             </button>
-
         </div>
+        {{-- <div class="col-1 d-flex align-items-end gap-2">
+            <button type="submit" class="btn btn-outline-primary" id="btnFilter">
+                Filter
+            </button>
+            <button type="button" class="btn btn-outline-danger" id="btnReset">
+                Reset
+            </button>
+        </div> --}}
 
-        <div class="col-md-12">
+        <div class="col-md-3">
             <div class="d-flex justify-content-end my-4">
                 <div>
                     {{-- <a href="{{ route('laporanSpp.export') }}" class="btn btn-outline-success" id="btnExport">
@@ -82,7 +89,7 @@
                     <th>Kelas</th>
                     <th>Bulan</th>
                     <th>Tahun</th>
-                    <th>Total Bayar</th>
+                    <th>Nominal</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -120,7 +127,7 @@
     </div>
 
 
-    <div id="importModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title"
+    {{-- <div id="importModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -140,19 +147,19 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
 
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div id="detailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="my-modal-title">Detail Biaya</h5>
+                    <h5 class="modal-title" id="my-modal-title">Detail Laporan SPP</h5>
                     <button class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -183,13 +190,13 @@
                         <input type="text" id="detail-tahun" class="form-control" readonly>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="detail-total-bayar">Total Bayar</label>
+                        <label for="detail-total-bayar">Nominal</label>
                         <input type="text" id="detail-total-bayar" class="form-control" readonly>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
+                        Tutup
                     </button>
                 </div>
             </div>
@@ -301,7 +308,12 @@
                     }
                 });
             });
+            $('#btnReset').click(function() {
+                $('#filterStatus').val('');
 
+                // Reload page to reset the table or you can optionally re-fetch all data via AJAX
+                location.reload();
+            });
 
 
         });

@@ -19,10 +19,14 @@ class PetugasController extends Controller
 
     public function create()
     {
+        $data = [
+            'judul' => 'Tambah Data Petugas',
+            'roles' => Role::where('name', '!=', 'SiswaOrangTua')->get(),
+        ];
 
-        $data['roles'] = Role::where('name', '!=', 'SiswaOrangTua')->get();
         return view('admin.petugas.petugas-create', $data);
     }
+
 
 
     public function store(Request $request)
@@ -75,10 +79,14 @@ class PetugasController extends Controller
     public function edit(User $petugas)
     {
         $roles = Role::where('name', '!=', 'SiswaOrangTua')->get();
+
+        $data['judul'] = 'Edit Data Petugas';
         $data['roles'] = $roles;
         $data['petugas'] = $petugas;
+
         return view('admin.petugas.petugas-edit', $data);
     }
+
     public function update(Request $request, User $petugas)
     {
         $this->validate($request, [
@@ -121,7 +129,9 @@ class PetugasController extends Controller
     public function destroy(User $petugas)
     {
         $petugas->delete();
-        return redirect()->route('petugas.index')->with('success', 'Data siswa telah dihapus');
+        // return redirect()->route('petugas.index')->with('success', 'Data siswa telah dihapus');
+        return redirect()->route('petugas.index')->with('success', 'Data petugas telah dihapus');
+
     }
 
 

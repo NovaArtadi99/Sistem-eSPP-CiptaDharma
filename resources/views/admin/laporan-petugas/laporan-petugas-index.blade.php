@@ -82,10 +82,17 @@
                         <td><b>{{ $petugas->menerbitkan_count }}</b></td>
                         <td><b>{{ $petugas->melunasi_count ?? '-' }}</b></td>
                         <td>
-                            <div class="d-grid">
+                            {{-- <div class="d-grid">
                                 <a href="{{ route('laporanPetugas.show', ['petugas' => $petugas->id]) }}"
                                     class="btn btn-block btn-info my-1">Detail</a>
+                            </div> --}}
+                            <div class="d-grid">
+                                <button class="btn btn-block btn-info my-1 btnDetailLaporanPetugas" data-bs-toggle="modal"
+                                    data-bs-target="#modalDetailPetugas{{ $petugas->id }}">
+                                    Detail
+                                </button>
                             </div>
+
 
                         </td>
                     </tr>
@@ -95,6 +102,58 @@
             </tbody>
         </table>
     </div>
+
+    @foreach ($petugasList as $petugas)
+        <!-- Modal Detail Petugas -->
+        <div class="modal fade" id="modalDetailPetugas{{ $petugas->id }}" tabindex="-1"
+            aria-labelledby="modalDetailLabel{{ $petugas->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetailLabel{{ $petugas->id }}">Detail Petugas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Nama</label>
+                            <input type="text" class="form-control" value="{{ $petugas->nama }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label>Email</label>
+                            <input type="email" class="form-control" value="{{ $petugas->email }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label>No Telepon</label>
+                            <input type="text" class="form-control" value="{{ $petugas->no_telp }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label>NIP</label>
+                            <input type="text" class="form-control" value="{{ $petugas->nip }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label>Jabatan</label>
+                            <div>
+                                @foreach ($petugas->roles as $role)
+                                    <span class="badge bg-primary">{{ $role->name }}</span>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>SPP Terbit</label>
+                            <input type="text" class="form-control" value="{{ $petugas->menerbitkan_count }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label>SPP Dilunasi</label>
+                            <input type="text" class="form-control" value="{{ $petugas->melunasi_count }}" readonly>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
 @endsection
 
 {{-- @push('scripts')

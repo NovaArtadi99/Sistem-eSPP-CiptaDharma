@@ -19,11 +19,11 @@
         </div>
 
         <div class="mb-3">
-            <label for="">Nomor HP</label>
+            <label for="">Nomor Telepon</label>
             <input type="text" name="no_telp" class="form-control" value="{{ $user->no_telp }}" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Kirim</button>
     </form>
 
 

@@ -28,8 +28,12 @@
                 <option value="Belum Lunas">Belum Lunas</option>
                 <option value="Sedang Diverifikasi">Sedang Diverifikasi</option>
                 <option value="Lunas">Lunas</option>
+                <option value="Kurang">Kurang</option>
+                <option value="Lebih">Lunas Lebih</option>
+                <option value="Verifikasi Kurang">Verifikasi Kurang</option>
             </select>
         </div>
+
         <div class="col-md-2">
             <label for="filterTahun">Filter Tahun</label>
             <select id="filterTahun" name="filter_tahun" class="form-control">
@@ -57,11 +61,19 @@
                 <option value="Desember">Desember</option>
             </select>
         </div>
-        <div class="col-2">
+        {{-- <div class="col-2">
             <button class="btn btn-outline-primary mt-4" id="btnFilter">
                 Filter
             </button>
 
+        </div> --}}
+        <div class="col-2 d-flex align-items-end gap-2">
+            <button type="submit" class="btn btn-outline-primary" id="btnFilter">
+                Filter
+            </button>
+            <button type="button" class="btn btn-outline-danger" id="btnReset">
+                Reset
+            </button>
         </div>
     </div>
 
@@ -75,6 +87,7 @@
                     <th>NIS</th>
                     <th>Angkatan</th>
                     <th>Kelas</th>
+                    {{-- <th>Bulan</th> --}}
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
@@ -88,15 +101,19 @@
                         <td>{{ $siswa->siswa->nis }}</td>
                         <td>{{ $siswa->siswa->angkatan }}</td>
                         <td>{{ $siswa->siswa->kelas }}</td>
+                        {{-- <td>{{ $siswa->biaya->bulan }}</td> --}}
+                        {{-- <td>{{ $siswa->biaya->bulan ?? '-' }}</td> --}}
                         <td>
+                            {{-- @if ($siswa->status == 'Belum Lunas')
+                                <button class="btn btn-danger">Belum Lunas</button> --}}
                             @if ($siswa->status == 'Belum Lunas')
-                                <button class="btn btn-danger">Belum Lunas</button>
+                                <button class="badge rounded-pill bg-danger">Belum Lunas</button>
                             @elseif ($siswa->status == 'Sedang Diverifikasi')
-                                <button class="btn btn-warning">Sedang Diverifikasi</button>
+                                <button class="badge rounded-pill bg-warning">Sedang Diverifikasi</button>
                             @elseif ($siswa->status == 'Lebih')
                                 <span class="badge rounded-pill bg-success">Lunas Lebih</span>
                             @elseif ($siswa->status == 'Kurang')
-                                <span class="badge rounded-pill bg-warning">Kurang</span>
+                                <button class="badge rounded-pill bg-warning">Kurang</button>
                             @elseif ($siswa->status == 'Verifikasi Kurang')
                                 <span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>
                             @else
@@ -124,7 +141,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="my-modal-title">Detail Siswa</h5>
+                    <h5 class="modal-title" id="my-modal-title">Detail Laporan Siswa</h5>
                     <button class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -186,7 +203,7 @@
                     <div class="form-group mb-3">
                         <label for="detail-bukti-pelunasan">Bukti Pelunasan</label>
                         <br>
-                        <a href="" id="detail-bukti-pelunasan-link" target="_blank"> Click to view
+                        <a href="" id="detail-bukti-pelunasan-link" target="_blank"> Klik untuk melihat
                         </a>
                     </div>
 
@@ -194,7 +211,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
+                        Tutup
                     </button>
 
                 </div>
@@ -237,11 +254,12 @@
                                     (value.status == 'Sedang Diverifikasi' ?
                                         '<span class="badge rounded-pill bg-warning">Sedang Diverifikasi</span>' :
                                         (value.status == 'Lebih' ?
-                                        '<span class="badge rounded-pill bg-success">Lunas Lebih</span>' :
+                                            '<span class="badge rounded-pill bg-success">Lunas Lebih</span>' :
                                             (value.status == 'Kurang' ?
-                                            '<span class="badge rounded-pill bg-warning">Kurang</span>' :
-                                                (value.status == 'Verifikasi Kurang' ?
-                                                '<span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>' :
+                                                '<span class="badge rounded-pill bg-warning">Kurang</span>' :
+                                                (value.status ==
+                                                    'Verifikasi Kurang' ?
+                                                    '<span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>' :
                                                     '<span class="badge rounded-pill bg-success">Lunas</span>'
                                                 )
                                             )
@@ -281,6 +299,12 @@
                         });
                     }
                 });
+            });
+            $('#btnReset').click(function() {
+                $('#filterStatus').val('');
+
+                // Reload page to reset the table or you can optionally re-fetch all data via AJAX
+                location.reload();
             });
         });
 

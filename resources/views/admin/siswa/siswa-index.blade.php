@@ -410,6 +410,7 @@
             localStorage.removeItem("filter_kelas");
             $('#filterAngkatan').val('');
             $('#filterKelas').val('');
+            location.reload();
         });
 
     </script>

@@ -4,19 +4,25 @@
         <div class="col-md-4">
             <label for="filterStatus">Filter Status</label>
             <select id="filterStatus" name="filter_status" class="form-control">
-                <option value="">Pilih Status</option>
-                {{-- <option value="Lunas">Lunas</option> --}}
-                <option value="Sedang Diverifikasi">Sedang Diverifikasi</option>
-                <option value="Belum Lunas">Belum Lunas</option>
-            </select>
-        </div>
-
-        <div class="col-4">
-            <button type="submit" class="btn btn-outline-primary mt-4" id="btnFilter">
-                Filter
-            </button>
+    <option value="">Pilih Status</option>
+    <option value="Sedang Diverifikasi">Sedang Diverifikasi</option>
+    <option value="Belum Lunas">Belum Lunas</option>
+    <option value="Kurang">Kurang</option>
+    <option value="Lebih">Lebih</option>
+    <option value="Verifikasi Kurang">Verifikasi Kurang</option>
+</select>
 
         </div>
+
+        <div class="col-4 d-flex align-items-end gap-2">
+    <button type="submit" class="btn btn-outline-primary" id="btnFilter">
+        Filter
+    </button>
+    <button type="button" class="btn btn-outline-danger" id="btnReset">
+        Reset
+    </button>
+</div>
+
     </div>
 
     <div class="table-responsive">
@@ -244,6 +250,13 @@
             }
         });
     });
+    $('#btnReset').click(function () {
+    $('#filterStatus').val('');
+
+    // Reload page to reset the table or you can optionally re-fetch all data via AJAX
+    location.reload();
+});
+
 });
 
 </script>

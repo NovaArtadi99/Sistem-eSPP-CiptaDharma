@@ -32,18 +32,27 @@
             <div class="row mb-4">
                 <div class="col">
                     @if ($pembayaran->bukti_pelunasan)
-                        <img src="{{ asset('bukti-pelunasan/' . $pembayaran->bukti_pelunasan) }}" id="preview"
-                            class="img-fluid img-thumbnail shadow" alt="Bukti Pembayaran">
+                        <a href="{{ asset('bukti-pelunasan/' . $pembayaran->bukti_pelunasan) }}"
+                            class="btn btn-sm btn-primary" target="_blank">Lihat Bukti</a>
                     @endif
+
+                </div>
+            </div>
+            
+
+            <div class="d-flex justify-content-between mt-4">
+                {{-- Tombol Kembali di kiri --}}
+                <a href="{{ route('ortu.riwayatPembayaran') }}" class="btn btn-lg btn-danger">← Kembali</a>
+
+                {{-- Tombol Lihat dan Unduh Kuitansi di kanan --}}
+                <div class="d-flex gap-2">
+                    <a href="{{ route('tagihan.lihatKuitansi', $pembayaran->id) }}" class="btn btn-lg btn-primary">Lihat
+                        Kuitansi</a>
+                    <a href="{{ route('tagihan.downloadKuitansi', $pembayaran->id) }}"
+                        class="btn btn-lg btn-secondary">Unduh Kuitansi</a>
                 </div>
             </div>
 
-            <div class="d-flex justify-content-end gap-2">
-                <a href="{{ route('tagihan.lihatKuitansi', $pembayaran->id) }}" class="btn btn-lg btn-primary">Lihat
-                    Kuitansi</a>
-                <a href="{{ route('tagihan.downloadKuitansi', $pembayaran->id) }}" class="btn btn-lg btn-secondary">Unduh
-                    Kuitansi</a>
-            </div>
         </div>
     </div>
 @endsection

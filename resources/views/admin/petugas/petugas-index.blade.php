@@ -145,7 +145,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
+                        Tutup
                     </button>
 
                 </div>
@@ -338,7 +338,7 @@
                     $('#detail-email').val(response.email ?? '-');
                     $('#detail-jenis-kelamin').val(response.jenis_kelamin ?? '-');
                     $('#detail-alamat').val(response.alamat ?? '-');
-                    $('#detail-telepon').val(response.telepon ?? '-');
+                    $('#detail-telepon').val(response.no_telp ?? '-');
                     $('#detail-agama').val(response.agama ?? '-');
                     $('#detail-status').html(response.status == 1 ?
                         '<span class="badge rounded-pill bg-success">Aktif</span>' :
@@ -350,6 +350,7 @@
         $('#btnReset').click(function() {
             localStorage.removeItem("filter_jenis_kelamin");
             $('#filterJK').val('');
+            location.reload();
         });
     </script>
 @endpush

@@ -21,14 +21,14 @@
                 <i class="fas fa-user fa-fw"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{{ route('profil.index') }}">Profile</a></li>
+                <li><a class="dropdown-item" href="{{ route('profil.index') }}">Profil</a></li>
                 {{-- <li><a class="dropdown-item" href="#!">Activity Log</a></li> --}}
                 <li><hr class="dropdown-divider" /></li>
                 <li>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <a class="dropdown-item" href="{{ route('logout') }}"
-                            onclick="event.preventDefault(); this.closest('form').submit();">Logout</a>
+                            onclick="event.preventDefault(); this.closest('form').submit();">Keluar</a>
                     </form>
                 </li>
             </ul>
@@ -99,7 +99,7 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button class="drawer-link btn btn-link text-danger d-inline-block" type="submit">
-                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    <i class="fas fa-sign-out-alt me-2"></i> Keluar
                 </button>
             </form>
         </li>

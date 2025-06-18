@@ -28,12 +28,15 @@
                 <option value="Desember">Desember</option>
             </select>
         </div>
-        <div class="col-4">
-            <button type="submit" class="btn btn-outline-primary mt-4" id="btnFilter">
+        <div class="col-4 d-flex align-items-end gap-2">
+            <button type="submit" class="btn btn-outline-primary" id="btnFilter">
                 Filter
             </button>
-
+            <button type="button" class="btn btn-outline-danger" id="btnReset">
+                Reset
+            </button>
         </div>
+
     </div>
     <div class="table-responsive">
         <table class="table table-light" id="dataTableOrtu">
@@ -73,10 +76,10 @@
                                     <button type="button" class="btn btn-sm btn-warning">Sedang Diverifikasi</button>
 
                                     <!-- tambahan a -->
-                                {{-- @elseif ($riwayat->status == 'Lebih')
+                                    {{-- @elseif ($riwayat->status == 'Lebih')
                                     <a href="#" class="btn btn-sm btn-success" data-bs-toggle="modal"
                                         data-bs-target="#buktiModal_{{ $index + 1 }}">Lunas Lebih</a> --}}
-                                {{-- @elseif ($riwayat->status == 'Kurang')
+                                    {{-- @elseif ($riwayat->status == 'Kurang')
                                     <button type="button" class="btn btn-sm btn-warning">Kurang</button> --}}
                                     <!-- tambahan b -->
                                 @else
@@ -86,8 +89,9 @@
                                 @if ($riwayat->status == 'Lunas' && $riwayat->isSentKuitansi == '1')
                                     {{-- <a href="{{ asset('bukti-pelunasan/' . $riwayat->bukti_pelunasan) }}"
                                         class="btn btn-sm btn-primary">Bukti</a> --}}
-                                    <a href="{{ route('tagihan.lihatKuitansi', $riwayat->id) }}"
-                                        class="btn btn-sm btn-secondary">Lihat Kuitansi</a>
+                                    <a href="{{ route('tagihan.lihatKuitansi', $riwayat->id) }}"></a>
+                                    {{-- <a href="{{ route('tagihan.lihatKuitansi', $riwayat->id) }}"
+                                        class="btn btn-sm btn-secondary">Lihat Kuitansi</a> --}}
                                 @else
                                     <button disabled class="btn btn-sm btn-secondary">Kuitansi Belum ada</button>
                                 @endif
@@ -218,71 +222,83 @@
         });
     </script> --}}
 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-<script>
-    var table;
-    table = $('#dataTableOrtu').DataTable({
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script>
+        var table;
+        table = $('#dataTableOrtu').DataTable({
             responsive: {
                 details: {
                     type: 'column',
                     target: 0
                 }
             },
-            columnDefs: [
-                { className: 'control', orderable: false, targets: 0 }
-            ],
+            columnDefs: [{
+                className: 'control',
+                orderable: false,
+                targets: 0
+            }],
             ordering: true
-    });
-    $(document).ready(function () {
-        $('#btnFilter').click(function(e) {
-        e.preventDefault();
-
-        $.ajax({
-            url: "{{ route('ortu.filterRiwayatPembayaran') }}",
-            type: "POST",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                "filter_tahun": $('#filterTahun').val(),
-                "filter_bulan": $('#filterBulan').val(),
-            },
-            success: function(data) {
-                table.clear();
-                // Masukkan data dengan row.add
-                $.each(data, function(index, value) {
-                    let statusBtn = (value.status === 'Belum Lunas')
-                        ? `<a href="{{ route('pembayaran.verifikasi', '') }}/${value.id}" class="btn btn-sm btn-danger">Belum Lunas</a>`
-                        : `<span class="btn btn-sm btn-success">Lunas</span>`;
-
-                    let kuitansiBtn = (value.status === 'Lunas' && value.isSentKuitansi == 1)
-                        ? `<a href="{{ asset('bukti-pelunasan/') }}/${value.bukti_pelunasan}" class="btn btn-sm btn-secondary">Kuitansi</a>`
-                        : `<button disabled class="btn btn-sm btn-secondary">Kuitansi Belum ada</button>`;
-
-                    let detailBtn = `<a href="/ortu/riwayat-pembayaran/${value.id}" class="btn btn-sm btn-info">Detail</a>`;
-
-                    table.row.add([
-                        '', // Kolom collapse (control)
-                        index + 1,
-                        value.no_invoice,
-                        value.tanggal_terbit,
-                        value.siswa.nama,
-                        value.siswa.nis,
-                        value.siswa.angkatan,
-                        value.siswa.kelas,
-                        'Rp. ' + value.biaya.nominal.toLocaleString('id-ID'),
-                        `<div class="d-flex gap-1">${statusBtn}${kuitansiBtn}</div>`,
-                        detailBtn
-                    ]);
-                });
-
-                table.draw();
-            }
         });
-    });
+        $(document).ready(function() {
+            $('#btnFilter').click(function(e) {
+                e.preventDefault();
 
-    })
-</script>
+                $.ajax({
+                    url: "{{ route('ortu.filterRiwayatPembayaran') }}",
+                    type: "POST",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "filter_tahun": $('#filterTahun').val(),
+                        "filter_bulan": $('#filterBulan').val(),
+                    },
+                    success: function(data) {
+                        table.clear();
+                        // Masukkan data dengan row.add
+                        $.each(data, function(index, value) {
+                            let statusBtn = (value.status === 'Belum Lunas') ?
+                                `<a href="{{ route('pembayaran.verifikasi', '') }}/${value.id}" class="btn btn-sm btn-danger">Belum Lunas</a>` :
+                                `<span class="btn btn-sm btn-success">Lunas</span>`;
+
+                            let kuitansiBtn = (value.status === 'Lunas' && value
+                                    .isSentKuitansi == 1) ?
+                                `<a href="{{ asset('bukti-pelunasan/') }}/${value.bukti_pelunasan}" class="btn btn-sm btn-secondary">Kuitansi</a>` :
+                                `<button disabled class="btn btn-sm btn-secondary">Kuitansi Belum ada</button>`;
+
+                            let detailBtn =
+                                `<a href="/ortu/riwayat-pembayaran/${value.id}" class="btn btn-sm btn-info">Detail</a>`;
+
+                            table.row.add([
+                                '', // Kolom collapse (control)
+                                index + 1,
+                                value.no_invoice,
+                                value.tanggal_terbit,
+                                value.siswa.nama,
+                                value.siswa.nis,
+                                value.siswa.angkatan,
+                                value.siswa.kelas,
+                                'Rp. ' + value.biaya.nominal.toLocaleString(
+                                    'id-ID'),
+                                `<div class="d-flex gap-1">${statusBtn}${kuitansiBtn}</div>`,
+                                detailBtn
+                            ]);
+                        });
+
+                        table.draw();
+                    }
+                });
+            });
+            $('#btnReset').click(function() {
+                $('#filterStatus').val('');
+
+                // Reload page to reset the table or you can optionally re-fetch all data via AJAX
+                location.reload();
+            });
+
+
+        })
+    </script>
 @endpush

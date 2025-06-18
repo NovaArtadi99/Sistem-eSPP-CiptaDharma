@@ -102,36 +102,43 @@
                         </td>
                         <td>
                             <div class="d-flex gap-1">
+                                {{-- Tombol Lihat Kuitansi --}}
                                 @if ($pembayaran->isSentKuitansi == '1')
                                     <a href="{{ route('tagihan.lihatKuitansi', $pembayaran->id) }}"
                                         class="btn btn-sm btn-secondary">Lihat Kuitansi</a>
                                 @endif
 
+                                {{-- Tombol Verifikasi --}}
                                 @if (
                                     $pembayaran->bukti_pelunasan != null &&
-                                        ($pembayaran->status == 'Sedang Diverifikasi' || $pembayaran->status == 'Belum Lunas' ))
-                                    {{-- <a href="javascript:void(0);"
-                                        class="btn btn-sm btn-info btn-verifikasi" data-id="{{ $pembayaran->id }}">
-                                        Verifikasi</a> --}}
+                                        ($pembayaran->status == 'Sedang Diverifikasi' || $pembayaran->status == 'Belum Lunas'))
                                     <button data-bs-toggle="modal" data-bs-target="#verifikasi_{{ $index + 1 }}"
-                                            class="btn btn-sm btn-info">Verifikasi</button>
-                                    {{-- <div id="statusButtons_{{ $pembayaran->id }}" class="status-buttons"
-                                        style="display: none;">
-                                        <a href="{{ route('pembayaran.verifikasi', $pembayaran->id) }}"
-                                            class="btn btn-sm btn-success">Lunas</a>
-                                        <button data-bs-toggle="modal" data-bs-target="#lebih_{{ $index + 1 }}"
-                                            class="btn btn-sm btn-primary">Lebih</button>
-                                        <button data-bs-toggle="modal" data-bs-target="#kurang_{{ $index + 1 }}"
-                                            class="btn btn-sm btn-danger">Kurang</button>
-                                    </div> --}}
+                                        class="btn btn-sm btn-info">Verifikasi</button>
                                 @endif
-                                @if ($pembayaran->bukti_pelunasan != null && ($pembayaran->status == 'Kurang' || $pembayaran->status == 'Verifikasi Kurang'))
-                                    <button onclick="verifikasi_kurang({{ json_encode($pembayaran) }})"class="btn btn-sm btn-info">Verifikasi</button>
+
+                                @if (
+                                    $pembayaran->bukti_pelunasan != null &&
+                                        ($pembayaran->status == 'Kurang' || $pembayaran->status == 'Verifikasi Kurang'))
+                                    <button onclick="verifikasi_kurang({{ json_encode($pembayaran) }})"
+                                        class="btn btn-sm btn-info">Verifikasi</button>
                                 @endif
+
+                                {{-- Tombol Lihat Bukti Pembayaran --}}
+                                @if (
+                                    $pembayaran->bukti_pelunasan != null &&
+                                        ($pembayaran->status == 'Sedang Diverifikasi' || $pembayaran->status == 'Verifikasi Kurang'))
+                                    <a href="{{ asset('bukti-pelunasan/' . $pembayaran->bukti_pelunasan) }}"
+                                        target="_blank" class="btn btn-sm btn-success">Lihat Bukti</a>
+                                @endif
+
+
+                                {{-- Tombol Detail --}}
                                 <a href="{{ route('pembayaran.show', $pembayaran->id) }}"
                                     class="btn btn-sm btn-warning">Detail</a>
                             </div>
                         </td>
+
+
                     </tr>
                 @endforeach
             </tbody>
@@ -151,21 +158,26 @@
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form action="{{ route('verifikasi_nilai', $pembayaran->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('verifikasi_nilai', $pembayaran->id) }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body">
                             <label for="ntagihan">Tagihan</label>
-                            <input id="ntagihan_{{ $index }}" type="text" class="form-control" readonly value="{{ 'Rp. ' . number_format($pembayaran->biaya->nominal, 0, ',', '.') }}">
+                            <input id="ntagihan_{{ $index }}" type="text" class="form-control" readonly
+                                value="{{ 'Rp. ' . number_format($pembayaran->biaya->nominal, 0, ',', '.') }}">
                             <label for="numb">Nominal dikirim</label>
-                            <input type="text" class="form-control" id="numb_{{ $index }}" oninput="hitungStatus({{ $index }})" value="{{ number_format($pembayaran->nominal, 0, ',', '.') }}">
-                            <input type="hidden" name="nominal" id="real_numb_{{ $index }}" value="{{ $pembayaran->nominal }}">
+                            <input type="text" class="form-control" id="numb_{{ $index }}"
+                                oninput="hitungStatus({{ $index }})"
+                                value="{{ number_format($pembayaran->nominal, 0, ',', '.') }}">
+                            <input type="hidden" name="nominal" id="real_numb_{{ $index }}"
+                                value="{{ $pembayaran->nominal }}">
                             {{-- <input oninput="hitungStatus({{ $index }})" id="numb_{{ $index }}" type="number" class="form-control" name="nominal" value="{{ number_format($pembayaran->nominal, 0, ',', '.') }}"> --}}
                             <label for="status">Status</label>
                             <input id="status_{{ $index }}" type="text" class="form-control" readonly>
-                            <div id="bukti_kembali_{{ $index }}" style="display: none;" >
-                            <label for="bukti_kembali">Bukti tambahan</label>
-                            <input id="bukti_kembali_{{ $index }}" type="file" class="form-control" accept="image/*"
-                                name="file_bukti">
+                            <div id="bukti_kembali_{{ $index }}" style="display: none;">
+                                <label for="bukti_kembali">Bukti tambahan</label>
+                                <input id="bukti_kembali_{{ $index }}" type="file" class="form-control"
+                                    accept="image/*" name="file_bukti">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -238,7 +250,8 @@
     <!-- tambahan b -->
 
 
-    <div class="modal fade" id="VerifikasiKurang" tabindex="-1" aria-labelledby="VerifikasiKurangLabel" aria-hidden="true">
+    <div class="modal fade" id="VerifikasiKurang" tabindex="-1" aria-labelledby="VerifikasiKurangLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="formkurang" method="POST">
@@ -256,7 +269,7 @@
                         <input type="hidden" name="nominal" id="real_numbk">
                         <label for="statusk">Status</label>
                         <input id="statusk" type="text" class="form-control" readonly>
-                        <div id="bukti_kembalik" style="display: none;" >
+                        <div id="bukti_kembalik" style="display: none;">
                             <label for="bukti_kembalik">Bukti tambahan</label>
                             <input id="bukti_kembalikk" type="file" class="form-control" accept="image/*"
                                 name="file_bukti">
@@ -269,68 +282,65 @@
             </div>
         </div>
     </div>
-
-
 @endsection
 @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            @foreach ($pembayarans as $index => $pembayaran)
+                document.getElementById('verifikasi_{{ $index + 1 }}')
+                    .addEventListener('shown.bs.modal', () => {
+                        hitungStatus({{ $index }});
+                    });
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        @foreach ($pembayarans as $index => $pembayaran)
-            document.getElementById('verifikasi_{{ $index + 1 }}')
-                .addEventListener('shown.bs.modal', () => {
-                    hitungStatus({{ $index }});
-                });
+                // Tambahkan event input ke nominal
+                document.getElementById(`numb_{{ $index }}`)
+                    .addEventListener('input', () => hitungStatus({{ $index }}));
+            @endforeach
+        });
 
-            // Tambahkan event input ke nominal
-            document.getElementById(`numb_{{ $index }}`)
-                .addEventListener('input', () => hitungStatus({{ $index }}));
-        @endforeach
-    });
-
-    function formatRupiah(angka) {
-        return 'Rp. ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
-    function hitungStatus(index) {
-        const tagihanEl = document.getElementById(`ntagihan_${index}`);
-        const nominalEl = document.getElementById(`numb_${index}`);
-        const statusEl = document.getElementById(`status_${index}`);
-        const buktiEl = document.getElementById(`bukti_kembali_${index}`);
-        const realNominalEl = document.getElementById(`real_numb_${index}`);
-
-        const tagihan = parseInt(tagihanEl.value.replace(/\D/g, ''));
-        let nominalRaw = nominalEl.value.replace(/\D/g, '');
-        let nominal = parseInt(nominalRaw || 0);
-
-        // Update tampilan dengan format Rupiah
-        nominalEl.value = formatRupiah(nominal);
-        realNominalEl.value = nominal; // Simpan angka asli untuk dikirim
-
-        // Logika status
-        if (isNaN(nominal)) {
-            statusEl.value = '';
-            buktiEl.style.display = 'none';
-            return;
+        function formatRupiah(angka) {
+            return 'Rp. ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        let selisih = nominal - tagihan;
-        if (selisih > 0) {
-            statusEl.value = `Lebih Rp. ${formatRupiah(selisih).replace('Rp. ', '')}`;
-            buktiEl.style.display = 'block';
-        } else if (selisih < 0) {
-            statusEl.value = `Kurang Rp. ${formatRupiah(Math.abs(selisih)).replace('Rp. ', '')}`;
-            buktiEl.style.display = 'none';
-        } else {
-            statusEl.value = 'Pas';
-            buktiEl.style.display = 'none';
+        function hitungStatus(index) {
+            const tagihanEl = document.getElementById(`ntagihan_${index}`);
+            const nominalEl = document.getElementById(`numb_${index}`);
+            const statusEl = document.getElementById(`status_${index}`);
+            const buktiEl = document.getElementById(`bukti_kembali_${index}`);
+            const realNominalEl = document.getElementById(`real_numb_${index}`);
+
+            const tagihan = parseInt(tagihanEl.value.replace(/\D/g, ''));
+            let nominalRaw = nominalEl.value.replace(/\D/g, '');
+            let nominal = parseInt(nominalRaw || 0);
+
+            // Update tampilan dengan format Rupiah
+            nominalEl.value = formatRupiah(nominal);
+            realNominalEl.value = nominal; // Simpan angka asli untuk dikirim
+
+            // Logika status
+            if (isNaN(nominal)) {
+                statusEl.value = '';
+                buktiEl.style.display = 'none';
+                return;
+            }
+
+            let selisih = nominal - tagihan;
+            if (selisih > 0) {
+                statusEl.value = `Lebih Rp. ${formatRupiah(selisih).replace('Rp. ', '')}`;
+                buktiEl.style.display = 'block';
+            } else if (selisih < 0) {
+                statusEl.value = `Kurang Rp. ${formatRupiah(Math.abs(selisih)).replace('Rp. ', '')}`;
+                buktiEl.style.display = 'none';
+            } else {
+                statusEl.value = 'Pas';
+                buktiEl.style.display = 'none';
+            }
         }
-    }
-</script>
+    </script>
 
 
 
-{{-- <script>
+    {{-- <script>
     document.addEventListener('DOMContentLoaded', () => {
         @foreach ($pembayarans as $index => $pembayaran)
             document.getElementById('verifikasi_{{ $index + 1 }}')
@@ -410,11 +420,12 @@
                                     (value.status == 'Sedang Diverifikasi' ?
                                         '<span class="badge rounded-pill bg-warning">Sedang Diverifikasi</span>' :
                                         (value.status == 'Lebih' ?
-                                        '<span class="badge rounded-pill bg-success">Lunas Lebih</span>' :
+                                            '<span class="badge rounded-pill bg-success">Lunas Lebih</span>' :
                                             (value.status == 'Kurang' ?
-                                            '<span class="badge rounded-pill bg-warning">Kurang</span>' :
-                                                (value.status == 'Verifikasi Kurang' ?
-                                                '<span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>' :
+                                                '<span class="badge rounded-pill bg-warning">Kurang</span>' :
+                                                (value.status ==
+                                                    'Verifikasi Kurang' ?
+                                                    '<span class="badge rounded-pill bg-warning">Verifikasi Kurang</span>' :
                                                     '<span class="badge rounded-pill bg-success">Lunas</span>'
                                                 )
                                             )
@@ -433,10 +444,13 @@
                                 (value.bukti_pelunasan != null && (value.status ==
                                         'Sedang Diverifikasi' || value.status ==
                                         'Kurang' || value.status ==
-                                        'Verifikasi Kurang' || value.status == 'Belum Lunas') ?
+                                        'Verifikasi Kurang' || value.status ==
+                                        'Belum Lunas') ?
                                     // '<a href="javascript:void(0);" class="btn btn-sm btn-info btn-verifikasi" data-id="' +
                                     // value.id + '">Verifikasi</a>' +
-                                    '<button data-bs-toggle="modal" data-bs-target="#verifikasi_'+(index + 1)+'"class="btn btn-sm btn-info">Verifikasi</button>'+
+                                    '<button data-bs-toggle="modal" data-bs-target="#verifikasi_' +
+                                    (index + 1) +
+                                    '"class="btn btn-sm btn-info">Verifikasi</button>' +
                                     '<div id="statusButtons_' + value.id +
                                     '" class="status-buttons" style="display: none;">' +
                                     '<a href="/pembayaran/verifikasi/' + value.id +
@@ -483,24 +497,24 @@
             });
         });
     </script>
-<script>
-function reattachEventHandlers() {
-    // Handler for verification buttons
-    $(document).off('click', '.btn-verifikasi').on('click', '.btn-verifikasi', function() {
-        var id = $(this).data('id');
-        $(this).hide();
-        $('#statusButtons_' + id).show();
-    });
+    <script>
+        function reattachEventHandlers() {
+            // Handler for verification buttons
+            $(document).off('click', '.btn-verifikasi').on('click', '.btn-verifikasi', function() {
+                var id = $(this).data('id');
+                $(this).hide();
+                $('#statusButtons_' + id).show();
+            });
 
-    // Handler for invoice buttons (reattach if needed)
-    $(document).off('click', '.btnSendInvoice').on('click', '.btnSendInvoice', function(e) {
-        e.preventDefault();
-        var dataId = $(this).data('id');
-        // Your existing invoice sending code...
-    });
-}
+            // Handler for invoice buttons (reattach if needed)
+            $(document).off('click', '.btnSendInvoice').on('click', '.btnSendInvoice', function(e) {
+                e.preventDefault();
+                var dataId = $(this).data('id');
+                // Your existing invoice sending code...
+            });
+        }
 
-$('#btnReset').click(function() {
+        $('#btnReset').click(function() {
             localStorage.removeItem("filter_angkatan");
             localStorage.removeItem("filter_kelas");
             localStorage.removeItem("filter_tahun");
@@ -509,8 +523,9 @@ $('#btnReset').click(function() {
             $('#filterKelas').val('');
             $('#filterTahun').val('');
             $('#filterBulan').val('');
+            location.reload();
         });
-</script>
+    </script>
     <!-- tambahan a -->
     <script>
         document.getElementById('btnVerifikasi').addEventListener('click', function() {
@@ -521,13 +536,12 @@ $('#btnReset').click(function() {
     <!-- tambahan b -->
 
     <script>
-
         function verifikasi_kurang(data) {
             hitungStatusk();
 
             $('#ntagihank').val(`Rp. ${formatRupiah(data.biaya.nominal-data.nominal).replace('Rp. ', '')}`);
             $('#numbk').val(`Rp. ${formatRupiah(data.biaya.nominal-data.nominal).replace('Rp. ', '')}`);
-            $('#real_numbk').val(data.biaya.nominal-data.nominal);
+            $('#real_numbk').val(data.biaya.nominal - data.nominal);
             $('#formMethod').val('POST');
             $('#formkurang').attr('action', `/verifikasi_kurang`);
             $('#id').val(data.id);

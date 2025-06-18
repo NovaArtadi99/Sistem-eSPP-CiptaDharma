@@ -76,7 +76,7 @@
             </div>
 
             <div class="mt-4">
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label for="">Bukti Pelunasan</label>
                     @if ($pembayaran->bukti_pelunasan == null)
                         <h3>Orang tua belum melakukan pembayaran</h3>
@@ -84,7 +84,7 @@
                         <img src="{{ asset('bukti-pelunasan/' . $pembayaran->bukti_pelunasan) }}" id="preview"
                             width="100%" alt="" class="img-thumbnail shadow">
                     @endif
-                </div>
+                </div> --}}
 
                 <div class="row">
                     <div class="col-md-6">
@@ -170,4 +170,10 @@
             </div>
         </div>
     </div>
+    <div class="mt-3 text-start">
+    <a href="{{ route('ortu.pembayaran') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Keluar
+    </a>
+</div>
+
 @endsection

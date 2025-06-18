@@ -322,6 +322,7 @@
                     localStorage.removeItem("filter_bulan");
                     $('#filterTahun').val('');
                     $('#filterBulan').val('');
+                    location.reload();
                 });
             });
         </script>

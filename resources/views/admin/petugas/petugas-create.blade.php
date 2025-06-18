@@ -15,7 +15,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="">Jabatan petugas</label>
+            <label for="">Jabatan Petugas</label>
             <select name="roles" class="form-control" required>
                 <option value="">Pilih Jabatan</option>
                 @foreach ($roles as $role)
@@ -60,7 +60,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="">No Telfon</label>
+            <label for="">No Telepon</label>
             <input type="number" name="no_telp" class="form-control" required autocomplete="on"
                 value="{{ old('no_telp', '') }}">
         </div>
@@ -88,6 +88,9 @@
 
 
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="mb-3 d-flex justify-content-start gap-2">
+            <button type="submit" class="btn btn-success">Kirim</button>
+            <a href="{{ route('petugas.index') }}" class="btn btn-primary">Batal</a>
+        </div>
     </form>
 @endsection

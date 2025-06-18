@@ -14,8 +14,8 @@ class ProfilController extends Controller
 {
     public function index()
     {
-        $data['judul'] = 'Data Profile';
-        
+        $data['judul'] = 'Data Profil';
+
         $data['user'] = User::find(Auth::user()->id);
 
         return view('profile.editt', $data);
@@ -23,7 +23,7 @@ class ProfilController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $data['judul'] = 'Data Profile';
+        $data['judul'] = 'Data Profil';
         $password = $request->filled('password') ? bcrypt($request->password) : $user->password;
 
         $user->update([

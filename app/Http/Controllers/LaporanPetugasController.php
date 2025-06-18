@@ -8,14 +8,21 @@ use Illuminate\Http\Request;
 class LaporanPetugasController extends Controller
 {
     public function index()
-    {
-        $data['judul'] = 'Laporan Data Petugas';
-        $data['laporan_petugas'] = User::role(['Petugas', 'KepalaSekolah'])->withCount('menerbitkan')->withCount('melunasi')->latest()->get();
+{
+    $data['judul'] = 'Laporan Data Petugas';
+
+    $data['laporan_petugas'] = User::role(['Petugas', 'KepalaSekolah'])
+        ->withCount('menerbitkan')
+        ->withCount('melunasi')
+        ->latest()
+        ->get();
+
+    $data['petugasList'] = $data['laporan_petugas']; // alias atau salinan dengan nama lain
+
+    return view('admin.laporan-petugas.laporan-petugas-index', $data);
+}
 
 
-        // dd($data);
-        return view('admin.laporan-petugas.laporan-petugas-index', $data);
-    }
 
 
     public function store(Request $request)

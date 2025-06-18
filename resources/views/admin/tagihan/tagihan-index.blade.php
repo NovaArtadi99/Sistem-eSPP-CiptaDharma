@@ -561,6 +561,7 @@
             $('#filterKelas').val('');
             $('#filterTahun').val('');
             $('#filterBulan').val('');
+            location.reload();
         });
     </script>
 
