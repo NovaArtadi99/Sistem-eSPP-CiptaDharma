@@ -217,9 +217,14 @@
                         <input type="text" id="detail-tanggal-lahir" class="form-control" readonly>
                     </div>
                     <div class="form-group mb-3">
+    <label for="detail-agama">Agama</label>
+    <input type="text" id="detail-agama" class="form-control" readonly>
+</div>
+
+                    {{-- <div class="form-group mb-3">
                         <label for="detail-password">Password</label>
                         <input type="password" id="detail-password" class="form-control" readonly>
-                    </div>
+                    </div> --}}
                     {{-- <div class="form-group mb-3">
                         <label for="detail-id-telegram">ID Telegram</label>
                         <input type="text" id="detail-id-telegram" class="form-control" readonly>
@@ -401,6 +406,8 @@
                     $('#detail-id-telegram').val(response.id_telegram);
                     $('#detail-tanggal-lahir').val(response.tanggal_lahir);
                     $('#detail-password').val(response.password);
+                    $('#detail-agama').val(response.agama); // sesuaikan key 'agama' sesuai response dari backend
+
 
                 }
             });

@@ -37,9 +37,10 @@
                         {{-- <li class="breadcrumb-item active">Dashboard</li> --}}
                     </ol>
                     {{-- popup Berhasil login --}}
-        {{-- @if (session()->has('loginSuccess'))
+        @if (session()->has('loginSuccess'))
             @include('admin.partials.loginberhasil')
-        @endif --}}
+        @endif
+
                     @include('admin.flash')
                     @yield('content')
 

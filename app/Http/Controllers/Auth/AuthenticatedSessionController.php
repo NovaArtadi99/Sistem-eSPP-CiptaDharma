@@ -8,37 +8,35 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log; // Tambahkan ini
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-        // Tambahkan debug
-    \Log::info('Login Success Session Set');
 
-    $request->session()->flash('loginSuccess', true);
+        // Logging login success
+        Log::info('Login Success Session Set');
+
+        // Flash session for login success
+        // $request->session()->flash('loginSuccess', true);
+        /** @var \Illuminate\Session\Store $session */
+        $session = $request->session();
+        $session->flash('loginSuccess', true);
+
 
         $request->session()->regenerate();
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
