@@ -66,12 +66,22 @@ class LaporanSPPController extends Controller
 
     public function filter(Request $request)
     {
-        if (empty($request->filter_tahun) && empty($request->filter_bulan) && empty($request->filter_tanggal_awal) && empty($request->filter_tanggal_akhir)) {
+        if (empty($request->filter_tahun) && empty($request->filter_bulan)
+        && empty($request->filter_tanggal_awal) && empty($request->filter_tanggal_akhir)
+        && empty($request->filter_kelas) && empty($request->filter_stts)
+        ) {
             return Tagihan::with(['siswa','biaya'])->whereStatus('Lunas')->latest()->get();
         } else {
             return response()->json(
                 Tagihan::with(['siswa','biaya'])
-                    ->whereStatus('Lunas')
+                    ->when(!empty($request->filter_stts), function ($query) use ($request) {
+                        $query->whereStatus($request->filter_stts);
+                    })
+                    ->when(!empty($request->filter_kelas), function ($query) use ($request) {
+                        $query->whereHas('siswa', function ($q) use ($request) {
+                            $q->where('kelas', $request->filter_kelas);
+                        });
+                    })
                     ->when(!empty($request->filter_tahun), function ($query) use ($request) {
                         $query->whereTahun($request->filter_tahun);
                     })
@@ -89,12 +99,17 @@ class LaporanSPPController extends Controller
 
     public function export(Request $request)
     {
+        // dd($request->all());
         $filterTahun = $request->query('filter_tahun');
         $filterBulan = $request->query('filter_bulan');
         $filterTanggalAwal = $request->query('filter_tanggal_awal');
         $filterTanggalAkhir = $request->query('filter_tanggal_akhir');
+        $fields = $request->query('fields');
+        $stts = $request->query('filter_stts');
+        $kelas = $request->query('filter_kelas');
+
         $tgl = date('d-m-Y_H-i-s');
-        return Excel::download(new LaporanSPPExport($filterTahun, $filterBulan, $filterTanggalAwal, $filterTanggalAkhir), 'laporan_spp_' . $tgl . '.xlsx');
+        return Excel::download(new LaporanSPPExport($filterTahun, $filterBulan, $filterTanggalAwal, $filterTanggalAkhir, $fields, $stts, $kelas), 'laporan_spp_' . $tgl . '.xlsx');
     }
 
 

@@ -11,12 +11,15 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles, WithEvents
 {
 
+    private array $fields;
     private $counter = 0;
 
     use Exportable;
@@ -24,76 +27,105 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
     protected $bulan;
     protected $tanggalAwal;
     protected $tanggalAkhir;
+    protected $stts;
+    protected $kelas;
 
-    public function __construct($tahun = null, $bulan = null, $tanggalAwal = null, $tanggalAkhir = null)
+
+    public function __construct($tahun = null, $bulan = null, $tanggalAwal = null, $tanggalAkhir = null, array $fields = [], $stts = null, $kelas = null)
     {
         $this->tahun = $tahun;
         $this->bulan = $bulan;
         $this->tanggalAwal = $tanggalAwal;
         $this->tanggalAkhir = $tanggalAkhir;
+        $this->fields = $fields ?: ['NoInvoice', 'NIS', 'NamaSiswa', 'Kelas', 'Bulan', 'Tahun'];
+        $this->stts = $stts;
+        $this->kelas = $kelas;
     }
+    
+    protected function fieldMap(): array
+    {
+        return [
+            'NoInvoice'     => ['No Invoice',   fn($t) => $t->no_invoice],
+            'NIS'           => ['NIS',          fn($t) => $t->siswa->nis],
+            'NamaSiswa'     => ['Nama Siswa',   fn($t) => $t->siswa->nama],
+            'Kelas'         => ['Kelas',        fn($t) => $t->siswa->kelas],
+            'Bulan'         => ['Bulan',        fn($t) => $t->bulan],
+            'Tahun'         => ['Tahun',        fn($t) => $t->tahun],
+            'TotalBayar'    => ['Total Bayar',  fn($t) => 'Rp. ' . number_format($t->biaya->nominal, 0, ',', '.')],
+            'TanggalTerbit' => ['Tanggal Terbit', fn($t) => $t->tanggal_terbit],
+            'TanggalLunas'  => ['Tanggal Lunas', fn($t) => $t->tanggal_lunas],
+            'AdminPenerbit' => ['Admin Penerbit', fn($t) => $t->penerbit->nama ?? '-'],
+            'UserMelunasi'  => ['User Melunasi', fn($t) => $t->melunasi->nama ?? '-'],
+            'Status'        => ['Status',        fn($t) => $t->status],
+        ];
+    }
+
 
     public function collection()
     {
-        $tagihan = Tagihan::with('siswa')->where('status', 'Lunas');
+        $query = Tagihan::with(['siswa', 'biaya', 'penerbit', 'melunasi']);
+
         if ($this->tahun) {
-            $tagihan->where('tahun', $this->tahun);
+            $query->where('tahun', $this->tahun);
         }
 
         if ($this->bulan) {
-            $tagihan->where('bulan', $this->bulan);
+            $query->where('bulan', $this->bulan);
         }
 
         if ($this->tanggalAwal && $this->tanggalAkhir) {
-            $tagihan->whereBetween('tanggal_lunas', [$this->tanggalAwal, $this->tanggalAkhir]);
+            $query->whereBetween('tanggal_lunas', [$this->tanggalAwal, $this->tanggalAkhir]);
+        }
+        if ($this->stts) {
+            $query->where('status', $this->stts);
+        }
+        if ($this->kelas) {
+            $query->whereHas('siswa', function ($q) {
+                $q->where('kelas', $this->kelas);
+            });
         }
 
-        return $tagihan->get();
+        return $query->get();
     }
-
 
     public function headings(): array
     {
-        return [
-            '#',
-            'No Invoice',
-            'NIS',
-            'Nama Siswa',
-            'Kelas',
-            'Bulan',
-            'Tahun',
-            'Total Bayar',
-            'Tanggal Terbit',
-            'Tanggal Lunas',
-            'Admin Penerbit',
-            'User Melunasi',
-            'Status',
-        ];
+        $heading = ['#'];
+        $fieldMap = $this->fieldMap();
+
+        foreach ($this->fields as $field) {
+            if (isset($fieldMap[$field])) {
+                $heading[] = $fieldMap[$field][0];
+            }
+        }
+        return $heading;
     }
 
     public function map($tagihan): array
     {
-        return [
-            ++$this->counter,
-            $tagihan->no_invoice,
-            $tagihan->siswa->nis,
-            $tagihan->siswa->nama,
-            $tagihan->siswa->kelas,
-            $tagihan->bulan,
-            $tagihan->tahun,
-            'Rp. ' . number_format($tagihan->biaya->nominal, 0, ',', '.'),
-            $tagihan->tanggal_terbit,
-            $tagihan->tanggal_lunas,
-            $tagihan->penerbit->nama ?? '-',
-            $tagihan->melunasi->nama ?? '-',
-            $tagihan->status
-        ];
+        $row = [++$this->counter];
+        $fieldMap = $this->fieldMap();
+
+        foreach ($this->fields as $field) {
+            if (isset($fieldMap[$field])) {
+                $row[] = ($fieldMap[$field][1])($tagihan); // panggil closure
+            }
+        }
+        return $row;
+    }
+
+    protected function getLastColumnLetter(): string
+    {
+        $totalColumns = count($this->fields) + 1;
+
+        return \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($totalColumns);
     }
 
     public function styles(Worksheet $sheet)
     {
+        $lastCol = $this->getLastColumnLetter();
         return [
-            'A5:M5' => [
+            "A5:{$lastCol}5" => [
                 'font' => ['bold' => true],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
@@ -107,21 +139,23 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
         ];
     }
 
+
     public function registerEvents(): array
     {
         return [
             BeforeSheet::class => function (BeforeSheet $event) {
                 $sheet = $event->sheet->getDelegate();
+                $lastCol = $this->getLastColumnLetter();
 
-                // Set judul utama
-                $sheet->mergeCells('A1:M1');
+                // Header
+                $sheet->mergeCells("A1:{$lastCol}1");
                 $sheet->setCellValue('A1', 'Pemerintah Provinsi Bali');
 
-                $sheet->mergeCells('A2:M2');
+                $sheet->mergeCells("A2:{$lastCol}2");
                 $sheet->setCellValue('A2', 'SD CHIPTA DHARMA');
 
-                $sheet->mergeCells('A3:M3');
-                $sheet->setCellValue('A3', 'Laporan Data SPP');
+                $sheet->mergeCells("A3:{$lastCol}3");
+                $sheet->setCellValue('A3', 'Laporan Pembayaran SPP Siswa');
 
                 $periode = 'Periode : ';
                 if ($this->bulan && $this->tahun) {
@@ -132,16 +166,43 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
                     $periode .= '-';
                 }
 
-                $sheet->mergeCells('A4:B4');
+                $sheet->mergeCells("A4:B4");
                 $sheet->setCellValue('A4', $periode);
 
-                // Atur rata tengah dan bold
                 foreach (['A1', 'A2', 'A3'] as $cell) {
                     $sheet->getStyle($cell)->getFont()->setBold(true)->setSize(14);
                     $sheet->getStyle($cell)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 }
 
                 $sheet->getStyle('A4')->getFont()->setBold(true);
+
+                // Logo Sekolah
+                $logoPath = public_path('logo_sekolah.png');
+                if (file_exists($logoPath)) {
+                    $drawing = new Drawing();
+                    $drawing->setName('Logo');
+                    $drawing->setDescription('Logo Sekolah');
+                    $drawing->setPath($logoPath);
+                    $drawing->setHeight(80);
+                    $drawing->setCoordinates('A1');
+                    $drawing->setWorksheet($sheet);
+                }
+            },
+
+            AfterSheet::class => function (AfterSheet $event) {
+                $sheet = $event->sheet->getDelegate();
+                $lastCol = $this->getLastColumnLetter();
+
+                // Hitung baris paling bawah dari data
+                $lastRow = $sheet->getHighestRow() + 3;
+
+                // Buat cell tanda tangan
+                $sheet->mergeCells("{$lastCol}{$lastRow}:{$lastCol}" . ($lastRow + 2));
+                $sheet->setCellValue("{$lastCol}{$lastRow}", "Penanggung Jawab\n\n\n\n(__________________)");
+
+                $sheet->getStyle("{$lastCol}{$lastRow}")
+                    ->getAlignment()->setWrapText(true)
+                    ->setHorizontal(Alignment::HORIZONTAL_CENTER);
             },
         ];
     }

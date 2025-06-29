@@ -95,7 +95,7 @@ class TagihanController extends Controller
         //new
         $data_tagihan = [
             'no_invoice'     => $request->no_invoice,
-            'nama_invoice'   => $request->nama_invoice,
+            'nama_invoice'   => $request->keterangan,
             'user_id'        => $request->user_id,
             'biaya_id'       => $request->biaya_id,
             'bulan'          => $request->bulan,
@@ -141,8 +141,8 @@ class TagihanController extends Controller
         $dompdf->render();
 
         $output = $dompdf->output();
-
-        $pdfPath = storage_path('app/public/invoice.pdf');
+        $namafile = $user->nama . "_Invoice_". $request->keterangan ."_". $request->bulan . "_" . $request->tahun . ".pdf";
+        $pdfPath = storage_path("app/public/" . $namafile);
         file_put_contents($pdfPath, $output);
 
         $botToken = env('TELEGRAM_BOT_TOKEN');
@@ -150,7 +150,12 @@ class TagihanController extends Controller
         $client->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
             'form_params' => [
                 'chat_id' => $chatId,
-                'text' => "Halo {$user->nama}, berikut adalah invoice {$request->nama_invoice} Anda.",
+                'text' => "Invoice Pembayaran {$request->keterangan} Bulan {$request->bulan} {$request->tahun} untuk siswa atas nama {$user->nama}\n\n" .
+                    "No. Invoice: {$no_inv->no_invoice}\n" .
+                    "Keterangan: Invoice {$request->keterangan}\n" .
+                    "Biaya: " . ($biaya ? $biaya->nama_biaya : 'Biaya Lain') . "\n" .
+                    "Jumlah: Rp. " . number_format($tagihan->nominal_biaya_lain ?? $biaya->nominal, 0, ',', '.') . "\n\n" .
+                    "Silakan cek lampiran untuk detail invoice.",
             ],
         ]);
 
@@ -164,7 +169,7 @@ class TagihanController extends Controller
                 [
                     'name'     => 'document',
                     'contents' => fopen($pdfPath, 'r'),
-                    'filename' => 'invoice.pdf',
+                    'filename' => $namafile,
                 ],
             ],
         ]);

@@ -1,81 +1,92 @@
 @extends('admin.admin-layout')
 @section('content')
-    <div class="row mb-3">
-
-        <div class="col-md-2">
-            <label for="filterTahun">Filter Tahun</label>
-            <select id="filterTahun" name="filter_tahun" class="form-control">
-                <option value="">Pilih Tahun</option>
-                @for ($year = 2020; $year <= date('Y'); $year++)
-                    <option value="{{ $year }}">{{ $year }}</option>
-                @endfor
-            </select>
-        </div>
-        <div class="col-md-2">
-            <label for="filterBulan">Filter Bulan</label>
-            <select id="filterBulan" class="form-control" name="filter_bulan">
-                <option value="">Pilih Bulan</option>
-                <option value="Januari">Januari</option>
-                <option value="Februari">Februari</option>
-                <option value="Maret">Maret</option>
-                <option value="April">April</option>
-                <option value="Mei">Mei</option>
-                <option value="Juni">Juni</option>
-                <option value="Juli">Juli</option>
-                <option value="Agustus">Agustus</option>
-                <option value="September">September</option>
-                <option value="Oktober">Oktober</option>
-                <option value="November">November</option>
-                <option value="Desember">Desember</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <label for="filterTanggalAwal">Filter Tanggal Awal</label>
-            <input type="date" id="filterTanggalAwal" name="filter_tanggal_awal" class="form-control">
-        </div>
-        <div class="col-md-2">
-            <label for="filterTanggalAkhir">Filter Tanggal Akhir</label>
-            <input type="date" id="filterTanggalAkhir" name="filter_tanggal_akhir" class="form-control">
-        </div>
-
-        <div class="col-md-1">
-            <button type="submit" class="btn btn-outline-primary mt-4" id="btnFilter">
-                Filter
-            </button>
-        </div>
-        {{-- <div class="col-1 d-flex align-items-end gap-2">
-            <button type="submit" class="btn btn-outline-primary" id="btnFilter">
-                Filter
-            </button>
-            <button type="button" class="btn btn-outline-danger" id="btnReset">
-                Reset
-            </button>
-        </div> --}}
-
-        <div class="col-md-3">
-            <div class="d-flex justify-content-end my-4">
-                <div>
-                    {{-- <a href="{{ route('laporanSpp.export') }}" class="btn btn-outline-success" id="btnExport">
-                        <i class="fas fa-file-excel"></i> Export Excel
-                    </a> --}}
-                    <a href="#" class="btn btn-outline-success" id="btnExport">
-                        <i class="fas fa-file-excel"></i> Export Excel
-                    </a>
-                    {{-- <a href="{{ route('laporanSpp.import') }}" class="btn btn-warning" id="btnImport" data-bs-toggle="modal"
-                        data-bs-target="#importModal">
-                        <i class="fas fa-file-import"></i> Import Excel
-                    </a> --}}
-                    <a href="#" class="btn btn-outline-dark" id="btnPrint">
-                        <i class="fas fa-print"></i> Print
-                    </a>
-
+    <div class="row">
+        <div class="row col-md-6">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="filterstts">Status</label>
+                        <select id="filterstts" name="filter_status" class="form-control">
+                            <option value="Lunas">Lunas</option>
+                            <option value="Belum Lunas">Belum Lunas</option>
+                            <option value="Sedang Diverifikasi">Sedang Diverifikasi</option>
+                            <option value="Lebih">Lebih</option>
+                            <option value="Kurang">Kurang</option>
+                            <option value="Verifikasi Kurang">Verifikasi Kurang</option>
+                            <option value="">Semua</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="filterKelas">Kelas</label>
+                        <select id="filterKelas" class="form-control" name="filter_kelas">
+                            <option value="">Pilih Kelas</option>
+                            @foreach (range(1, 6) as $number)
+                                @foreach (range('A', 'D') as $letter)
+                                    <option value="{{ $number . $letter }}">{{ $number . $letter }}</option>
+                                @endforeach
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="filterTahun">Tahun</label>
+                        <select id="filterTahun" name="filter_tahun" class="form-control">
+                            <option value="">Pilih Tahun</option>
+                            @for ($year = 2020; $year <= date('Y'); $year++)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="filterBulan">Bulan</label>
+                        <select id="filterBulan" class="form-control" name="filter_bulan">
+                            <option value="">Pilih Bulan</option>
+                            <option value="Januari">Januari</option>
+                            <option value="Februari">Februari</option>
+                            <option value="Maret">Maret</option>
+                            <option value="April">April</option>
+                            <option value="Mei">Mei</option>
+                            <option value="Juni">Juni</option>
+                            <option value="Juli">Juli</option>
+                            <option value="Agustus">Agustus</option>
+                            <option value="September">September</option>
+                            <option value="Oktober">Oktober</option>
+                            <option value="November">November</option>
+                            <option value="Desember">Desember</option>
+                        </select>
+                    </div>
                 </div>
-
-
+                <div class="row mt-2">
+                    <div class="col-md-3">
+                        <label for="filterTanggalAwal">Tanggal Awal</label>
+                        <input type="date" id="filterTanggalAwal" name="filter_tanggal_awal" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="filterTanggalAkhir">Tanggal Akhir</label>
+                        <input type="date" id="filterTanggalAkhir" name="filter_tanggal_akhir" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-outline-primary mt-4" id="btnFilter">
+                            Filter
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-
-
+        <div class="row col-md-6">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-end my-4">
+                    <div>
+                        <a href="#" class="btn btn-outline-success" id="btnExport_format"
+                            data-bs-toggle="modal" data-bs-target="#btnExport_format_modal">
+                            <i class="fas fa-file-excel"></i> Export Excel
+                        </a>
+                        <a href="#" class="btn btn-outline-dark" id="btnPrint">
+                            <i class="fas fa-print"></i> Print
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="table-responsive">
@@ -202,6 +213,83 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal format laporan -->
+    <div class="modal fade" id="btnExport_format_modal" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+        aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleId">
+                        Atur Format Laporan SPP
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formatLaporanForm">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldNoInvoice" checked>
+                            <label class="form-check-label" for="fieldNoInvoice">No Invoice</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldNIS" checked>
+                            <label class="form-check-label" for="fieldNIS">NIS</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldNamaSiswa" checked>
+                            <label class="form-check-label" for="fieldNamaSiswa">Nama Siswa</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldKelas" checked>
+                            <label class="form-check-label" for="fieldKelas">Kelas</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldBulan" checked>
+                            <label class="form-check-label" for="fieldBulan">Bulan</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldTahun" checked>
+                            <label class="form-check-label" for="fieldTahun">Tahun</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldTotalBayar" checked>
+                            <label class="form-check-label" for="fieldTotalBayar">Total Bayar</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldTanggalTerbit" checked>
+                            <label class="form-check-label" for="fieldTanggalTerbit">Tanggal Terbit</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldTanggalLunas" checked>
+                            <label class="form-check-label" for="fieldTanggalLunas">Tanggal Lunas</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldAdminPenerbit" checked>
+                            <label class="form-check-label" for="fieldAdminPenerbit">Admin Penerbit</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldUserMelunasi" checked>
+                            <label class="form-check-label" for="fieldUserMelunasi">User Melunasi</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="fieldStatus" checked>
+                            <label class="form-check-label" for="fieldStatus">Status</label>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-outline-success" id="btnExport">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Tutup
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -213,6 +301,19 @@
         const bulan = document.getElementById('filterBulan').value;
         const tglAwal = document.getElementById('filterTanggalAwal').value;
         const tglAkhir = document.getElementById('filterTanggalAkhir').value;
+        const stts = document.getElementById('filterstts').value;
+        const kelas = document.getElementById('filterKelas').value;
+
+        const fields = [
+            'NoInvoice', 'NIS', 'NamaSiswa', 'Kelas',
+            'Bulan', 'Tahun', 'TotalBayar', 'TanggalTerbit',
+            'TanggalLunas', 'AdminPenerbit', 'UserMelunasi', 'Status'
+        ];
+
+        const selectedFields = fields.filter(field => {
+            const checkbox = document.getElementById(`field${field}`);
+            return checkbox && checkbox.checked;
+        });
 
         const params = new URLSearchParams();
 
@@ -220,6 +321,10 @@
         if (bulan) params.append('filter_bulan', bulan);
         if (tglAwal) params.append('filter_tanggal_awal', tglAwal);
         if (tglAkhir) params.append('filter_tanggal_akhir', tglAkhir);
+        if (stts) params.append('filter_stts', stts);
+        if (kelas) params.append('filter_kelas', kelas);
+
+        selectedFields.forEach(field => params.append('fields[]', field));
 
         const url = "{{ route('laporanSpp.export') }}" + "?" + params.toString();
         window.location.href = url;
@@ -247,12 +352,15 @@
     <script>
         $(document).ready(function() {
             $('#btnFilter').click(function(e) {
+            // console.log($('#filterKelas').val());
                 e.preventDefault();
                 $.ajax({
                     url: "{{ route('laporanSpp.filter') }}",
                     type: "POST",
                     data: {
                         "_token": "{{ csrf_token() }}",
+                        "filter_stts": $('#filterstts').val(),
+                        "filter_kelas": $('#filterKelas').val(),
                         "filter_tahun": $('#filterTahun').val(),
                         "filter_bulan": $('#filterBulan').val(),
                         "filter_tanggal_awal": $('#filterTanggalAwal').val(),
