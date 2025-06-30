@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use Illuminate\Support\Facades\Auth;
 
 class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles, WithEvents
 {
@@ -190,20 +191,37 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
             },
 
             AfterSheet::class => function (AfterSheet $event) {
-                $sheet = $event->sheet->getDelegate();
-                $lastCol = $this->getLastColumnLetter();
+            $sheet = $event->sheet->getDelegate();
+            $lastCol = $this->getLastColumnLetter();
+            $startRow = $sheet->getHighestRow() + 4; // mulai 3 baris setelah data
 
-                // Hitung baris paling bawah dari data
-                $lastRow = $sheet->getHighestRow() + 3;
+            $user = Auth::user();
+            $adminName = $user->nama ?? '__________________';
+            $ttdPath = public_path("ttd_admin.png");
 
-                // Buat cell tanda tangan
-                $sheet->mergeCells("{$lastCol}{$lastRow}:{$lastCol}" . ($lastRow + 2));
-                $sheet->setCellValue("{$lastCol}{$lastRow}", "Penanggung Jawab\n\n\n\n(__________________)");
+            // 1. Tulis teks "Penanggung Jawab"
+            $sheet->setCellValue("{$lastCol}{$startRow}", "Penanggung Jawab");
+            $sheet->getStyle("{$lastCol}{$startRow}")
+                ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-                $sheet->getStyle("{$lastCol}{$lastRow}")
-                    ->getAlignment()->setWrapText(true)
-                    ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            },
+            // 2. Tambahkan gambar tanda tangan jika ada
+            if (file_exists($ttdPath)) {
+                $drawing = new Drawing();
+                $drawing->setName('TTD Admin');
+                $drawing->setDescription('Tanda Tangan Admin');
+                $drawing->setPath($ttdPath);
+                $drawing->setHeight(60);
+                $drawing->setCoordinates("{$lastCol}" . ($startRow + 1)); // baris di bawah "Penanggung Jawab"
+                $drawing->setOffsetY(0); // opsional: ubah sesuai kebutuhan
+                $drawing->setWorksheet($sheet);
+            }
+
+            // 3. Tulis nama admin di baris bawah gambar
+            $sheet->setCellValue("{$lastCol}" . ($startRow + 3), "({$adminName})");
+            $sheet->getStyle("{$lastCol}" . ($startRow + 3))
+                ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        }
+
         ];
     }
 
