@@ -42,7 +42,7 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
         $this->stts = $stts;
         $this->kelas = $kelas;
     }
-    
+
     protected function fieldMap(): array
     {
         return [
@@ -150,13 +150,26 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
 
                 // Header
                 $sheet->mergeCells("A1:{$lastCol}1");
-                $sheet->setCellValue('A1', 'Pemerintah Provinsi Bali');
+                $sheet->setCellValue('A1', 'LAPORAN SPP SD CIPTA DHARMA');
 
                 $sheet->mergeCells("A2:{$lastCol}2");
-                $sheet->setCellValue('A2', 'SD CHIPTA DHARMA');
+                $sheet->setCellValue('A2', 'Tahun Pelajaran 2024/2025');
 
-                $sheet->mergeCells("A3:{$lastCol}3");
-                $sheet->setCellValue('A3', 'Laporan Pembayaran SPP Siswa');
+                // $sheet->mergeCells("A3:{$lastCol}3");
+                // $sheet->setCellValue('A3', 'Laporan Pembayaran SPP Siswa');
+
+                // Spasi kosong antara header dan periode
+                $sheet->mergeCells("A4:{$lastCol}4");
+                $sheet->setCellValue('A4', ''); // Baris kosong
+
+                // $periode = 'Periode : ';
+                // if ($this->bulan && $this->tahun) {
+                //     $periode .= $this->bulan . ' ' . $this->tahun;
+                // } elseif ($this->tahun) {
+                //     $periode .= $this->tahun;
+                // } else {
+                //     $periode .= '-';
+                // }
 
                 $periode = 'Periode : ';
                 if ($this->bulan && $this->tahun) {
@@ -167,62 +180,74 @@ class LaporanSPPExport implements FromCollection, WithHeadings, WithMapping, Sho
                     $periode .= '-';
                 }
 
-                $sheet->mergeCells("A4:B4");
-                $sheet->setCellValue('A4', $periode);
+                $sheet->mergeCells("A5:B5");
+                $sheet->setCellValue('A5', $periode);
+
+
+                // $sheet->mergeCells("A4:B4");
+                // $sheet->setCellValue('A4', $periode);
+
+                // foreach (['A1', 'A2', 'A3'] as $cell) {
+                //     $sheet->getStyle($cell)->getFont()->setBold(true)->setSize(14);
+                //     $sheet->getStyle($cell)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                // }
+
+                // $sheet->getStyle('A4')->getFont()->setBold(true);
 
                 foreach (['A1', 'A2', 'A3'] as $cell) {
                     $sheet->getStyle($cell)->getFont()->setBold(true)->setSize(14);
                     $sheet->getStyle($cell)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 }
+                $sheet->getStyle('A5')->getFont()->setBold(true);
 
-                $sheet->getStyle('A4')->getFont()->setBold(true);
 
                 // Logo Sekolah
-                $logoPath = public_path('logo_sekolah.png');
+                $logoPath = public_path('dist/assets/image/logo_sd_cipta_dharma-removebg-preview.png');
                 if (file_exists($logoPath)) {
                     $drawing = new Drawing();
                     $drawing->setName('Logo');
-                    $drawing->setDescription('Logo Sekolah');
+                    $drawing->setDescription('Logo SD Cipta Dharma');
                     $drawing->setPath($logoPath);
-                    $drawing->setHeight(80);
+                    $drawing->setHeight(70); // Ukuran logo disesuaikan agar tidak menutupi teks A1-A3
                     $drawing->setCoordinates('A1');
+                    $drawing->setOffsetX(10); // Opsional: posisi horizontal logo bisa disesuaikan
+                    $drawing->setOffsetY(5);  // Opsional: posisi vertikal logo bisa disesuaikan
                     $drawing->setWorksheet($sheet);
                 }
             },
 
             AfterSheet::class => function (AfterSheet $event) {
-            $sheet = $event->sheet->getDelegate();
-            $lastCol = $this->getLastColumnLetter();
-            $startRow = $sheet->getHighestRow() + 4; // mulai 3 baris setelah data
+                $sheet = $event->sheet->getDelegate();
+                $lastCol = $this->getLastColumnLetter();
+                $startRow = $sheet->getHighestRow() + 4; // mulai 3 baris setelah data
 
-            $user = Auth::user();
-            $adminName = $user->nama ?? '__________________';
-            $ttdPath = public_path("ttd_admin.png");
+                $user = Auth::user();
+                $adminName = $user->nama ?? '__________________';
+                $ttdPath = public_path("ttd_admin.png");
 
-            // 1. Tulis teks "Penanggung Jawab"
-            $sheet->setCellValue("{$lastCol}{$startRow}", "Penanggung Jawab");
-            $sheet->getStyle("{$lastCol}{$startRow}")
-                ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                // 1. Tulis teks "Penanggung Jawab"
+                $sheet->setCellValue("{$lastCol}{$startRow}", "Penanggung Jawab");
+                $sheet->getStyle("{$lastCol}{$startRow}")
+                    ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-            // 2. Tambahkan gambar tanda tangan jika ada
-            if (file_exists($ttdPath)) {
-                $drawing = new Drawing();
-                $drawing->setName('TTD Admin');
-                $drawing->setDescription('Tanda Tangan Admin');
-                $drawing->setPath($ttdPath);
-                $drawing->setHeight(60);
-                $drawing->setCoordinates("{$lastCol}" . ($startRow + 1)); // baris di bawah "Penanggung Jawab"
-                $drawing->setOffsetY(0); // opsional: ubah sesuai kebutuhan
-                $drawing->setWorksheet($sheet);
+                // 2. Tambahkan gambar tanda tangan jika ada
+                if (file_exists($ttdPath)) {
+                    $drawing = new Drawing();
+                    $drawing->setName('TTD Admin');
+                    $drawing->setDescription('Tanda Tangan Admin');
+                    $drawing->setPath($ttdPath);
+                    $drawing->setHeight(60);
+                    $drawing->setCoordinates("{$lastCol}" . ($startRow + 1)); // baris di bawah "Penanggung Jawab"
+                    $drawing->setOffsetY(0); // opsional: ubah sesuai kebutuhan
+                    $drawing->setWorksheet($sheet);
+                }
+
+                // 3. Tulis nama admin di baris bawah gambar
+                $sheet->setCellValue("{$lastCol}" . ($startRow + 3), "({$adminName})");
+                $sheet->getStyle("{$lastCol}" . ($startRow + 3))
+                    ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             }
-
-            // 3. Tulis nama admin di baris bawah gambar
-            $sheet->setCellValue("{$lastCol}" . ($startRow + 3), "({$adminName})");
-            $sheet->getStyle("{$lastCol}" . ($startRow + 3))
-                ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        }
 
         ];
     }
-
 }
